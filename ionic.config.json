@@ -1,0 +1,7 @@
+{
+  "name": "lelang-2.0",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
