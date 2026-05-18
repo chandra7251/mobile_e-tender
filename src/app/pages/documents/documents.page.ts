@@ -1,0 +1,176 @@
+import { Component, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
+import { VendorService } from '../../core/services/vendor.service';
+import { VendorDocument, DocumentType } from '../../core/models/user.model';
+
+type AllowedType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
+
+@Component({
+  standalone: false,
+  selector: 'app-documents',
+  templateUrl: './documents.page.html',
+  styleUrls: ['./documents.page.scss'],
+})
+export class DocumentsPage implements OnInit {
+
+  // ── List ──────────────────────────────────────────────────────────────────
+  documents: VendorDocument[] = [];
+  isLoading = false;
+  listError = '';
+
+  // ── Upload form ───────────────────────────────────────────────────────────
+  selectedType: AllowedType = 'legalitas';
+  selectedFile: File | null = null;
+  selectedFileName = '';
+  isUploading = false;
+  uploadError = '';
+  showUploadForm = false;
+
+  readonly docTypes: { value: AllowedType; label: string }[] = [
+    { value: 'legalitas',          label: 'Legalitas' },
+    { value: 'izin_usaha',         label: 'Izin Usaha' },
+    { value: 'dokumen_pendukung',  label: 'Dokumen Pendukung' },
+  ];
+
+  constructor(
+    private vendorService: VendorService,
+    private toast: ToastController
+  ) {}
+
+  ngOnInit(): void {
+    this.loadDocuments();
+  }
+
+  // ── Load list ─────────────────────────────────────────────────────────────
+
+  loadDocuments(): void {
+    this.isLoading = true;
+    this.listError = '';
+
+    this.vendorService.getDocuments().subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        if (res.status && res.data) {
+          this.documents = res.data;
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.listError = err?.error?.message || 'Gagal memuat daftar dokumen.';
+      }
+    });
+  }
+
+  doRefresh(event: any): void {
+    this.vendorService.getDocuments().subscribe({
+      next: (res) => {
+        if (res.status && res.data) this.documents = res.data;
+        event.target.complete();
+      },
+      error: () => event.target.complete()
+    });
+  }
+
+  // ── File picker ───────────────────────────────────────────────────────────
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.selectedFileName = this.selectedFile.name;
+      this.uploadError = '';
+    }
+  }
+
+  // ── Upload ────────────────────────────────────────────────────────────────
+
+  onUpload(): void {
+    if (!this.selectedFile) {
+      this.uploadError = 'Pilih file terlebih dahulu.';
+      return;
+    }
+
+    this.isUploading = true;
+    this.uploadError = '';
+
+    // Cast ke DocumentType karena superset dari AllowedType
+    this.vendorService.uploadDocument(this.selectedType as DocumentType, this.selectedFile).subscribe({
+      next: async (res) => {
+        this.isUploading = false;
+        if (res.status) {
+          await this.showToast('Dokumen berhasil diupload!', 'success');
+          this.resetForm();
+          this.showUploadForm = false;
+          this.loadDocuments();
+        } else {
+          this.uploadError = res.message || 'Upload gagal.';
+        }
+      },
+      error: (err) => {
+        this.isUploading = false;
+        const errors = err?.error?.data;
+        if (errors) {
+          const firstKey = Object.keys(errors)[0];
+          this.uploadError = errors[firstKey]?.[0] || 'Upload gagal.';
+        } else {
+          this.uploadError = err?.error?.message || 'Terjadi kesalahan saat upload.';
+        }
+      }
+    });
+  }
+
+  // ── UI helpers ────────────────────────────────────────────────────────────
+
+  toggleUploadForm(): void {
+    this.showUploadForm = !this.showUploadForm;
+    if (!this.showUploadForm) this.resetForm();
+  }
+
+  resetForm(): void {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.selectedType = 'legalitas';
+    this.uploadError = '';
+  }
+
+  getTypeLabel(value: string): string {
+    return this.docTypes.find(t => t.value === value)?.label ?? value;
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'approved': return 'success';
+      case 'rejected': return 'danger';
+      default:         return 'warning';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'approved': return 'Disetujui';
+      case 'rejected': return 'Ditolak';
+      default:         return 'Menunggu';
+    }
+  }
+
+  getDocIcon(type: string): string {
+    switch (type) {
+      case 'legalitas':         return 'ribbon-outline';
+      case 'izin_usaha':        return 'business-outline';
+      case 'dokumen_pendukung': return 'document-attach-outline';
+      default:                  return 'document-outline';
+    }
+  }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '-';
+    return new Date(dateStr).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  private async showToast(message: string, color: string): Promise<void> {
+    const t = await this.toast.create({ message, duration: 2500, color, position: 'top' });
+    await t.present();
+  }
+}

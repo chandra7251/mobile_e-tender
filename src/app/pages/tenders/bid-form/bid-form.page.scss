@@ -1,0 +1,284 @@
+// ── Layout ────────────────────────────────────────────────────────────────
+
+.page-content {
+  padding: 16px 16px 80px;
+}
+
+// ── Current bid card ──────────────────────────────────────────────────────
+
+.current-bid-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  background: rgba(var(--ion-color-success-rgb), 0.06);
+  border: 1.5px solid rgba(var(--ion-color-success-rgb), 0.3);
+  box-shadow: none;
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.current-bid-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-color-success-shade);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 14px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.current-bid-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bid-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bid-stat-label {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.bid-stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+
+  &.notes-val {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ion-color-medium-shade);
+  }
+}
+
+// ── Form card ─────────────────────────────────────────────────────────────
+
+.form-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+// ── Field ────────────────────────────────────────────────────────────────
+
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-color-dark-tint);
+  margin-bottom: 8px;
+
+  .required {
+    color: var(--ion-color-danger);
+    margin-left: 2px;
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--ion-color-medium);
+    font-size: 12px;
+  }
+}
+
+// ── Currency input ────────────────────────────────────────────────────────
+
+.currency-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--ion-color-light-shade);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--ion-color-light);
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: var(--ion-color-primary);
+    background: white;
+  }
+}
+
+.currency-prefix {
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ion-color-medium);
+  background: var(--ion-color-light-shade);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border-right: 1.5px solid var(--ion-color-light-shade);
+  flex-shrink: 0;
+}
+
+.currency-input {
+  flex: 1;
+  height: 48px;
+  border: none;
+  outline: none;
+  padding: 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  background: transparent;
+
+  &::placeholder {
+    color: var(--ion-color-medium-tint);
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+  // Remove arrows on number input
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  margin: 6px 0 0 2px;
+}
+
+// ── Textarea notes ────────────────────────────────────────────────────────
+
+.notes-textarea {
+  width: 100%;
+  border: 1.5px solid var(--ion-color-light-shade);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ion-color-dark);
+  background: var(--ion-color-light);
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: var(--ion-color-primary);
+    background: white;
+  }
+
+  &::placeholder {
+    color: var(--ion-color-medium-tint);
+  }
+}
+
+// ── Submit button ─────────────────────────────────────────────────────────
+
+.submit-btn {
+  --border-radius: 12px;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.submit-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  text-align: center;
+  margin: 10px 0 0;
+
+  ion-icon {
+    font-size: 13px;
+  }
+}
+
+// ── Error box ─────────────────────────────────────────────────────────────
+
+.error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(var(--ion-color-danger-rgb), 0.08);
+  color: var(--ion-color-danger);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// ── Error center ──────────────────────────────────────────────────────────
+
+.error-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 24px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 60px;
+    color: var(--ion-color-medium-tint);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+}

@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onLogout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Welcome Card (loaded) -->
+  <div class="welcome-card" *ngIf="vendorProfile">
+    <div class="welcome-info">
+      <h2>Selamat datang,</h2>
+      <h3>{{ vendorProfile.name }}</h3>
+      <p>{{ companyName }}</p>
+
+      <!-- Status verifikasi -->
+      <ion-badge [color]="vendorStatus === 'approved' ? 'success' : vendorStatus === 'rejected' ? 'danger' : 'warning'" class="status-badge">
+        {{ vendorStatus === 'approved' ? 'Terverifikasi' : vendorStatus === 'rejected' ? 'Ditolak' : 'Menunggu Verifikasi' }}
+      </ion-badge>
+    </div>
+    <ion-icon name="business-outline" class="welcome-icon"></ion-icon>
+  </div>
+
+  <!-- Welcome Card (skeleton) -->
+  <div class="welcome-card skeleton-card" *ngIf="!vendorProfile">
+    <div style="flex: 1">
+      <ion-skeleton-text animated style="width: 55%; height: 18px; border-radius: 6px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 75%; height: 24px; margin-top: 8px; border-radius: 6px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 45%; height: 14px; margin-top: 6px; border-radius: 6px;"></ion-skeleton-text>
+    </div>
+  </div>
+
+  <!-- Menu Utama -->
+  <ion-list-header>
+    <ion-label>Menu Utama</ion-label>
+  </ion-list-header>
+
+  <ion-grid>
+    <ion-row>
+
+      <ion-col size="6">
+        <div class="menu-card" routerLink="/tabs/tenders">
+          <ion-icon name="document-text-outline" color="primary"></ion-icon>
+          <span>Daftar Tender</span>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="menu-card" routerLink="/tabs/documents">
+          <ion-icon name="folder-open-outline" color="success"></ion-icon>
+          <span>Dokumen Saya</span>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="menu-card" routerLink="/tabs/profile">
+          <ion-icon name="person-circle-outline" color="tertiary"></ion-icon>
+          <span>Profil</span>
+        </div>
+      </ion-col>
+
+      <ion-col size="6">
+        <div class="menu-card" (click)="onLogout()">
+          <ion-icon name="log-out-outline" color="medium"></ion-icon>
+          <span>Logout</span>
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

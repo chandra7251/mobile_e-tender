@@ -1,0 +1,424 @@
+// ── Layout ────────────────────────────────────────────────────────────────
+
+.page-content {
+  padding: 16px 16px 80px;
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────
+
+.detail-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.header-card {
+  ion-card-content {
+    padding: 20px 16px;
+  }
+}
+
+// ── Status ────────────────────────────────────────────────────────────────
+
+.status-row {
+  margin-bottom: 12px;
+}
+
+.status-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+// ── Tender title & desc ───────────────────────────────────────────────────
+
+.tender-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ion-color-dark);
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.tender-desc {
+  font-size: 14px;
+  color: var(--ion-color-medium-shade);
+  margin: 0 0 16px;
+  line-height: 1.6;
+}
+
+// ── Budget ────────────────────────────────────────────────────────────────
+
+.budget-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(var(--ion-color-success-rgb), 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+
+  ion-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+.budget-label {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.budget-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ion-color-success-shade);
+}
+
+// ── Join card ─────────────────────────────────────────────────────────────
+
+.join-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  border: 2px solid rgba(var(--ion-color-primary-rgb), 0.2);
+  box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb), 0.1);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.join-btn {
+  --border-radius: 12px;
+  height: 50px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.join-hint {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  text-align: center;
+  margin: 8px 0 0;
+  line-height: 1.4;
+}
+
+.joined-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(var(--ion-color-success-rgb), 0.1);
+  color: var(--ion-color-success-shade);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Error / info boxes ────────────────────────────────────────────────────
+
+.error-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(var(--ion-color-danger-rgb), 0.08);
+  color: var(--ion-color-danger);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// ── Section title ─────────────────────────────────────────────────────────
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+
+  ion-icon {
+    font-size: 18px;
+    color: var(--ion-color-primary);
+  }
+}
+
+// ── Bid card ──────────────────────────────────────────────────────────────
+
+.bid-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  border: 2px solid rgba(var(--ion-color-warning-rgb), 0.35);
+  box-shadow: 0 4px 16px rgba(var(--ion-color-warning-rgb), 0.12);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.bid-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  ion-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+.bid-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+}
+
+.bid-subtitle {
+  font-size: 12px;
+  color: var(--ion-color-medium-shade);
+  line-height: 1.4;
+}
+
+.bid-btn {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 700;
+}
+
+// ── Result card ───────────────────────────────────────────────────────────
+
+.result-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  border: 2px solid rgba(var(--ion-color-primary-rgb), 0.25);
+  box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb), 0.1);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.result-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  ion-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+.result-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+}
+
+.result-subtitle {
+  font-size: 12px;
+  color: var(--ion-color-medium-shade);
+  line-height: 1.4;
+}
+
+.result-btn {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 700;
+}
+
+// ── Schedule grid ─────────────────────────────────────────────────────────
+
+.schedule-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sched-label {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.sched-value {
+  font-size: 14px;
+  color: var(--ion-color-dark-tint);
+  font-weight: 500;
+
+  &.highlight {
+    color: var(--ion-color-tertiary-shade);
+    font-weight: 700;
+  }
+
+  &.warning-date {
+    color: var(--ion-color-warning-shade);
+    font-weight: 700;
+  }
+}
+
+// ── Requirements ─────────────────────────────────────────────────────────
+
+.requirements-text {
+  font-size: 14px;
+  color: var(--ion-color-dark-tint);
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-line;
+}
+
+// ── Announcements ─────────────────────────────────────────────────────────
+
+.announcement-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+
+  &.no-border {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.ann-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ann-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  flex: 1;
+  line-height: 1.3;
+}
+
+.ann-date {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.ann-content {
+  font-size: 13px;
+  color: var(--ion-color-medium-shade);
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.ann-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ion-color-danger);
+  font-size: 13px;
+  padding: 8px 0;
+
+  ion-icon { font-size: 17px; }
+}
+
+.ann-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+    color: var(--ion-color-medium-tint);
+  }
+
+  p {
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+.announcement-skeleton {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+  &:last-child { border-bottom: none; }
+}
+
+// ── Error center ──────────────────────────────────────────────────────────
+
+.error-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium-tint);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin: 0 0 20px;
+  }
+}

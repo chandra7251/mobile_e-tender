@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" id="btn-back-bid">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ pageTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="page-content">
+
+    <!-- ════════ SKELETON LOADING ════════ -->
+    <ng-container *ngIf="isLoadingMode">
+      <ion-card class="form-card">
+        <ion-card-content>
+          <ion-skeleton-text animated style="width:40%; height:14px; margin-bottom:20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:100%; height:48px; border-radius:10px; margin-bottom:16px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:100%; height:80px; border-radius:10px; margin-bottom:16px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:100%; height:48px; border-radius:12px;"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
+    <!-- ════════ ERROR LOAD STATE ════════ -->
+    <div class="error-center" *ngIf="isErrorMode">
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+      <h3>Tidak dapat memuat</h3>
+      <p>{{ loadError }}</p>
+      <ion-button fill="outline" (click)="loadMyBid()">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Coba Lagi
+      </ion-button>
+    </div>
+
+    <!-- ════════ FORM (submit + update mode) ════════ -->
+    <ng-container *ngIf="isSubmitMode || isUpdateMode">
+
+      <!-- ── Info bid saat ini (mode update) ── -->
+      <ion-card class="current-bid-card" *ngIf="isUpdateMode && existingBid">
+        <ion-card-content>
+          <div class="current-bid-header">
+            <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+            <span>Penawaran Saat Ini</span>
+          </div>
+          <div class="current-bid-body">
+            <div class="bid-stat">
+              <span class="bid-stat-label">Harga Penawaran</span>
+              <span class="bid-stat-value">{{ formatCurrency(existingBid.price) }}</span>
+            </div>
+            <div class="bid-stat" *ngIf="existingBid.notes">
+              <span class="bid-stat-label">Catatan</span>
+              <span class="bid-stat-value notes-val">{{ existingBid.notes }}</span>
+            </div>
+            <div class="bid-stat">
+              <span class="bid-stat-label">Diajukan</span>
+              <span class="bid-stat-value">{{ formatDate(existingBid.submitted_at) }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- ── Form card ── -->
+      <ion-card class="form-card">
+        <ion-card-header>
+          <ion-card-title class="form-title">
+            <ion-icon [name]="isUpdateMode ? 'create-outline' : 'pricetag-outline'" color="primary"></ion-icon>
+            {{ isUpdateMode ? 'Perbarui Penawaran' : 'Isi Penawaran Anda' }}
+          </ion-card-title>
+          <ion-card-subtitle *ngIf="isUpdateMode">
+            Tender ID: #{{ tenderId }} — Perubahan akan menggantikan penawaran lama
+          </ion-card-subtitle>
+          <ion-card-subtitle *ngIf="isSubmitMode">
+            Tender ID: #{{ tenderId }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <!-- Error save -->
+          <div class="error-box" *ngIf="saveError">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>{{ saveError }}</span>
+          </div>
+
+          <!-- Field: Harga Penawaran -->
+          <div class="field-group">
+            <label class="field-label" for="inp-bid-amount">
+              Harga Penawaran <span class="required">*</span>
+            </label>
+            <div class="currency-input-wrap">
+              <span class="currency-prefix">Rp</span>
+              <input
+                type="number"
+                id="inp-bid-amount"
+                class="currency-input"
+                placeholder="Masukkan jumlah penawaran"
+                [(ngModel)]="bidAmount"
+                min="1"
+                inputmode="numeric"
+              />
+            </div>
+            <p class="field-hint" *ngIf="bidAmount && bidAmount > 0">
+              {{ formatCurrency(bidAmount) }}
+            </p>
+          </div>
+
+          <!-- Field: Catatan -->
+          <div class="field-group">
+            <label class="field-label" for="inp-notes">
+              Catatan <span class="optional">(opsional)</span>
+            </label>
+            <textarea
+              id="inp-notes"
+              class="notes-textarea"
+              placeholder="Tambahkan catatan atau keterangan penawaran..."
+              [(ngModel)]="notes"
+              rows="4">
+            </textarea>
+          </div>
+
+          <!-- Tombol submit -->
+          <ion-button
+            expand="block"
+            (click)="onSubmit()"
+            [disabled]="isSaving || !bidAmount || bidAmount <= 0"
+            id="btn-submit-bid"
+            class="submit-btn"
+            [color]="isUpdateMode ? 'primary' : 'warning'">
+            <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
+            <ion-icon
+              *ngIf="!isSaving"
+              [name]="isUpdateMode ? 'save-outline' : 'send-outline'"
+              slot="start">
+            </ion-icon>
+            {{ submitLabel }}
+          </ion-button>
+
+          <p class="submit-note">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            Penawaran Anda bersifat rahasia dan hanya dapat dilihat oleh sistem.
+          </p>
+
+        </ion-card-content>
+      </ion-card>
+
+    </ng-container>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,182 @@
+// ── Layout ────────────────────────────────────────────────────────────────
+
+.page-content {
+  padding: 16px 16px 80px;
+}
+
+// ── Result card ───────────────────────────────────────────────────────────
+
+.result-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+// ── Winner card ───────────────────────────────────────────────────────────
+
+.winner-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg,
+    rgba(var(--ion-color-warning-rgb), 0.05) 0%,
+    rgba(var(--ion-color-warning-rgb), 0.02) 100%
+  );
+  border: 1.5px solid rgba(var(--ion-color-warning-rgb), 0.25);
+  box-shadow: 0 4px 16px rgba(var(--ion-color-warning-rgb), 0.08);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+// ── Section title ─────────────────────────────────────────────────────────
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+// ── Result badge ──────────────────────────────────────────────────────────
+
+.result-badge-row {
+  margin-bottom: 16px;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 24px;
+  letter-spacing: 0.2px;
+
+  ion-icon {
+    font-size: 17px;
+  }
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────
+
+.stat-row {
+  margin-bottom: 12px;
+}
+
+.winner-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+
+  &.winner-price {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--ion-color-warning-shade);
+  }
+
+  &.tender-title-val {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ion-color-medium-shade);
+    line-height: 1.4;
+  }
+
+  &.notes-val {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ion-color-medium-shade);
+    line-height: 1.5;
+  }
+}
+
+// ── Winner company ────────────────────────────────────────────────────────
+
+.winner-company {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ion-color-dark);
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--ion-color-warning-rgb), 0.2);
+
+  ion-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Empty / no-result state ───────────────────────────────────────────────
+
+.no-result-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 0 8px;
+
+  ion-icon {
+    font-size: 48px;
+    color: var(--ion-color-medium-tint);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+
+  .hint-text {
+    font-size: 12px;
+    color: var(--ion-color-medium-tint);
+    margin-top: 6px;
+  }
+}
+
+// ── Skeleton ──────────────────────────────────────────────────────────────
+
+.skeleton-card {
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+
+  ion-card-content {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,164 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Dokumen Saya</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleUploadForm()" id="btn-toggle-upload">
+        <ion-icon slot="icon-only" [name]="showUploadForm ? 'close-outline' : 'cloud-upload-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingText="Tarik untuk refresh"
+      refreshingText="Memuat ulang...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-content ion-padding">
+
+    <!-- ════════════ UPLOAD FORM ════════════ -->
+    <ion-card class="upload-card" *ngIf="showUploadForm">
+      <ion-card-header>
+        <ion-card-title>Upload Dokumen</ion-card-title>
+        <ion-card-subtitle>Format yang didukung: PDF, JPG, PNG</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <!-- Error box -->
+        <div class="error-box" *ngIf="uploadError">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ uploadError }}</span>
+        </div>
+
+        <!-- Tipe dokumen -->
+        <ion-item class="form-item" lines="full">
+          <ion-label position="stacked">Tipe Dokumen *</ion-label>
+          <ion-select
+            [(ngModel)]="selectedType"
+            interface="action-sheet"
+            placeholder="Pilih tipe dokumen"
+            [disabled]="isUploading">
+            <ion-select-option
+              *ngFor="let type of docTypes"
+              [value]="type.value">
+              {{ type.label }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- File picker -->
+        <div class="file-picker" [class.has-file]="!!selectedFileName">
+          <input
+            type="file"
+            id="file-input"
+            accept=".pdf,.jpg,.jpeg,.png"
+            (change)="onFileSelected($event)"
+            [disabled]="isUploading"
+            style="display:none">
+
+          <label for="file-input" class="file-label">
+            <div class="file-icon">
+              <ion-icon [name]="selectedFileName ? 'document-attach-outline' : 'cloud-upload-outline'"></ion-icon>
+            </div>
+            <div class="file-info">
+              <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+              <span class="file-placeholder" *ngIf="!selectedFileName">Klik untuk pilih file</span>
+              <span class="file-hint">PDF, JPG, PNG</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Tombol upload -->
+        <ion-button
+          expand="block"
+          (click)="onUpload()"
+          [disabled]="isUploading || !selectedFile"
+          class="upload-btn"
+          id="btn-upload-submit">
+          <ion-spinner *ngIf="isUploading" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!isUploading" name="cloud-upload-outline" slot="start"></ion-icon>
+          <span>{{ isUploading ? 'Mengupload...' : 'Upload Dokumen' }}</span>
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ════════════ LIST SKELETON ════════════ -->
+    <div *ngIf="isLoading">
+      <ion-card class="doc-card skeleton-doc" *ngFor="let i of [1,2,3]">
+        <ion-card-content>
+          <div class="doc-row">
+            <ion-skeleton-text animated class="icon-skeleton"></ion-skeleton-text>
+            <div class="doc-body">
+              <ion-skeleton-text animated style="width: 60%; height: 14px; margin-bottom: 6px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 40%; height: 12px;"></ion-skeleton-text>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- ════════════ LIST ERROR ════════════ -->
+    <div class="error-box full-error" *ngIf="listError && !isLoading">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ listError }}</span>
+      <ion-button fill="clear" size="small" (click)="loadDocuments()">Coba Lagi</ion-button>
+    </div>
+
+    <!-- ════════════ EMPTY STATE ════════════ -->
+    <div class="empty-state" *ngIf="!isLoading && !listError && documents.length === 0">
+      <ion-icon name="folder-open-outline"></ion-icon>
+      <h3>Belum ada dokumen</h3>
+      <p>Upload dokumen untuk mendukung proses verifikasi akun vendor Anda.</p>
+      <ion-button fill="outline" (click)="toggleUploadForm()" *ngIf="!showUploadForm">
+        <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+        Upload Sekarang
+      </ion-button>
+    </div>
+
+    <!-- ════════════ DOCUMENT LIST ════════════ -->
+    <div *ngIf="!isLoading && documents.length > 0">
+
+      <div class="list-header">
+        <span>{{ documents.length }} dokumen ditemukan</span>
+      </div>
+
+      <ion-card
+        class="doc-card"
+        *ngFor="let doc of documents">
+        <ion-card-content>
+          <div class="doc-row">
+
+            <!-- Icon -->
+            <div class="doc-icon-wrap">
+              <ion-icon [name]="getDocIcon(doc.type)" class="doc-icon"></ion-icon>
+            </div>
+
+            <!-- Info -->
+            <div class="doc-body">
+              <div class="doc-top">
+                <span class="doc-type">{{ getTypeLabel(doc.type) }}</span>
+                <ion-badge [color]="getStatusColor(doc.status)" class="doc-badge">
+                  {{ getStatusLabel(doc.status) }}
+                </ion-badge>
+              </div>
+              <span class="doc-date">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ formatDate(doc.uploaded_at) }}
+              </span>
+            </div>
+
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+    </div>
+
+  </div>
+
+</ion-content>

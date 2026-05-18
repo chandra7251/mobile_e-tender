@@ -1,0 +1,72 @@
+<ion-content class="ion-padding" [fullscreen]="true">
+
+  <div class="auth-container">
+
+    <!-- Logo / Header -->
+    <div class="auth-header">
+      <ion-icon name="business-outline" class="auth-logo"></ion-icon>
+      <h1>E-Procurement</h1>
+      <p>Masuk ke akun vendor Anda</p>
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+
+      <ion-list lines="none" class="auth-form-list">
+
+        <ion-item class="auth-item">
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            placeholder="vendor@example.com"
+            autocomplete="email">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="auth-item">
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            [(ngModel)]="password"
+            required
+            placeholder="password">
+          </ion-input>
+          <ion-button
+            slot="end"
+            fill="clear"
+            (click)="togglePassword()">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+      </ion-list>
+
+      <div class="auth-error" *ngIf="errorMessage">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        {{ errorMessage }}
+      </div>
+
+      <ion-button
+        expand="block"
+        type="submit"
+        class="auth-btn"
+        [disabled]="isLoading || !loginForm.valid">
+        <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+        <span *ngIf="!isLoading">Masuk</span>
+      </ion-button>
+
+    </form>
+
+    <!-- Footer link -->
+    <div class="auth-footer">
+      <span>Belum punya akun?</span>
+      <ion-button fill="clear" routerLink="/register">Daftar</ion-button>
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,272 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()" id="btn-back-detail">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Detail Tender</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingText="Tarik untuk refresh"
+      refreshingText="Memuat ulang...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ════════ SKELETON LOADING ════════ -->
+  <div class="page-content" *ngIf="isLoading">
+    <ion-card class="detail-card">
+      <ion-card-content>
+        <ion-skeleton-text animated style="width:30%; height:22px; border-radius:20px; margin-bottom:14px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:80%; height:22px; margin-bottom:6px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:60%; height:22px; margin-bottom:20px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:100%; height:14px; margin-bottom:4px;" *ngFor="let i of [1,2,3]"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- ════════ ERROR STATE ════════ -->
+  <div class="page-content" *ngIf="detailError && !isLoading">
+    <ion-card class="detail-card" style="text-align:center; padding: 24px 16px;">
+      <ion-icon name="cloud-offline-outline" style="font-size:48px; color:var(--ion-color-medium);"></ion-icon>
+      <p style="color:var(--ion-color-medium); margin: 12px 0 16px;">{{ detailError }}</p>
+      <ion-button fill="outline" size="small" (click)="retryLoad()" id="btn-retry-detail">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Coba Lagi
+      </ion-button>
+    </ion-card>
+  </div>
+
+  <!-- ════════ TENDER DETAIL ════════ -->
+  <div class="page-content" *ngIf="tender && !isLoading">
+
+    <!-- ── Header card ── -->
+    <ion-card class="detail-card header-card">
+      <ion-card-content>
+
+        <div class="status-row">
+          <ion-badge [color]="getStatusColor(tender.status)" class="status-badge">
+            {{ getStatusLabel(tender.status) }}
+          </ion-badge>
+        </div>
+
+        <h1 class="tender-title">{{ tender.title }}</h1>
+
+        <p class="tender-desc" *ngIf="tender.description">{{ tender.description }}</p>
+
+        <!-- Budget -->
+        <div class="budget-block">
+          <ion-icon name="cash-outline" color="success"></ion-icon>
+          <div>
+            <span class="budget-label">Pagu Anggaran</span>
+            <span class="budget-value">{{ formatCurrency(tender.budget) }}</span>
+          </div>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Join tender ── -->
+    <ion-card class="join-card" *ngIf="showJoinButton">
+      <ion-card-content>
+
+        <!-- Error join -->
+        <div class="error-box" *ngIf="joinError">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ joinError }}</span>
+        </div>
+
+        <!-- Sudah join -->
+        <div class="joined-box" *ngIf="hasJoined">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          <span>Anda sudah terdaftar di tender ini</span>
+        </div>
+
+        <!-- Tombol join -->
+        <ion-button
+          *ngIf="!hasJoined"
+          expand="block"
+          (click)="onJoin()"
+          [disabled]="isJoining"
+          id="btn-join-tender"
+          class="join-btn">
+          <ion-spinner *ngIf="isJoining" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!isJoining" name="enter-outline" slot="start"></ion-icon>
+          {{ isJoining ? 'Mendaftarkan...' : 'Ikuti Tender Ini' }}
+        </ion-button>
+
+        <p class="join-hint" *ngIf="!hasJoined">
+          Bergabung untuk mengakses informasi aanwijzing dan berpartisipasi dalam bidding.
+        </p>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Bid Sekarang (hanya saat status bidding) ── -->
+    <ion-card class="bid-card" *ngIf="showBidButton">
+      <ion-card-content>
+        <div class="bid-info">
+          <ion-icon name="pricetag-outline" color="warning"></ion-icon>
+          <div>
+            <span class="bid-title">Fase Bidding Sedang Berlangsung</span>
+            <span class="bid-subtitle">Ajukan atau perbarui penawaran harga Anda sekarang.</span>
+          </div>
+        </div>
+        <ion-button
+          expand="block"
+          color="warning"
+          (click)="goBid()"
+          id="btn-go-bid"
+          class="bid-btn">
+          <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+          Ajukan Penawaran
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Lihat Hasil (hanya saat status closed/finished) ── -->
+    <ion-card class="result-card" *ngIf="showResultButton">
+      <ion-card-content>
+        <div class="result-info">
+          <ion-icon name="trophy-outline" color="primary"></ion-icon>
+          <div>
+            <span class="result-title">Tender Telah Selesai</span>
+            <span class="result-subtitle">Lihat pemenang dan hasil penawaran Anda.</span>
+          </div>
+        </div>
+        <ion-button
+          expand="block"
+          color="primary"
+          (click)="goResult()"
+          id="btn-go-result"
+          class="result-btn">
+          <ion-icon slot="start" name="trophy-outline"></ion-icon>
+          Lihat Hasil Tender
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Jadwal Tender ── -->
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="calendar-outline"></ion-icon>
+          Jadwal Tender
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <div class="schedule-grid">
+
+          <div class="schedule-item">
+            <span class="sched-label">Tanggal Mulai</span>
+            <span class="sched-value">{{ formatDate(tender.start_date) }}</span>
+          </div>
+
+          <div class="schedule-item">
+            <span class="sched-label">Tanggal Selesai</span>
+            <span class="sched-value">{{ formatDate(tender.end_date) }}</span>
+          </div>
+
+          <div class="schedule-item" *ngIf="tender.aanwijzing_date">
+            <span class="sched-label">Aanwijzing</span>
+            <span class="sched-value highlight">{{ formatDate(tender.aanwijzing_date) }}</span>
+          </div>
+
+          <div class="schedule-item" *ngIf="tender.bidding_start">
+            <span class="sched-label">Bidding Mulai</span>
+            <span class="sched-value warning-date">{{ formatDate(tender.bidding_start) }}</span>
+          </div>
+
+          <div class="schedule-item" *ngIf="tender.bidding_end">
+            <span class="sched-label">Bidding Tutup</span>
+            <span class="sched-value warning-date">{{ formatDate(tender.bidding_end) }}</span>
+          </div>
+
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ── Spesifikasi / Requirements ── -->
+    <ion-card class="detail-card" *ngIf="tender.requirements">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="list-outline"></ion-icon>
+          Persyaratan
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="requirements-text">{{ tender.requirements }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ════════ ANNOUNCEMENTS / AANWIJZING ════════ -->
+    <ion-card class="detail-card announcements-card">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="megaphone-outline"></ion-icon>
+          Pengumuman Aanwijzing
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <!-- Loading announcements -->
+        <div *ngIf="announcementsLoading">
+          <div class="announcement-skeleton" *ngFor="let i of [1,2]">
+            <ion-skeleton-text animated style="width:55%; height:15px; margin-bottom:6px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width:90%; height:13px; margin-bottom:3px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width:70%; height:13px;"></ion-skeleton-text>
+          </div>
+        </div>
+
+        <!-- Error announcements -->
+        <div class="ann-error" *ngIf="announcementsError && !announcementsLoading">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ announcementsError }}</span>
+        </div>
+
+        <!-- Empty state announcements -->
+        <div class="ann-empty" *ngIf="!announcementsLoading && !announcementsError && announcements.length === 0">
+          <ion-icon name="megaphone-outline"></ion-icon>
+          <p>Belum ada pengumuman aanwijzing</p>
+        </div>
+
+        <!-- Announcement items -->
+        <div
+          class="announcement-item"
+          *ngFor="let ann of announcements; let last = last"
+          [class.no-border]="last">
+
+          <div class="ann-header">
+            <span class="ann-title">{{ ann.title }}</span>
+            <span class="ann-date">
+              {{ formatDateShort(ann.published_at || ann.created_at) }}
+            </span>
+          </div>
+
+          <p class="ann-content">{{ ann.content }}</p>
+
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <!-- ════════ ERROR STATE (tender not found) ════════ -->
+  <div class="error-center" *ngIf="!tender && !isLoading">
+    <ion-icon name="document-outline"></ion-icon>
+    <h3>Tender tidak ditemukan</h3>
+    <ion-button fill="outline" (click)="goBack()">
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      Kembali
+    </ion-button>
+  </div>
+
+</ion-content>

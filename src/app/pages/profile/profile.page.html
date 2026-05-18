@@ -1,0 +1,209 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Profil Vendor</ion-title>
+    <ion-buttons slot="end" *ngIf="!isEditMode">
+      <ion-button (click)="enterEditMode()" [disabled]="isLoading || !profile">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="isEditMode">
+      <ion-button (click)="cancelEdit()" color="light">Batal</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- ── Loading skeleton ── -->
+  <div *ngIf="isLoading">
+    <ion-card class="profile-card skeleton-card">
+      <ion-card-content>
+        <div class="avatar-skeleton">
+          <ion-skeleton-text animated style="width:72px; height:72px; border-radius:50%;"></ion-skeleton-text>
+        </div>
+        <ion-skeleton-text animated style="width:55%; height:20px; margin:12px auto 6px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:40%; height:14px; margin:0 auto;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+    <ion-list>
+      <ion-item *ngFor="let i of [1,2,3,4]">
+        <ion-skeleton-text animated style="width:80%; height:16px;"></ion-skeleton-text>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- ── Error state ── -->
+  <ion-card color="danger" *ngIf="errorMessage && !isEditMode && !isLoading">
+    <ion-card-content>
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      {{ errorMessage }}
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ════════════════ VIEW MODE ════════════════ -->
+  <ng-container *ngIf="profile && !isLoading && !isEditMode">
+
+    <!-- Avatar + nama card -->
+    <ion-card class="profile-card">
+      <ion-card-content class="ion-text-center">
+        <div class="avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <h2 class="profile-name">{{ profile.name }}</h2>
+        <p class="profile-email">{{ profile.email }}</p>
+
+        <!-- Status badge -->
+        <div class="status-row">
+          <ion-chip [color]="statusColor" class="status-chip">
+            <ion-label>{{ statusLabel }}</ion-label>
+          </ion-chip>
+        </div>
+
+        <!-- Catatan penolakan -->
+        <div class="rejection-note" *ngIf="verificationStatus === 'rejected' && verificationNotes">
+          <ion-note color="danger">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>{{ verificationNotes }}</span>
+          </ion-note>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Detail info -->
+    <ion-list class="detail-list" lines="full">
+      <ion-list-header>
+        <ion-label>Informasi Perusahaan</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-icon name="business-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <p>Nama Perusahaan</p>
+          <h3>{{ profile.vendor?.company_name || '-' }}</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <p>Nomor Telepon</p>
+          <h3>{{ profile.vendor?.phone || '-' }}</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <p>Alamat</p>
+          <h3 class="address-text">{{ profile.vendor?.address || '-' }}</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <p>Email</p>
+          <h3>{{ profile.email }}</h3>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- Edit button -->
+    <div class="ion-padding-top">
+      <ion-button expand="block" (click)="enterEditMode()">
+        <ion-icon slot="start" name="create-outline"></ion-icon>
+        Edit Profil
+      </ion-button>
+    </div>
+
+  </ng-container>
+
+  <!-- ════════════════ EDIT MODE ════════════════ -->
+  <ng-container *ngIf="isEditMode">
+
+    <ion-card class="edit-card">
+      <ion-card-header>
+        <ion-card-title>Edit Profil</ion-card-title>
+        <ion-card-subtitle>Perbarui informasi perusahaan Anda</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <!-- Error -->
+        <div class="error-box" *ngIf="errorMessage">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Nama lengkap -->
+        <ion-item class="form-item">
+          <ion-label position="stacked">Nama Lengkap *</ion-label>
+          <ion-input
+            [(ngModel)]="editForm.name"
+            type="text"
+            placeholder="Nama lengkap PIC"
+            [clearInput]="true">
+          </ion-input>
+        </ion-item>
+
+        <!-- Nama perusahaan -->
+        <ion-item class="form-item">
+          <ion-label position="stacked">Nama Perusahaan *</ion-label>
+          <ion-input
+            [(ngModel)]="editForm.company_name"
+            type="text"
+            placeholder="PT / CV / UD ..."
+            [clearInput]="true">
+          </ion-input>
+        </ion-item>
+
+        <!-- Telepon -->
+        <ion-item class="form-item">
+          <ion-label position="stacked">Nomor Telepon *</ion-label>
+          <ion-input
+            [(ngModel)]="editForm.phone"
+            type="tel"
+            placeholder="08xxxxxxxxxx"
+            [clearInput]="true">
+          </ion-input>
+        </ion-item>
+
+        <!-- Alamat -->
+        <ion-item class="form-item">
+          <ion-label position="stacked">Alamat *</ion-label>
+          <ion-textarea
+            [(ngModel)]="editForm.address"
+            placeholder="Jl. ..."
+            [rows]="3"
+            [autoGrow]="true">
+          </ion-textarea>
+        </ion-item>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <ion-button
+            expand="block"
+            (click)="onSave()"
+            [disabled]="isSaving"
+            class="save-btn">
+            <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
+            <span *ngIf="!isSaving">Simpan Perubahan</span>
+            <span *ngIf="isSaving">Menyimpan...</span>
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            color="medium"
+            (click)="cancelEdit()"
+            [disabled]="isSaving">
+            Batal
+          </ion-button>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </ng-container>
+
+</ion-content>

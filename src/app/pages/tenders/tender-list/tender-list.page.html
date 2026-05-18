@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Daftar Tender</ion-title>
+  </ion-toolbar>
+
+  <!-- Search bar -->
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearchChange()"
+      placeholder="Cari tender..."
+      debounce="300"
+      animated
+      id="search-tender">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingText="Tarik untuk refresh"
+      refreshingText="Memuat ulang...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ── Filter chips ── -->
+  <div class="filter-scroll">
+    <ion-chip
+      *ngFor="let opt of filterOptions"
+      [id]="'filter-' + opt.value"
+      [class.active-chip]="activeFilter === opt.value"
+      [color]="activeFilter === opt.value ? 'primary' : 'light'"
+      (click)="setFilter(opt.value)">
+      <ion-label>{{ opt.label }}</ion-label>
+    </ion-chip>
+  </div>
+
+  <div class="page-content ion-padding-horizontal">
+
+    <!-- ── Skeleton loading ── -->
+    <ng-container *ngIf="isLoading">
+      <ion-card class="tender-card skeleton-card" *ngFor="let i of skeletonItems">
+        <ion-card-content>
+          <div class="card-top">
+            <ion-skeleton-text animated style="width: 30%; height: 20px; border-radius: 20px;"></ion-skeleton-text>
+          </div>
+          <ion-skeleton-text animated style="width: 75%; height: 18px; margin: 10px 0 6px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 90%; height: 13px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%; height: 13px; margin-top: 4px;"></ion-skeleton-text>
+          <div class="date-row" style="margin-top: 12px;">
+            <ion-skeleton-text animated style="width: 45%; height: 12px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 35%; height: 12px;"></ion-skeleton-text>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
+    <!-- ── Error state ── -->
+    <div class="error-state" *ngIf="errorMessage && !isLoading">
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+      <p>{{ errorMessage }}</p>
+      <ion-button fill="outline" size="small" (click)="loadTenders()">Coba Lagi</ion-button>
+    </div>
+
+    <!-- ── Empty state ── -->
+    <div class="empty-state" *ngIf="!isLoading && !errorMessage && filteredTenders.length === 0">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <h3>Tidak ada tender</h3>
+      <p *ngIf="searchQuery || activeFilter !== 'all'">
+        Tidak ada hasil untuk filter yang dipilih.
+        <br>Coba ubah filter atau kata kunci pencarian.
+      </p>
+      <p *ngIf="!searchQuery && activeFilter === 'all'">
+        Belum ada tender yang tersedia saat ini.
+      </p>
+    </div>
+
+    <!-- ── Tender count ── -->
+    <div class="result-info" *ngIf="!isLoading && filteredTenders.length > 0">
+      {{ filteredTenders.length }} tender ditemukan
+    </div>
+
+    <!-- ── Tender cards ── -->
+    <ion-card
+      class="tender-card"
+      *ngFor="let tender of filteredTenders"
+      (click)="goToDetail(tender)"
+      [id]="'tender-' + tender.id"
+      button>
+
+      <ion-card-content>
+
+        <!-- Status badge -->
+        <div class="card-top">
+          <ion-badge [color]="getStatusColor(tender.status)" class="status-badge">
+            {{ getStatusLabel(tender.status) }}
+          </ion-badge>
+        </div>
+
+        <!-- Title -->
+        <h2 class="tender-title">{{ tender.title }}</h2>
+
+        <!-- Description (max 2 lines) -->
+        <p class="tender-desc">{{ tender.description }}</p>
+
+        <!-- Budget -->
+        <div class="budget-row" *ngIf="tender.budget">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span>{{ formatCurrency(tender.budget) }}</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Dates grid -->
+        <div class="dates-grid">
+
+          <div class="date-item">
+            <span class="date-label">Mulai</span>
+            <span class="date-value">{{ formatDate(tender.start_date) }}</span>
+          </div>
+
+          <div class="date-item">
+            <span class="date-label">Selesai</span>
+            <span class="date-value">{{ formatDate(tender.end_date) }}</span>
+          </div>
+
+          <ng-container *ngIf="tender.bidding_start">
+            <div class="date-item">
+              <span class="date-label">Bid Mulai</span>
+              <span class="date-value bid-date">{{ formatDate(tender.bidding_start) }}</span>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="tender.bidding_end">
+            <div class="date-item">
+              <span class="date-label">Bid Tutup</span>
+              <span class="date-value bid-date">{{ formatDate(tender.bidding_end) }}</span>
+            </div>
+          </ng-container>
+
+        </div>
+
+        <!-- Arrow indicator -->
+        <div class="card-footer">
+          <span class="detail-link">Lihat Detail</span>
+          <ion-icon name="chevron-forward-outline" color="primary"></ion-icon>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>
