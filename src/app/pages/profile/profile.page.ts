@@ -63,7 +63,7 @@ export class ProfilePage implements OnInit {
     this.vendorService.getStatus().subscribe({
       next: (res) => {
         if (res.status && res.data) {
-          this.verificationStatus = res.data.status;
+          this.verificationStatus = res.data.verification_status;
           this.verificationNotes = res.data.verification_notes;
         }
       },

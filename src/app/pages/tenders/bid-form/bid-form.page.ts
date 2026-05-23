@@ -137,11 +137,19 @@ export class BidFormPage implements OnInit {
 
   private mapError(err: any): string {
     const msg: string = (err?.error?.message || '').toLowerCase();
+    // Backend v2.0: 403 menyertakan data.verification_status
+    const verificationStatus = err?.error?.data?.verification_status;
 
-    if (msg.includes('not approved') || msg.includes('pending')) {
+    if (verificationStatus === 'pending') {
       return 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
     }
-    if (msg.includes('not a participant') || msg.includes('join')) {
+    if (verificationStatus === 'rejected') {
+      return 'Akun vendor Anda ditolak. Silakan cek halaman profil untuk informasi lebih lanjut.';
+    }
+    if (msg.includes('not approved') || msg.includes('pending') || msg.includes('belum diverifikasi')) {
+      return 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
+    }
+    if (msg.includes('not a participant') || msg.includes('join') || msg.includes('belum terdaftar')) {
       return 'Anda belum terdaftar sebagai peserta tender ini. Silakan Join Tender terlebih dahulu.';
     }
     if (msg.includes('has not started') || msg.includes('not started')) {
@@ -156,9 +164,11 @@ export class BidFormPage implements OnInit {
 
     // Validation errors dari backend
     const errors = err?.error?.data;
-    if (errors) {
+    if (errors && typeof errors === 'object') {
       const firstKey = Object.keys(errors)[0];
-      return errors[firstKey]?.[0] || 'Terjadi kesalahan validasi.';
+      if (Array.isArray(errors[firstKey])) {
+        return errors[firstKey]?.[0] || 'Terjadi kesalahan validasi.';
+      }
     }
 
     return err?.error?.message || 'Terjadi kesalahan. Silakan coba lagi.';

@@ -131,11 +131,17 @@ export class TenderDetailPage implements OnInit {
       error: (err) => {
         this.isJoining = false;
         const msg = err?.error?.message || '';
+        // Backend v2.0: 403 menyertakan data.verification_status
+        const verificationStatus = err?.error?.data?.verification_status;
 
         // Map error backend ke pesan yang ramah
-        if (msg.toLowerCase().includes('not approved') || msg.toLowerCase().includes('pending')) {
+        if (verificationStatus === 'pending') {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
-        } else if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('joined')) {
+        } else if (verificationStatus === 'rejected') {
+          this.joinError = 'Akun vendor Anda ditolak. Silakan cek halaman profil untuk informasi lebih lanjut.';
+        } else if (msg.toLowerCase().includes('not approved') || msg.toLowerCase().includes('pending') || msg.toLowerCase().includes('belum diverifikasi')) {
+          this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
+        } else if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('joined') || msg.toLowerCase().includes('sudah terdaftar')) {
           this.joinError = 'Anda sudah terdaftar di tender ini.';
           this.hasJoined = true; // Treat as already joined
         } else {

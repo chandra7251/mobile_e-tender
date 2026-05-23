@@ -70,7 +70,7 @@ export class HomePage implements OnInit {
   }
 
   get vendorStatus(): string {
-    return this.vendorProfile?.vendor?.status ?? '';
+    return this.vendorProfile?.vendor?.verification_status ?? '';
   }
 
   private async showToast(message: string, color: string): Promise<void> {

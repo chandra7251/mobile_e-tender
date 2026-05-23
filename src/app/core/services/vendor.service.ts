@@ -38,8 +38,8 @@ export class VendorService {
   }
 
   // GET /api/vendors/status
-  getStatus(): Observable<ApiResponse<{ status: string; verification_notes: string | null }>> {
-    return this.api.get<{ status: string; verification_notes: string | null }>('vendors/status');
+  getStatus(): Observable<ApiResponse<{ verification_status: string; verification_notes: string | null }>> {
+    return this.api.get<{ verification_status: string; verification_notes: string | null }>('vendors/status');
   }
 
   // GET /api/vendors/documents

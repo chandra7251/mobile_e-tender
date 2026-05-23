@@ -1043,3 +1043,57 @@ Total endpoint yang diimplementasi: **21 endpoint**
 | `/api/tenders/{tender}/bids/{bid}` | PUT | 🔒 | bid-form.page |
 | `/api/tenders/{tender}/winner` | GET | 🔒 | result.page |
 | `/api/tenders/{tender}/result` | GET | 🔒 | result.page |
+
+---
+
+## Session 013 — Sinkronisasi Backend v2.0 (MOBILE_API_CHANGES.md)
+**Tanggal:** 2026-05-23
+**Status:** ✅ Selesai
+
+### 🎯 Tujuan
+Implementasikan semua perubahan backend v2.0 yang tercantum di `MOBILE_API_CHANGES.md` ke sisi mobile (Ionic/Angular).
+
+---
+
+### 📋 Ringkasan Perubahan Backend v2.0
+
+| # | Perubahan | Dampak di Mobile |
+|---|-----------|-----------------|
+| 1 | Auth pindah ke JWT (token expire 60 menit) | Update `AuthData` model |
+| 2 | Response login/register punya `token_type` & `expires_in` | Update `AuthData` interface |
+| 3 | Field `status` di Vendor diganti `verification_status` | Update model, service, page |
+| 4 | Field `verified_at` baru di `Vendor` | Tambah ke `Vendor` interface |
+| 5 | Response 403 sertakan `data.verification_status` | Update error mapping join & bid |
+| 6 | `GET /api/auth/me` return nested vendor object | Model sudah support ini |
+| 7 | State machine tender: `draft→open→aanwijzing→bidding→closed→finished` | Tambah `'draft'` ke `TenderStatus` |
+
+---
+
+### 📄 File yang Diubah
+
+| File | Perubahan |
+|------|-----------|
+| `src/app/core/models/user.model.ts` | `AuthData` + `token_type`, `expires_in`; `Vendor.status` → `verification_status` + `verified_at`; `TenderStatus` + `'draft'` |
+| `src/app/core/services/vendor.service.ts` | `getStatus()` return type: `status` → `verification_status` |
+| `src/app/pages/profile/profile.page.ts` | `loadStatus()`: baca `res.data.verification_status` |
+| `src/app/pages/home/home.page.ts` | `vendorStatus` getter: `vendor.status` → `vendor.verification_status` |
+| `src/app/pages/tenders/tender-detail/tender-detail.page.ts` | Error mapping 403: baca `data.verification_status`, tambah case `rejected` |
+| `src/app/pages/tenders/bid-form/bid-form.page.ts` | `mapError()`: baca `data.verification_status`, perbaiki guard validasi errors |
+
+---
+
+### ✅ Verifikasi
+
+```
+npx tsc --noEmit --project tsconfig.app.json
+→ 0 errors ✅
+```
+
+---
+
+### 🔑 Catatan Penting
+
+- **JWT token** — Token sekarang expire. Interceptor sudah handle 401 → auto logout (Session 012). Tidak ada perubahan interceptor diperlukan.
+- **`verification_status`** — Semua referensi ke `vendor.status` (v1) sudah diganti ke `vendor.verification_status` (v2).
+- **403 response** — Backend v2.0 sertakan `data.verification_status` (`pending`/`rejected`) untuk error yang lebih spesifik.
+- **State machine `draft`** — Tender `draft` tetap difilter di frontend (tidak ditampilkan), tapi type union sudah aman untuk TypeScript strict mode.

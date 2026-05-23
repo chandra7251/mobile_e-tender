@@ -10,18 +10,28 @@ export interface User {
   updated_at?: string;
 }
 
+/**
+ * Vendor entity — backend v2.0
+ * Field `verification_status` menggantikan `status` (backend v1).
+ * Field `verified_at` ditambahkan untuk mencatat waktu persetujuan.
+ */
 export interface Vendor {
   id: number;
   user_id: number;
   company_name: string;
   phone: string;
   address: string;
-  status: 'pending' | 'approved' | 'rejected';
+  /** Status verifikasi vendor (ganti dari `status` di backend v1) */
+  verification_status: 'pending' | 'approved' | 'rejected';
   verification_notes: string | null;
+  verified_at?: string | null;
   created_at?: string;
   updated_at?: string;
 }
 
+/**
+ * Response dari GET /api/vendors/me dan GET /api/auth/me (nested vendor).
+ */
 export interface VendorProfile {
   id: number;
   name: string;
@@ -30,9 +40,15 @@ export interface VendorProfile {
   vendor: Vendor;
 }
 
+/**
+ * AuthData — backend v2.0 (JWT)
+ * Tambah `token_type` dan `expires_in` (3600 detik = 60 menit).
+ */
 export interface AuthData {
   user: User;
   token: string;
+  token_type: string;   // 'bearer'
+  expires_in: number;   // detik, biasanya 3600
 }
 
 // ─── Documents ─────────────────────────────────────────────────────────────
@@ -52,7 +68,16 @@ export interface VendorDocument {
 
 // ─── Tenders ───────────────────────────────────────────────────────────────
 
-export type TenderStatus = 'open' | 'aanwijzing' | 'bidding' | 'closed' | 'finished';
+/**
+ * State machine: draft → open → aanwijzing → bidding → closed → finished
+ * - `draft`     : belum dipublikasi (filter di frontend, tidak ditampilkan)
+ * - `open`      : vendor bisa daftar peserta
+ * - `aanwijzing`: masa penjelasan tender
+ * - `bidding`   : vendor bisa submit penawaran
+ * - `closed`    : masa bidding selesai, menunggu penetapan pemenang
+ * - `finished`  : pemenang sudah ditetapkan, result tersedia
+ */
+export type TenderStatus = 'draft' | 'open' | 'aanwijzing' | 'bidding' | 'closed' | 'finished';
 
 export interface Tender {
   id: number;
