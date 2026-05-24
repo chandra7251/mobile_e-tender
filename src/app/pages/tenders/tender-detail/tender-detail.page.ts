@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastController } from '@ionic/angular';
@@ -13,7 +13,7 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './tender-detail.page.html',
   styleUrls: ['./tender-detail.page.scss'],
 })
-export class TenderDetailPage implements OnInit {
+export class TenderDetailPage {
 
   tender: Tender | null = null;
   announcements: Announcement[] = [];
@@ -39,6 +39,14 @@ export class TenderDetailPage implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
+  }
+
+  // Dipanggil setiap kali halaman ditampilkan — pastikan data fresh
+  ionViewWillEnter(): void {
+    if (!this.tenderId) {
+      const idParam = this.route.snapshot.paramMap.get('id');
+      this.tenderId = idParam ? +idParam : 0;
+    }
     this.loadAll();
   }
 
@@ -54,19 +62,18 @@ export class TenderDetailPage implements OnInit {
     this.isLoading = true;
     this.detailError = '';
 
-    this.tenderService.getTenderDetail(this.tenderId).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        if (res.status && res.data) {
-          this.tender = res.data;
-        } else {
-          this.detailError = res.message || 'Data tender tidak ditemukan.';
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.detailError = err?.error?.message || 'Gagal memuat detail tender. Periksa koneksi Anda.';
+    // Load detail + cek partisipasi secara paralel
+    forkJoin({
+      detail: this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null))),
+      isParticipant: this.tenderService.checkParticipation(this.tenderId).pipe(catchError(() => of(false)))
+    }).subscribe(({ detail, isParticipant }) => {
+      this.isLoading = false;
+      if (detail?.status && detail?.data) {
+        this.tender = detail.data;
+      } else if (detail !== null) {
+        this.detailError = detail?.message || 'Data tender tidak ditemukan.';
       }
+      this.hasJoined = isParticipant;
     });
   }
 
@@ -163,6 +170,8 @@ export class TenderDetailPage implements OnInit {
 
   get showJoinButton(): boolean {
     if (!this.tender) return false;
+    // Sembunyikan tombol join jika sudah pernah join
+    if (this.hasJoined) return false;
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
 

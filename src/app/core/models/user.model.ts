@@ -11,59 +11,57 @@ export interface User {
 }
 
 /**
- * Vendor entity — backend v2.0
- * Field `verification_status` menggantikan `status` (backend v1).
- * Field `verified_at` ditambahkan untuk mencatat waktu persetujuan.
+ * Struktur response dari GET /api/vendors/me, GET /api/auth/me,
+ * POST /api/auth/login, POST /api/auth/register
+ *
+ * Backend mengembalikan VendorResource (flat) dengan nested user:
+ * {
+ *   id: vendor.id,
+ *   company_name, phone, address,
+ *   verification_status, verification_notes, verified_at,
+ *   user: { id, name, email }
+ * }
  */
-export interface Vendor {
-  id: number;
-  user_id: number;
+export interface VendorProfile {
+  id: number;                    // vendor.id
   company_name: string;
   phone: string;
   address: string;
-  /** Status verifikasi vendor (ganti dari `status` di backend v1) */
   verification_status: 'pending' | 'approved' | 'rejected';
   verification_notes: string | null;
   verified_at?: string | null;
-  created_at?: string;
-  updated_at?: string;
-}
-
-/**
- * Response dari GET /api/vendors/me dan GET /api/auth/me (nested vendor).
- */
-export interface VendorProfile {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  vendor: Vendor;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
 
 /**
  * AuthData — backend v2.0 (JWT)
- * Tambah `token_type` dan `expires_in` (3600 detik = 60 menit).
+ * Login/register mengembalikan token + vendor (VendorResource)
  */
 export interface AuthData {
-  user: User;
   token: string;
-  token_type: string;   // 'bearer'
-  expires_in: number;   // detik, biasanya 3600
+  token_type: string;    // 'bearer'
+  vendor: VendorProfile; // flat vendor object dengan nested user
 }
 
 // ─── Documents ─────────────────────────────────────────────────────────────
 
 export type DocumentType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
-export type DocumentStatus = 'pending' | 'approved' | 'rejected';
 
+/**
+ * Response dari GET /api/vendors/documents dan POST /api/vendors/documents
+ * Backend mengembalikan: id, document_type, file_name, mime_type, file_size, uploaded_at
+ */
 export interface VendorDocument {
   id: number;
-  vendor_id: number;
-  type: DocumentType;
-  file_path: string;
-  status: DocumentStatus;
+  document_type: DocumentType;  // backend pakai 'document_type', bukan 'type'
+  file_name: string;             // nama file asli
+  mime_type?: string;
+  file_size?: number;            // ukuran dalam bytes
   uploaded_at: string;
-  created_at?: string;
 }
 
 // ─── Tenders ───────────────────────────────────────────────────────────────
@@ -83,9 +81,9 @@ export interface Tender {
   id: number;
   title: string;
   description: string;
-  budget: number;
+  specification?: string;   // backend pakai 'specification' (bukan 'requirements')
+  // budget tidak ada di TenderResource — dihapus
   status: TenderStatus;
-  requirements?: string;
   start_date: string;
   end_date: string;
   aanwijzing_date?: string | null;
@@ -105,42 +103,57 @@ export interface Announcement {
   created_at: string;
 }
 
-// ─── Bidding ───────────────────────────────────────────────────────────────
-
+/**
+ * Response dari GET/POST/PUT /api/tenders/{id}/bids
+ * Backend BidResource: id, tender_id, bid_amount, notes, submitted_at, updated_at
+ */
 export interface Bid {
   id: number;
   tender_id: number;
-  vendor_id?: number;
-  price: number;
+  bid_amount: number;   // backend pakai 'bid_amount', bukan 'price'
   notes?: string;
   submitted_at: string;
+  updated_at?: string;
 }
 
 // ─── Winner & Result ───────────────────────────────────────────────────────
 
+/**
+ * Response dari GET /api/tenders/{id}/winner
+ * Backend: winner_company, winning_bid_amount, selection_method, decided_at, is_winner, my_bid_amount
+ */
 export interface Winner {
-  vendor_id: number;
-  company_name: string;
-  bid_price: number;
-  winning_bid_amount?: number;   // alias backend mungkin pakai ini
+  winner_company: string;         // nama perusahaan pemenang
+  winning_bid_amount: number;     // nilai bid pemenang
   selection_method?: string;
-  selected_at: string;
-  notes?: string;
+  decided_at: string;             // backend pakai 'decided_at' (bukan 'selected_at')
+  is_winner: boolean;             // apakah vendor yang login adalah pemenang
+  my_bid_amount?: number | null;  // nilai bid vendor yang login
 }
 
+/**
+ * Response dari GET /api/tenders/{id}/result
+ * Backend TenderResultResource: tender_id, winner_company, winning_bid_amount,
+ *   selection_method, notes, decided_at
+ */
 export interface TenderResult {
   tender_id: number;
-  tender_title: string;
-  result: 'won' | 'lost' | 'pending' | 'not_available';
-  final_status?: string;
-  winner: Winner | null;
-  my_bid: { price: number; notes?: string } | null;
+  winner_company?: string;       // nama pemenang (string langsung, bukan object)
+  winning_bid_amount?: number;
+  selection_method?: string;
+  notes?: string;
+  decided_at?: string;
 }
 
 // ─── Generic wrapper ───────────────────────────────────────────────────────
 
 export interface ApiResponse<T = any> {
-  status: boolean;
+  /**
+   * Endpoint ApiResponse trait: boolean true/false
+   * Endpoint manual (GET /api/tenders): string "success"
+   * Keduanya truthy saat berhasil — cukup cast ke boolean: !!res.status
+   */
+  status: boolean | string;
   message: string;
   data: T;
 }

@@ -1,0 +1,104 @@
+.page-content {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.list-info {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+}
+
+.history-card {
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+}
+
+.status-row {
+  margin-bottom: 8px;
+}
+
+.status-badge {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.tender-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 1rem;
+  }
+}
+
+.cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--ion-color-primary);
+  font-weight: 500;
+}
+
+.error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+  color: var(--ion-color-danger);
+  background: rgba(var(--ion-color-danger-rgb), 0.07);
+  border-radius: 12px;
+  margin-bottom: 16px;
+
+  ion-icon { font-size: 2rem; }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+}

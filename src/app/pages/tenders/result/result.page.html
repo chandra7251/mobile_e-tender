@@ -66,27 +66,19 @@
             </ion-badge>
           </div>
 
-          <!-- My bid amount -->
-          <div class="stat-row" *ngIf="tenderResult?.my_bid">
+          <!-- My bid amount (dari winner.my_bid_amount) -->
+          <div class="stat-row" *ngIf="winner?.my_bid_amount">
             <div class="stat-item">
               <span class="stat-label">Penawaran Saya</span>
-              <span class="stat-value">{{ formatCurrency(tenderResult!.my_bid!.price) }}</span>
+              <span class="stat-value">{{ formatCurrency(winner!.my_bid_amount) }}</span>
             </div>
           </div>
 
-          <!-- Final status -->
-          <div class="stat-row" *ngIf="tenderResult?.final_status">
+          <!-- Notes dari TenderResult -->
+          <div class="stat-row" *ngIf="tenderResult?.notes">
             <div class="stat-item">
-              <span class="stat-label">Status Final Tender</span>
-              <span class="stat-value">{{ tenderResult!.final_status }}</span>
-            </div>
-          </div>
-
-          <!-- Tender title -->
-          <div class="stat-row" *ngIf="tenderResult?.tender_title">
-            <div class="stat-item">
-              <span class="stat-label">Tender</span>
-              <span class="stat-value tender-title-val">{{ tenderResult!.tender_title }}</span>
+              <span class="stat-label">Catatan</span>
+              <span class="stat-value">{{ tenderResult!.notes }}</span>
             </div>
           </div>
 
@@ -116,7 +108,7 @@
             <!-- Company name -->
             <div class="winner-company">
               <ion-icon name="business-outline" color="warning"></ion-icon>
-              <span>{{ winner.company_name }}</span>
+              <span>{{ winner.winner_company }}</span>  <!-- backend: winner_company -->
             </div>
 
             <div class="winner-stats">
@@ -133,12 +125,7 @@
 
               <div class="stat-item">
                 <span class="stat-label">Dipilih Pada</span>
-                <span class="stat-value">{{ formatDate(winner.selected_at) }}</span>
-              </div>
-
-              <div class="stat-item" *ngIf="winner.notes">
-                <span class="stat-label">Catatan</span>
-                <span class="stat-value notes-val">{{ winner.notes }}</span>
+                <span class="stat-value">{{ formatDate(winner.decided_at) }}</span>  <!-- backend: decided_at -->
               </div>
 
             </div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.service';
 import { VendorProfile } from '../../core/models/user.model';
@@ -9,11 +10,9 @@ import { VendorProfile } from '../../core/models/user.model';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage {
 
   profile: VendorProfile | null = null;
-  verificationStatus: string = '';
-  verificationNotes: string | null = null;
 
   // Form edit
   isEditMode = false;
@@ -30,21 +29,23 @@ export class ProfilePage implements OnInit {
 
   constructor(
     private vendorService: VendorService,
+    private router: Router,
     private toast: ToastController,
     private alert: AlertController
   ) {}
 
-  ngOnInit(): void {
+  // Dipanggil setiap kali halaman ditampilkan
+  ionViewWillEnter(): void {
     this.loadProfile();
-    this.loadStatus();
   }
 
-  // ─── Load data ──────────────────────────────────────────────────────────
+  // ─── Load data ──────────────────────────────────────────────────────────────
 
   loadProfile(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
+    // Satu endpoint: GET /api/vendors/me — sudah mengandung verification_status
     this.vendorService.getProfile().subscribe({
       next: (res) => {
         this.isLoading = false;
@@ -59,31 +60,25 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  loadStatus(): void {
-    this.vendorService.getStatus().subscribe({
-      next: (res) => {
-        if (res.status && res.data) {
-          this.verificationStatus = res.data.verification_status;
-          this.verificationNotes = res.data.verification_notes;
-        }
-      },
-      error: () => {}
-    });
+  // ─── Computed status (dari satu sumber: profile.vendor) ───────────────────────
+
+  get verificationStatus(): string {
+    return this.profile?.verification_status ?? '';
   }
 
-  // ─── Edit mode ──────────────────────────────────────────────────────────
+  get verificationNotes(): string | null {
+    return this.profile?.verification_notes ?? null;
+  }
+
+  // ─── Edit mode ──────────────────────────────────────────────────────────────
 
   enterEditMode(): void {
     if (!this.profile) return;
-    if (!this.profile.vendor) {
-      this.errorMessage = 'Data vendor belum tersedia. Coba muat ulang halaman.';
-      return;
-    }
     this.editForm = {
-      name: this.profile.name,
-      company_name: this.profile.vendor.company_name,
-      phone: this.profile.vendor.phone,
-      address: this.profile.vendor.address
+      name: this.profile.user.name,
+      company_name: this.profile.company_name,
+      phone: this.profile.phone,
+      address: this.profile.address
     };
     this.errorMessage = '';
     this.isEditMode = true;
@@ -94,7 +89,12 @@ export class ProfilePage implements OnInit {
     this.errorMessage = '';
   }
 
-  // ─── Save ────────────────────────────────────────────────────────────────
+  // Navigasi ke halaman dokumen
+  goToDocuments(): void {
+    this.router.navigate(['/tabs/documents']);
+  }
+
+  // ─── Save ─────────────────────────────────────────────────────────────────────
 
   onSave(): void {
     if (!this.editForm.company_name || !this.editForm.phone || !this.editForm.address) {
@@ -129,7 +129,7 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────
+  // ─── Helpers ────────────────────────────────────────────────────────────────────
 
   get statusColor(): string {
     switch (this.verificationStatus) {

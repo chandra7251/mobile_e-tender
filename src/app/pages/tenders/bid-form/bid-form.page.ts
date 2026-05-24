@@ -54,7 +54,7 @@ export class BidFormPage implements OnInit {
           // Sudah ada bid — mode UPDATE
           this.existingBid = res.data;
           this.bidId = res.data.id;
-          this.bidAmount = res.data.price;
+          this.bidAmount = res.data.bid_amount;  // backend: bid_amount (bukan price)
           this.notes = res.data.notes ?? '';
           this.mode = 'update';
         } else {

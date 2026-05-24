@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import {
   ApiResponse,
@@ -51,6 +52,29 @@ export class TenderService {
   // GET /api/tenders/{tender}/bids/me  — 🔒 Protected (HARUS sebelum POST bids)
   getMyBid(tenderId: number): Observable<ApiResponse<Bid>> {
     return this.api.get<Bid>(`tenders/${tenderId}/bids/me`);
+  }
+
+  /**
+   * checkParticipation — cek apakah vendor sudah join tender ini.
+   *
+   * Workaround: pakai bids/me
+   *   - 200 → vendor adalah peserta (sudah pernah bid atau sudah join)
+   *   - 404 → vendor adalah peserta tapi belum bid → kembalikan true
+   *   - 403 → vendor BUKAN peserta tender ini → kembalikan false
+   *
+   * Catatan: endpoint dedicated GET /api/tenders/{tender}/participants/check
+   *   sudah diajukan ke backend (lihat backend_requirements.md).
+   */
+  checkParticipation(tenderId: number): Observable<boolean> {
+    return this.getMyBid(tenderId).pipe(
+      map(() => true),           // 200 → sudah peserta
+      catchError(err => {
+        if (err?.status === 403) {
+          return of(false);      // 403 Forbidden → bukan peserta
+        }
+        return of(true);         // 404 atau lain → anggap peserta (sudah join, belum bid)
+      })
+    );
   }
 
   // POST /api/tenders/{tender}/bids  — 🔒 Protected

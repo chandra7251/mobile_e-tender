@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { VendorService } from '../../core/services/vendor.service';
 import { StorageService } from '../../core/services/storage.service';
-import { User, VendorProfile } from '../../core/models/user.model';
+import { VendorProfile } from '../../core/models/user.model';
 
 @Component({
   standalone: false,
@@ -12,9 +12,8 @@ import { User, VendorProfile } from '../../core/models/user.model';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage {
 
-  user: User | null = null;
   vendorProfile: VendorProfile | null = null;
 
   constructor(
@@ -25,25 +24,16 @@ export class HomePage implements OnInit {
     private toast: ToastController
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    // Tampilkan data dari storage dulu agar UI muncul cepat
-    this.user = await this.storage.getUser();
+  // Dipanggil setiap kali halaman ditampilkan (navigasi kembali ke tab ini)
+  ionViewWillEnter(): void {
+    this.loadProfile();
+  }
 
-    // Fetch profil vendor lengkap dari GET /api/vendors/me
+  private loadProfile(): void {
     this.vendorService.getProfile().subscribe({
-      next: async (res) => {
+      next: (res) => {
         if (res.status && res.data) {
           this.vendorProfile = res.data;
-
-          // Simpan hanya field User yang valid ke storage
-          const userToStore: User = {
-            id: res.data.id,
-            name: res.data.name,
-            email: res.data.email,
-            role: res.data.role
-          };
-          this.user = userToStore;
-          await this.storage.setUser(userToStore);
         }
       },
       error: (err) => {
@@ -66,11 +56,12 @@ export class HomePage implements OnInit {
   }
 
   get companyName(): string {
-    return this.vendorProfile?.vendor?.company_name ?? '';
+    return this.vendorProfile?.company_name ?? '';
   }
 
+  // Baca langsung dari vendorProfile — satu sumber kebenaran (GET /api/vendors/me)
   get vendorStatus(): string {
-    return this.vendorProfile?.vendor?.verification_status ?? '';
+    return this.vendorProfile?.verification_status ?? '';
   }
 
   private async showToast(message: string, color: string): Promise<void> {

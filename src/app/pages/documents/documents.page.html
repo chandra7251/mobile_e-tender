@@ -136,17 +136,15 @@
 
             <!-- Icon -->
             <div class="doc-icon-wrap">
-              <ion-icon [name]="getDocIcon(doc.type)" class="doc-icon"></ion-icon>
+              <ion-icon [name]="getDocIcon(doc.document_type)" class="doc-icon"></ion-icon>
             </div>
 
             <!-- Info -->
             <div class="doc-body">
               <div class="doc-top">
-                <span class="doc-type">{{ getTypeLabel(doc.type) }}</span>
-                <ion-badge [color]="getStatusColor(doc.status)" class="doc-badge">
-                  {{ getStatusLabel(doc.status) }}
-                </ion-badge>
+                <span class="doc-type">{{ getTypeLabel(doc.document_type) }}</span>
               </div>
+              <span class="doc-filename" *ngIf="doc.file_name">{{ doc.file_name }}</span>
               <span class="doc-date">
                 <ion-icon name="time-outline"></ion-icon>
                 {{ formatDate(doc.uploaded_at) }}

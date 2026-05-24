@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TenderService } from '../../../core/services/tender.service';
 import { Tender, TenderStatus } from '../../../core/models/user.model';
@@ -11,7 +11,7 @@ type FilterStatus = 'all' | TenderStatus;
   templateUrl: './tender-list.page.html',
   styleUrls: ['./tender-list.page.scss'],
 })
-export class TenderListPage implements OnInit {
+export class TenderListPage {
 
   allTenders: Tender[] = [];
   filteredTenders: Tender[] = [];
@@ -35,7 +35,8 @@ export class TenderListPage implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  // Dipanggil setiap kali halaman ditampilkan (navigasi kembali ke tab ini)
+  ionViewWillEnter(): void {
     this.loadTenders();
   }
 

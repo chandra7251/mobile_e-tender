@@ -88,8 +88,10 @@ export class ResultPage implements OnInit {
     this.location.back();
   }
 
-  get myResult(): 'won' | 'lost' | 'pending' | 'not_available' {
-    return this.tenderResult?.result ?? 'not_available';
+  // Apakah vendor ini adalah pemenang — dari winner.is_winner
+  get myResult(): 'won' | 'lost' | 'not_available' {
+    if (!this.winner) return 'not_available';
+    return this.winner.is_winner ? 'won' : 'lost';
   }
 
   getResultColor(result: string): string {
@@ -119,10 +121,9 @@ export class ResultPage implements OnInit {
     }
   }
 
-  // Harga bid pemenang — coba bid_price dulu, fallback winning_bid_amount
+  // Harga bid pemenang — langsung dari winning_bid_amount
   get winnerBidAmount(): number | null {
-    if (!this.winner) return null;
-    return this.winner.bid_price ?? this.winner.winning_bid_amount ?? null;
+    return this.winner?.winning_bid_amount ?? this.tenderResult?.winning_bid_amount ?? null;
   }
 
   formatCurrency(amount: number | null | undefined): string {

@@ -35,6 +35,10 @@ const routes: Routes = [
         path: 'tenders/:id/result',
         loadChildren: () => import('../tenders/result/result.module').then(m => m.ResultPageModule)
       },
+      {
+        path: 'results',
+        loadChildren: () => import('../tenders/result-history/result-history.module').then(m => m.ResultHistoryPageModule)
+      },
       // Default tab
       {
         path: '',

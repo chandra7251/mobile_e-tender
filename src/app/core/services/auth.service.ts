@@ -3,7 +3,7 @@ import { Observable, from } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
-import { ApiResponse, AuthData, User } from '../models/user.model';
+import { ApiResponse, AuthData } from '../models/user.model';
 
 // ─── Payload interfaces ────────────────────────────────────────────────────
 
@@ -55,7 +55,6 @@ export class AuthService {
       tap(async (res) => {
         if (res.status && res.data) {
           await this.storage.setToken(res.data.token);
-          await this.storage.setUser(res.data.user);
         }
       })
     );
@@ -67,7 +66,6 @@ export class AuthService {
       tap(async (res) => {
         if (res.status && res.data) {
           await this.storage.setToken(res.data.token);
-          await this.storage.setUser(res.data.user);
         }
       })
     );
@@ -83,8 +81,8 @@ export class AuthService {
   }
 
   // GET /api/auth/me
-  me(): Observable<ApiResponse<User>> {
-    return this.api.get<User>('auth/me');
+  me(): Observable<ApiResponse<any>> {
+    return this.api.get<any>('auth/me');
   }
 
   // PUT /api/auth/change-password

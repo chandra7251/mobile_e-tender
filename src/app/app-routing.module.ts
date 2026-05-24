@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { GuestGuard } from './core/guards/guest.guard';
 
 const routes: Routes = [
   // Root redirect
@@ -10,22 +11,26 @@ const routes: Routes = [
     pathMatch: 'full'
   },
 
-  // Public routes
+  // Public routes — dilindungi GuestGuard (user sudah login diarahkan ke home)
   {
     path: 'login',
-    loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule)
+    loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule),
+    canActivate: [GuestGuard]
   },
   {
     path: 'register',
-    loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule)
+    loadChildren: () => import('./pages/auth/register/register.module').then(m => m.RegisterPageModule),
+    canActivate: [GuestGuard]
   },
   {
     path: 'forgot-password',
-    loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
+    loadChildren: () => import('./pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule),
+    canActivate: [GuestGuard]
   },
   {
     path: 'reset-password',
-    loadChildren: () => import('./pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
+    loadChildren: () => import('./pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule),
+    canActivate: [GuestGuard]
   },
 
   // Protected: tabs shell (home, profile, documents live inside tabs)

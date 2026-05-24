@@ -49,8 +49,8 @@
         <div class="avatar">
           <ion-icon name="person-circle-outline"></ion-icon>
         </div>
-        <h2 class="profile-name">{{ profile.name }}</h2>
-        <p class="profile-email">{{ profile.email }}</p>
+        <h2 class="profile-name">{{ profile.user.name }}</h2>
+        <p class="profile-email">{{ profile.user.email }}</p>
 
         <!-- Status badge -->
         <div class="status-row">
@@ -79,7 +79,7 @@
         <ion-icon name="business-outline" slot="start" color="primary"></ion-icon>
         <ion-label>
           <p>Nama Perusahaan</p>
-          <h3>{{ profile.vendor?.company_name || '-' }}</h3>
+          <h3>{{ profile.company_name || '-' }}</h3>
         </ion-label>
       </ion-item>
 
@@ -87,7 +87,7 @@
         <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
         <ion-label>
           <p>Nomor Telepon</p>
-          <h3>{{ profile.vendor?.phone || '-' }}</h3>
+          <h3>{{ profile.phone || '-' }}</h3>
         </ion-label>
       </ion-item>
 
@@ -95,7 +95,7 @@
         <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
         <ion-label>
           <p>Alamat</p>
-          <h3 class="address-text">{{ profile.vendor?.address || '-' }}</h3>
+          <h3 class="address-text">{{ profile.address || '-' }}</h3>
         </ion-label>
       </ion-item>
 
@@ -103,18 +103,22 @@
         <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
         <ion-label>
           <p>Email</p>
-          <h3>{{ profile.email }}</h3>
+          <h3>{{ profile.user.email }}</h3>
         </ion-label>
       </ion-item>
     </ion-list>
 
-    <!-- Edit button -->
-    <div class="ion-padding-top">
-      <ion-button expand="block" (click)="enterEditMode()">
-        <ion-icon slot="start" name="create-outline"></ion-icon>
-        Edit Profil
-      </ion-button>
-    </div>
+      <!-- Aksi profil -->
+      <div class="ion-padding-top action-buttons">
+        <ion-button expand="block" (click)="enterEditMode()" id="btn-edit-profile">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Edit Profil
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="medium" (click)="goToDocuments()" id="btn-go-documents">
+          <ion-icon slot="start" name="folder-outline"></ion-icon>
+          Dokumen Saya
+        </ion-button>
+      </div>
 
   </ng-container>
 

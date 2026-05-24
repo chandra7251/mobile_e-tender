@@ -59,14 +59,6 @@
 
         <p class="tender-desc" *ngIf="tender.description">{{ tender.description }}</p>
 
-        <!-- Budget -->
-        <div class="budget-block">
-          <ion-icon name="cash-outline" color="success"></ion-icon>
-          <div>
-            <span class="budget-label">Pagu Anggaran</span>
-            <span class="budget-value">{{ formatCurrency(tender.budget) }}</span>
-          </div>
-        </div>
 
       </ion-card-content>
     </ion-card>
@@ -193,16 +185,16 @@
       </ion-card-content>
     </ion-card>
 
-    <!-- ── Spesifikasi / Requirements ── -->
-    <ion-card class="detail-card" *ngIf="tender.requirements">
+    <!-- ── Spesifikasi ── -->
+    <ion-card class="detail-card" *ngIf="tender.specification">
       <ion-card-header>
         <ion-card-title class="section-title">
           <ion-icon name="list-outline"></ion-icon>
-          Persyaratan
+          Spesifikasi
         </ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <p class="requirements-text">{{ tender.requirements }}</p>
+        <p class="requirements-text">{{ tender.specification }}</p>
       </ion-card-content>
     </ion-card>
 
@@ -246,7 +238,7 @@
           <div class="ann-header">
             <span class="ann-title">{{ ann.title }}</span>
             <span class="ann-date">
-              {{ formatDateShort(ann.published_at || ann.created_at) }}
+              {{ formatDateShort(ann.published_at) }}
             </span>
           </div>
 
