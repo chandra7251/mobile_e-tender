@@ -170,8 +170,8 @@ export class TenderDetailPage {
 
   get showJoinButton(): boolean {
     if (!this.tender) return false;
-    // Sembunyikan tombol join jika sudah pernah join
-    if (this.hasJoined) return false;
+    // Tampilkan card join selama status open/aanwijzing
+    // (kondisi hasJoined diatur di dalam template HTML)
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
 
