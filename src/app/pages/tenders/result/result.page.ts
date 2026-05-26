@@ -42,8 +42,6 @@ export class ResultPage implements OnInit {
     this.winnerError = '';
     this.resultError = '';
 
-    // Panggil winner + result secara paralel via forkJoin
-    // Masing-masing di-catchError agar tidak crash jika salah satu gagal
     const winner$ = this.tenderService.getWinner(this.tenderId).pipe(
       catchError(err => {
         this.winnerError = err?.error?.message || '';
@@ -61,11 +59,11 @@ export class ResultPage implements OnInit {
     forkJoin([winner$, result$]).subscribe(([winnerRes, resultRes]) => {
       this.isLoading = false;
 
-      if (winnerRes?.status && winnerRes?.data) {
+      if (winnerRes?.status === 'success' && winnerRes?.data) {
         this.winner = winnerRes.data;
       }
 
-      if (resultRes?.status && resultRes?.data) {
+      if (resultRes?.status === 'success' && resultRes?.data) {
         this.tenderResult = resultRes.data;
       }
     });
@@ -76,19 +74,16 @@ export class ResultPage implements OnInit {
     const result$ = this.tenderService.getTenderResult(this.tenderId).pipe(catchError(() => of(null)));
 
     forkJoin([winner$, result$]).subscribe(([winnerRes, resultRes]) => {
-      if (winnerRes?.status && winnerRes?.data) this.winner = winnerRes.data;
-      if (resultRes?.status && resultRes?.data) this.tenderResult = resultRes.data;
+      if (winnerRes?.status === 'success' && winnerRes?.data) this.winner = winnerRes.data;
+      if (resultRes?.status === 'success' && resultRes?.data) this.tenderResult = resultRes.data;
       event.target.complete();
     });
   }
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void { this.location.back(); }
 
-  // Apakah vendor ini adalah pemenang — dari winner.is_winner
   get myResult(): 'won' | 'lost' | 'not_available' {
     if (!this.winner) return 'not_available';
     return this.winner.is_winner ? 'won' : 'lost';
@@ -121,7 +116,6 @@ export class ResultPage implements OnInit {
     }
   }
 
-  // Harga bid pemenang — langsung dari winning_bid_amount
   get winnerBidAmount(): number | null {
     return this.winner?.winning_bid_amount ?? this.tenderResult?.winning_bid_amount ?? null;
   }
@@ -129,9 +123,7 @@ export class ResultPage implements OnInit {
   formatCurrency(amount: number | null | undefined): string {
     if (!amount) return '-';
     return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
+      style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(amount);
   }
 

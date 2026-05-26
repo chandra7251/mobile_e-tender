@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
-import { ApiResponse, AuthData } from '../models/user.model';
+import { ApiResponse, AuthData, RefreshData } from '../models/user.model';
 
 // ─── Payload interfaces ────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ export class AuthService {
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
     return this.api.post<AuthData>('auth/login', payload).pipe(
       tap(async (res) => {
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           await this.storage.setToken(res.data.token);
         }
       })
@@ -64,7 +64,7 @@ export class AuthService {
   register(payload: RegisterPayload): Observable<ApiResponse<AuthData>> {
     return this.api.post<AuthData>('auth/register', payload).pipe(
       tap(async (res) => {
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           await this.storage.setToken(res.data.token);
         }
       })
@@ -76,6 +76,25 @@ export class AuthService {
     return this.api.post<null>('auth/logout', {}).pipe(
       tap(async () => {
         await this.storage.clearAll();
+      })
+    );
+  }
+
+  // POST /api/auth/refresh
+  // Dipanggil manual dari komponen jika diperlukan.
+  // Auto-refresh oleh interceptor (via HttpBackend) tidak melalui method ini.
+  refreshToken(): Observable<string> {
+    return this.api.post<RefreshData>('auth/refresh', {}).pipe(
+      tap(async (res) => {
+        if (res.status === 'success' && res.data?.token) {
+          await this.storage.setToken(res.data.token);
+        }
+      }),
+      map(res => {
+        if (res.status === 'success' && res.data?.token) {
+          return res.data.token;
+        }
+        throw new Error('Refresh gagal: response tidak valid');
       })
     );
   }

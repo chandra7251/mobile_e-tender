@@ -151,6 +151,19 @@
               </span>
             </div>
 
+            <!-- Download button (authenticated — tidak ada URL publik) -->
+            <div class="doc-actions">
+              <ion-button
+                fill="clear"
+                size="small"
+                [disabled]="isDownloading(doc.id)"
+                (click)="onDownload(doc)"
+                [id]="'btn-download-' + doc.id">
+                <ion-spinner *ngIf="isDownloading(doc.id)" name="crescent" slot="icon-only"></ion-spinner>
+                <ion-icon *ngIf="!isDownloading(doc.id)" name="download-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+
           </div>
         </ion-card-content>
       </ion-card>

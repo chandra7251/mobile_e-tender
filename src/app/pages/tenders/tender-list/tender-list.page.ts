@@ -49,7 +49,7 @@ export class TenderListPage {
     this.tenderService.getTenders().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           // Filter out draft — hanya tampilkan status valid untuk vendor
           this.allTenders = res.data.filter(t =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
@@ -67,7 +67,7 @@ export class TenderListPage {
   doRefresh(event: any): void {
     this.tenderService.getTenders().subscribe({
       next: (res) => {
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           this.allTenders = res.data.filter(t =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );

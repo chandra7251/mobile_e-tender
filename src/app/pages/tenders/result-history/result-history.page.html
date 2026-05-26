@@ -34,40 +34,60 @@
     </div>
 
     <!-- ════ EMPTY ════ -->
-    <div class="empty-state" *ngIf="!isLoading && !errorMessage && allTenders.length === 0">
+    <div class="empty-state" *ngIf="!isLoading && !errorMessage && results.length === 0">
       <ion-icon name="trophy-outline"></ion-icon>
       <h3>Belum Ada Hasil</h3>
-      <p>Tender yang sudah selesai atau ditutup akan muncul di sini.</p>
+      <p>Tender yang sudah selesai dan diikuti akan muncul di sini.</p>
     </div>
 
     <!-- ════ LIST ════ -->
-    <ng-container *ngIf="!isLoading && allTenders.length > 0">
+    <ng-container *ngIf="!isLoading && results.length > 0">
 
-      <p class="list-info">{{ allTenders.length }} tender ditemukan</p>
+      <p class="list-info">{{ results.length }} hasil tender</p>
 
       <ion-card
         class="history-card"
-        *ngFor="let tender of allTenders"
-        (click)="goToResult(tender)"
+        *ngFor="let result of results"
+        (click)="goToResult(result)"
         button
-        id="btn-tender-result-{{ tender.id }}">
+        id="btn-tender-result-{{ result.tender_id }}">
         <ion-card-content>
 
+          <!-- Badge menang / tidak -->
           <div class="status-row">
-            <ion-badge [color]="getStatusColor(tender.status)" class="status-badge">
-              {{ getStatusLabel(tender.status) }}
+            <ion-badge [color]="getResultColor(result.is_winner)" class="status-badge">
+              <ion-icon [name]="getResultIcon(result.is_winner)" style="margin-right:4px;"></ion-icon>
+              {{ getResultLabel(result.is_winner) }}
             </ion-badge>
           </div>
 
-          <h2 class="tender-title">{{ tender.title }}</h2>
+          <!-- Judul tender -->
+          <h2 class="tender-title">{{ result.tender_title }}</h2>
 
+          <!-- Bid saya vs pemenang -->
+          <div class="bid-info">
+            <div class="bid-row">
+              <span class="bid-label">Penawaran saya:</span>
+              <span class="bid-value">{{ formatCurrency(result.my_bid_amount) }}</span>
+            </div>
+            <div class="bid-row" *ngIf="!result.is_winner">
+              <span class="bid-label">Penawaran menang:</span>
+              <span class="bid-value winner-amount">{{ formatCurrency(result.winning_bid_amount) }}</span>
+            </div>
+            <div class="bid-row" *ngIf="!result.is_winner">
+              <span class="bid-label">Pemenang:</span>
+              <span class="bid-value">{{ result.winner_company }}</span>
+            </div>
+          </div>
+
+          <!-- Tanggal keputusan -->
           <div class="date-row">
             <ion-icon name="calendar-outline"></ion-icon>
-            <span>Berakhir: {{ formatDate(tender.end_date) }}</span>
+            <span>Diputuskan: {{ formatDate(result.decided_at) }}</span>
           </div>
 
           <div class="cta-row">
-            <span class="cta-text">Lihat Hasil</span>
+            <span class="cta-text">Lihat Detail</span>
             <ion-icon name="chevron-forward-outline"></ion-icon>
           </div>
 

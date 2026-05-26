@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TenderService } from '../../../core/services/tender.service';
-import { Tender } from '../../../core/models/user.model';
+import { VendorService } from '../../../core/services/vendor.service';
+import { VendorResult } from '../../../core/models/user.model';
 
 /**
- * ResultHistoryPage — Daftar tender berstatus 'closed' atau 'finished'
- * yang bisa dilihat hasilnya oleh vendor.
+ * ResultHistoryPage — Daftar hasil tender yang pernah diikuti vendor.
  *
- * Karena backend belum memiliki endpoint GET /api/vendors/results,
- * halaman ini mengambil semua tender dan mem-filter status closed/finished.
- * Endpoint dedicated akan ditambahkan di backend (lihat backend_requirements.md).
+ * Menggunakan endpoint dedicated GET /api/vendors/results (Mobile_Integration.md)
+ * Menggantikan workaround lama: getTenders() + filter(status === 'finished')
  */
 @Component({
   standalone: false,
@@ -19,12 +17,12 @@ import { Tender } from '../../../core/models/user.model';
 })
 export class ResultHistoryPage {
 
-  allTenders: Tender[] = [];
+  results: VendorResult[] = [];
   isLoading = false;
   errorMessage = '';
 
   constructor(
-    private tenderService: TenderService,
+    private vendorService: VendorService,
     private router: Router
   ) {}
 
@@ -36,13 +34,12 @@ export class ResultHistoryPage {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.tenderService.getTenders().subscribe({
+    // GET /api/vendors/results — backend sudah filter hanya tender finished
+    this.vendorService.getMyResults().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status && res.data) {
-          // Filter hanya tender yang sudah selesai/ditutup
-          this.allTenders = (Array.isArray(res.data) ? res.data : [])
-            .filter(t => t.status === 'closed' || t.status === 'finished');
+        if (res.status === 'success' && res.data) {
+          this.results = Array.isArray(res.data) ? res.data : [];
         }
       },
       error: (err) => {
@@ -53,11 +50,10 @@ export class ResultHistoryPage {
   }
 
   doRefresh(event: any): void {
-    this.tenderService.getTenders().subscribe({
+    this.vendorService.getMyResults().subscribe({
       next: (res) => {
-        if (res.status && res.data) {
-          this.allTenders = (Array.isArray(res.data) ? res.data : [])
-            .filter(t => t.status === 'closed' || t.status === 'finished');
+        if (res.status === 'success' && res.data) {
+          this.results = Array.isArray(res.data) ? res.data : [];
         }
         event.target.complete();
       },
@@ -65,16 +61,29 @@ export class ResultHistoryPage {
     });
   }
 
-  goToResult(tender: Tender): void {
-    this.router.navigate(['/tabs/tenders', tender.id, 'result']);
+  goToResult(result: VendorResult): void {
+    this.router.navigate(['/tabs/tenders', result.tender_id, 'result']);
   }
 
-  getStatusColor(status: string): string {
-    return status === 'finished' ? 'success' : 'medium';
+  getResultColor(isWinner: boolean): string {
+    return isWinner ? 'success' : 'medium';
   }
 
-  getStatusLabel(status: string): string {
-    return status === 'finished' ? 'Selesai' : 'Ditutup';
+  getResultLabel(isWinner: boolean): string {
+    return isWinner ? '🏆 Menang' : 'Tidak Menang';
+  }
+
+  getResultIcon(isWinner: boolean): string {
+    return isWinner ? 'trophy-outline' : 'close-circle-outline';
+  }
+
+  formatCurrency(amount: number | null | undefined): string {
+    if (!amount) return '-';
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(amount);
   }
 
   formatDate(dateStr: string | null | undefined): string {

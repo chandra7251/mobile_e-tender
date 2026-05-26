@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService, RegisterPayload } from '../../../core/services/auth.service';
@@ -47,10 +47,11 @@ export class RegisterPage {
     this.auth.register(this.form).subscribe({
       next: async (res) => {
         this.isLoading = false;
-        if (res.status) {
+        if (res.status === 'success') {
           await this.showToast('Registrasi berhasil!', 'success');
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
         } else {
+          // Backend return status 'error' with HTTP 200
           this.errorMessage = res.message || 'Registrasi gagal.';
         }
       },
