@@ -1,91 +1,181 @@
-:host {
-  --background: #f0f4ff;
+// Variables
+$primary-blue   : #3F51B5;
+$blue-light     : #5C6BC0;
+$accent-cyan    : #00BCD4;
+$cyan-dark      : #0097A7;
+$bg-surface     : #F4F6F9;
+$card-white     : #FFFFFF;
+$text-primary   : #1A1A2E;
+$text-secondary : #6B7280;
+$text-muted     : #9CA3AF;
+$text-white     : #FFFFFF;
+
+ion-content {
+  --background: #{$primary-blue};
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+// Reset default ion-input
+ion-input {
+  --padding-start: 0;
+  --padding-end: 0;
+  --background: transparent;
+  --border-width: 0;
+  --highlight-height: 0;
+}
+
+// Vectors
+// Cari .top-vector-container — tambahkan/update properti ini
+.top-vector-container {
+  line-height: 0;     // ← wajib ada, hilangkan gap whitespace
+  margin-top: 0;
+  padding: 0;
+
+  svg {
+    width: 100%;
+    display: block;
+  }
+
+  .title {
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    color: #{$primary-blue};
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    z-index: 2;
+  }
+}
+
+
+// Cari .bottom-vector-container — tambahkan/update properti ini
+.bottom-vector-container {
+  line-height: 0;     // ← wajib ada
+  margin-bottom: 0;
+  padding: 0;
+  margin-top: auto;   // dorong wave ke paling bawah
+
+  svg {
+    width: 100%;
+    display: block;
+  }
 }
 
 .auth-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 100%;
-  padding: 32px 16px;
+  padding: 0 30px 20px;
+  margin-top: 55px;
+  z-index: 1;
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 
   .auth-logo {
-    font-size: 56px;
-    color: var(--ion-color-primary);
+    width: 160px;
+    height: auto;
+    margin-bottom: 12px;
+    padding-left: 35px;
   }
 
   h1 {
     font-size: 26px;
     font-weight: 700;
-    color: #1a1a2e;
-    margin: 8px 0 4px;
-  }
-
-  p {
-    font-size: 14px;
-    color: #6b7280;
+    color: #{$text-white};
+    margin: 0;
   }
 }
 
-.auth-form-list {
-  background: transparent;
-  margin-bottom: 8px;
-}
+.field-wrapper {
+  background: #{$blue-light};
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  padding: 4px 20px;
+  margin-bottom: 16px;
+  gap: 12px;
+  height: 52px;
 
-.auth-item {
-  --background: #ffffff;
-  --border-radius: 12px;
-  --padding-start: 16px;
-  --inner-padding-end: 8px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-
-  ion-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ion-color-primary);
-    margin-bottom: 2px;
+  ion-icon {
+    color: #{$text-white};
+    font-size: 20px;
+    flex-shrink: 0;
   }
 
   ion-input {
-    font-size: 15px;
+    --color: #{$text-white};
+    --placeholder-color: rgba(255, 255, 255, 0.7);
+    --placeholder-opacity: 1;
+    font-size: 14px;
   }
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  
+  ion-button {
+    --color: #{$accent-cyan};
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 30px;
+}
+
+.btn-cta {
+  --background: #{$accent-cyan};
+  --background-activated: #{$cyan-dark};
+  --color: #{$text-white};
+  --border-radius: 25px;
+  --box-shadow: none;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  margin-bottom: 16px;
+}
+
+.btn-register {
+  --background: #{$card-white};
+  --color: #{$primary-blue};
+  --border-radius: 25px;
+  --box-shadow: none;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: none;
+  margin: 0;
 }
 
 .auth-error {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--ion-color-danger);
+  color: #EF5350;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 12px;
+  border-radius: 8px;
   font-size: 13px;
-  margin: 4px 0 12px;
-  padding: 0 4px;
+  margin-bottom: 16px;
 
   ion-icon {
     font-size: 16px;
     flex-shrink: 0;
   }
-}
-
-.auth-btn {
-  --border-radius: 12px;
-  height: 50px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: 8px;
-}
-
-.auth-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24px;
-  font-size: 14px;
-  color: #6b7280;
 }
