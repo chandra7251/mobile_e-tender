@@ -7,6 +7,8 @@ import {
   ApiResponse,
   VendorProfile,
   VendorDocument,
+  VendorTender,
+  VendorResult,
   DocumentType
 } from '../models/user.model';
 import { environment } from '../../../environments/environment';
@@ -71,5 +73,39 @@ export class VendorService {
         );
       })
     );
+  }
+
+  // GET /api/vendors/documents/{doc_id}/download  — 🔒 Protected
+  // File dokumen tidak punya URL publik — WAJIB pakai endpoint ini
+  // Response: binary blob (PDF/JPG/PNG) + header Content-Disposition: attachment
+  downloadDocument(docId: number): Observable<Blob> {
+    return from(this.storage.getToken()).pipe(
+      switchMap(token => {
+        if (!token) {
+          return throwError(() => ({
+            error: { message: 'Sesi tidak valid, silakan login ulang.' }
+          }));
+        }
+        return this.http.get(
+          `${environment.apiUrl}/vendors/documents/${docId}/download`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: 'blob'
+          }
+        );
+      })
+    );
+  }
+
+  // GET /api/vendors/tenders  — 🔒 Protected
+  // Daftar tender yang diikuti vendor (sudah join sebagai peserta)
+  getMyTenders(): Observable<ApiResponse<VendorTender[]>> {
+    return this.api.get<VendorTender[]>('vendors/tenders');
+  }
+
+  // GET /api/vendors/results  — 🔒 Protected
+  // Hasil tender vendor — menggantikan filter manual tenders.status === 'finished'
+  getMyResults(): Observable<ApiResponse<VendorResult[]>> {
+    return this.api.get<VendorResult[]>('vendors/results');
   }
 }

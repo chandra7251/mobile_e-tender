@@ -26,10 +26,13 @@ export class DocumentsPage implements OnInit {
   uploadError = '';
   showUploadForm = false;
 
+  // ── Download state ────────────────────────────────────────────────────────
+  downloadingId: number | null = null;
+
   readonly docTypes: { value: AllowedType; label: string }[] = [
-    { value: 'legalitas',          label: 'Legalitas' },
-    { value: 'izin_usaha',         label: 'Izin Usaha' },
-    { value: 'dokumen_pendukung',  label: 'Dokumen Pendukung' },
+    { value: 'legalitas',         label: 'Legalitas' },
+    { value: 'izin_usaha',        label: 'Izin Usaha' },
+    { value: 'dokumen_pendukung', label: 'Dokumen Pendukung' },
   ];
 
   constructor(
@@ -50,7 +53,7 @@ export class DocumentsPage implements OnInit {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           this.documents = res.data;
         }
       },
@@ -64,7 +67,7 @@ export class DocumentsPage implements OnInit {
   doRefresh(event: any): void {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
-        if (res.status && res.data) this.documents = res.data;
+        if (res.status === 'success' && res.data) this.documents = res.data;
         event.target.complete();
       },
       error: () => event.target.complete()
@@ -76,9 +79,9 @@ export class DocumentsPage implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+      this.selectedFile     = input.files[0];
       this.selectedFileName = this.selectedFile.name;
-      this.uploadError = '';
+      this.uploadError      = '';
     }
   }
 
@@ -93,11 +96,10 @@ export class DocumentsPage implements OnInit {
     this.isUploading = true;
     this.uploadError = '';
 
-    // Cast ke DocumentType karena superset dari AllowedType
     this.vendorService.uploadDocument(this.selectedType as DocumentType, this.selectedFile).subscribe({
       next: async (res) => {
         this.isUploading = false;
-        if (res.status) {
+        if (res.status === 'success') {
           await this.showToast('Dokumen berhasil diupload!', 'success');
           this.resetForm();
           this.showUploadForm = false;
@@ -119,6 +121,32 @@ export class DocumentsPage implements OnInit {
     });
   }
 
+  // ── Download (authenticated — file tidak punya URL publik) ────────────────
+
+  onDownload(doc: VendorDocument): void {
+    if (this.downloadingId === doc.id) return; // debounce
+    this.downloadingId = doc.id;
+
+    this.vendorService.downloadDocument(doc.id).subscribe({
+      next: (blob) => {
+        this.downloadingId = null;
+        // Buat URL object sementara dan trigger download / buka di tab baru
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = doc.file_name; // nama file asli dari backend
+        link.click();
+        // Bersihkan URL object setelah delay singkat
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      },
+      error: async (err) => {
+        this.downloadingId = null;
+        const msg = err?.error?.message || 'Gagal mengunduh dokumen.';
+        await this.showToast(msg, 'danger');
+      }
+    });
+  }
+
   // ── UI helpers ────────────────────────────────────────────────────────────
 
   toggleUploadForm(): void {
@@ -127,10 +155,10 @@ export class DocumentsPage implements OnInit {
   }
 
   resetForm(): void {
-    this.selectedFile = null;
+    this.selectedFile     = null;
     this.selectedFileName = '';
-    this.selectedType = 'legalitas';
-    this.uploadError = '';
+    this.selectedType     = 'legalitas';
+    this.uploadError      = '';
   }
 
   getTypeLabel(value: string): string {
@@ -160,6 +188,10 @@ export class DocumentsPage implements OnInit {
       case 'dokumen_pendukung': return 'document-attach-outline';
       default:                  return 'document-outline';
     }
+  }
+
+  isDownloading(docId: number): boolean {
+    return this.downloadingId === docId;
   }
 
   formatDate(dateStr: string): string {

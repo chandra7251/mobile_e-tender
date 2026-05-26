@@ -39,12 +39,30 @@ export interface VendorProfile {
 
 /**
  * AuthData — backend v2.0 (JWT)
- * Login/register mengembalikan token + vendor (VendorResource)
+ * Response dari POST /api/auth/login dan POST /api/auth/register.
+ *
+ * Catatan: backend mengembalikan 'user' (bukan 'vendor') di dalam data.
+ * VendorProfile yang lengkap di-fetch terpisah via GET /api/vendors/me.
  */
 export interface AuthData {
   token: string;
-  token_type: string;    // 'bearer'
-  vendor: VendorProfile; // flat vendor object dengan nested user
+  token_type: string;   // 'bearer'
+  expires_in: number;   // detik, biasanya 3600
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;        // 'vendor'
+  };
+}
+
+/**
+ * RefreshData — response dari POST /api/auth/refresh
+ */
+export interface RefreshData {
+  token: string;
+  token_type: string;   // 'bearer'
+  expires_in: number;   // detik, biasanya 3600
 }
 
 // ─── Documents ─────────────────────────────────────────────────────────────
@@ -82,7 +100,6 @@ export interface Tender {
   title: string;
   description: string;
   specification?: string;   // backend pakai 'specification' (bukan 'requirements')
-  // budget tidak ada di TenderResource — dihapus
   status: TenderStatus;
   start_date: string;
   end_date: string;
@@ -90,6 +107,31 @@ export interface Tender {
   bidding_start?: string | null;
   bidding_end?: string | null;
   created_at?: string;
+  // ── Baru (Mobile_Integration.md — 26 Mei 2026) ──
+  is_participant: boolean;   // tersedia langsung di TenderResource (guest = false)
+  joined_at: string | null;  // null jika belum join
+}
+
+// ─── Vendor Tenders (GET /api/vendors/tenders) ─────────────────────────────
+
+/** Alias — response /vendors/tenders menggunakan shape yang sama dengan Tender */
+export type VendorTender = Tender;
+
+// ─── Vendor Results (GET /api/vendors/results) ─────────────────────────────
+
+/**
+ * Response item dari GET /api/vendors/results
+ * Menggantikan workaround filter tenders.status === 'finished'
+ */
+export interface VendorResult {
+  tender_id: number;
+  tender_title: string;
+  tender_status: string;       // biasanya 'finished'
+  is_winner: boolean;
+  my_bid_amount: number;
+  winner_company: string;
+  winning_bid_amount: number;
+  decided_at: string;
 }
 
 // ─── Announcements ─────────────────────────────────────────────────────────
@@ -105,14 +147,19 @@ export interface Announcement {
 
 /**
  * Response dari GET/POST/PUT /api/tenders/{id}/bids
- * Backend BidResource: id, tender_id, bid_amount, notes, submitted_at, updated_at
+ * Backend BidResource: id, ulid, tender_id, bid_amount, notes, submitted_at, updated_at
+ *
+ * submitted_at format baru (setelah 26 Mei 2026): ISO8601 dengan microsecond
+ * Contoh: "2026-05-26T10:00:00.123456+07:00"
+ * → Selalu parse dengan new Date() — JANGAN gunakan format strict.
  */
 export interface Bid {
   id: number;
+  ulid: string;              // baru — sortable tie-breaker level 3
   tender_id: number;
-  bid_amount: number;   // backend pakai 'bid_amount', bukan 'price'
-  notes?: string;
-  submitted_at: string;
+  bid_amount: number;        // backend pakai 'bid_amount', bukan 'price'
+  notes?: string | null;
+  submitted_at: string;      // ISO8601, bisa ada microsecond (.123456)
   updated_at?: string;
 }
 
@@ -147,13 +194,18 @@ export interface TenderResult {
 
 // ─── Generic wrapper ───────────────────────────────────────────────────────
 
+/**
+ * ApiResponse — wrapper standar backend v2.0
+ *
+ * Backend selalu mengembalikan:
+ *   "status": "success"  → request berhasil
+ *   "status": "error"    → request gagal
+ *
+ * BUKAN boolean. Gunakan: if (res.status === 'success' && res.data) { ... }
+ */
 export interface ApiResponse<T = any> {
-  /**
-   * Endpoint ApiResponse trait: boolean true/false
-   * Endpoint manual (GET /api/tenders): string "success"
-   * Keduanya truthy saat berhasil — cukup cast ke boolean: !!res.status
-   */
-  status: boolean | string;
+  status: 'success' | 'error';
   message: string;
   data: T;
+  errors?: any;
 }

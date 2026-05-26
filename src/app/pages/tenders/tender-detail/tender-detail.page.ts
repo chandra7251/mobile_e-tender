@@ -20,7 +20,7 @@ export class TenderDetailPage {
 
   tenderId!: number;
   isLoading = false;
-  detailError = '';        // ← error state untuk loadDetail
+  detailError = '';
   isJoining = false;
   hasJoined = false;
   joinError = '';
@@ -41,7 +41,6 @@ export class TenderDetailPage {
     this.tenderId = idParam ? +idParam : 0;
   }
 
-  // Dipanggil setiap kali halaman ditampilkan — pastikan data fresh
   ionViewWillEnter(): void {
     if (!this.tenderId) {
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -62,18 +61,23 @@ export class TenderDetailPage {
     this.isLoading = true;
     this.detailError = '';
 
-    // Load detail + cek partisipasi secara paralel
-    forkJoin({
-      detail: this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null))),
-      isParticipant: this.tenderService.checkParticipation(this.tenderId).pipe(catchError(() => of(false)))
-    }).subscribe(({ detail, isParticipant }) => {
-      this.isLoading = false;
-      if (detail?.status && detail?.data) {
-        this.tender = detail.data;
-      } else if (detail !== null) {
-        this.detailError = detail?.message || 'Data tender tidak ditemukan.';
+    // GET /api/tenders/{tender} sudah menyertakan is_participant di response
+    // Tidak perlu request tambahan ke /participants/check
+    this.tenderService.getTenderDetail(this.tenderId).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        if (res.status === 'success' && res.data) {
+          this.tender = res.data;
+          // Baca is_participant langsung dari TenderResource (hemat 1 HTTP request)
+          this.hasJoined = res.data.is_participant ?? false;
+        } else {
+          this.detailError = res.message || 'Data tender tidak ditemukan.';
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.detailError = err?.error?.message || 'Gagal memuat detail tender.';
       }
-      this.hasJoined = isParticipant;
     });
   }
 
@@ -89,7 +93,7 @@ export class TenderDetailPage {
     this.tenderService.getAnnouncements(this.tenderId).subscribe({
       next: (res) => {
         this.announcementsLoading = false;
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           this.announcements = res.data;
         }
       },
@@ -105,11 +109,16 @@ export class TenderDetailPage {
 
   doRefresh(event: any): void {
     const detail$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null)));
-    const ann$ = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
+    const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
 
     forkJoin([detail$, ann$]).subscribe(([detailRes, annRes]) => {
-      if (detailRes?.status && detailRes?.data) this.tender = detailRes.data;
-      if (annRes?.status && annRes?.data) this.announcements = annRes.data;
+      if (detailRes?.status === 'success' && detailRes?.data) {
+        this.tender    = detailRes.data;
+        this.hasJoined = detailRes.data.is_participant ?? false;
+      }
+      if (annRes?.status === 'success' && annRes?.data) {
+        this.announcements = annRes.data;
+      }
       event.target.complete();
     });
   }
@@ -121,15 +130,12 @@ export class TenderDetailPage {
     this.isJoining = true;
     this.joinError = '';
 
-    // POST /api/tenders/{tender}/participants
-    // Backend mengambil vendor dari token — TIDAK perlu kirim vendor_id
     this.tenderService.joinTender(this.tenderId).subscribe({
       next: async (res) => {
         this.isJoining = false;
-        if (res.status) {
+        if (res.status === 'success') {
           this.hasJoined = true;
           await this.showToast('Berhasil bergabung ke tender!', 'success');
-          // Reload announcements karena mungkin sudah ada akses setelah join
           this.loadAnnouncements();
         } else {
           this.joinError = res.message || 'Gagal bergabung.';
@@ -138,19 +144,15 @@ export class TenderDetailPage {
       error: (err) => {
         this.isJoining = false;
         const msg = err?.error?.message || '';
-        // Backend v2.0: 403 menyertakan data.verification_status
         const verificationStatus = err?.error?.data?.verification_status;
 
-        // Map error backend ke pesan yang ramah
         if (verificationStatus === 'pending') {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (verificationStatus === 'rejected') {
           this.joinError = 'Akun vendor Anda ditolak. Silakan cek halaman profil untuk informasi lebih lanjut.';
-        } else if (msg.toLowerCase().includes('not approved') || msg.toLowerCase().includes('pending') || msg.toLowerCase().includes('belum diverifikasi')) {
-          this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('joined') || msg.toLowerCase().includes('sudah terdaftar')) {
           this.joinError = 'Anda sudah terdaftar di tender ini.';
-          this.hasJoined = true; // Treat as already joined
+          this.hasJoined = true;
         } else {
           this.joinError = msg || 'Gagal bergabung ke tender.';
         }
@@ -160,9 +162,7 @@ export class TenderDetailPage {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void { this.location.back(); }
 
   goBid(): void {
     this.router.navigate(['/tabs/tenders', this.tenderId, 'bid']);
@@ -170,8 +170,7 @@ export class TenderDetailPage {
 
   get showJoinButton(): boolean {
     if (!this.tender) return false;
-    // Tampilkan card join selama status open/aanwijzing
-    // (kondisi hasJoined diatur di dalam template HTML)
+    if (this.hasJoined) return false;
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
 
@@ -213,9 +212,7 @@ export class TenderDetailPage {
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
+      style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(amount);
   }
 

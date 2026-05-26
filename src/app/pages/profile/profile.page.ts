@@ -49,7 +49,7 @@ export class ProfilePage {
     this.vendorService.getProfile().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           this.profile = res.data;
         }
       },
@@ -108,7 +108,7 @@ export class ProfilePage {
     this.vendorService.updateProfile(this.editForm).subscribe({
       next: async (res) => {
         this.isSaving = false;
-        if (res.status) {
+        if (res.status === 'success') {
           this.isEditMode = false;
           await this.showToast('Profil berhasil diperbarui!', 'success');
           this.loadProfile(); // refresh data
