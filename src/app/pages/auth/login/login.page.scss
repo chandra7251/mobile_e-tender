@@ -20,8 +20,8 @@ ion-content {
   min-height: 100%;
 }
 
-// Reset default ion-input
-ion-input {
+// Reset default ion-input and ion-textarea
+ion-input, ion-textarea {
   --padding-start: 0;
   --padding-end: 0;
   --background: transparent;
@@ -32,38 +32,55 @@ ion-input {
 // Vectors
 // Cari .top-vector-container — tambahkan/update properti ini
 .top-vector-container {
-  line-height: 0;     // ← wajib ada, hilangkan gap whitespace
+  line-height: 0;
   margin-top: 0;
   padding: 0;
+  position: relative; // for absolute header
 
   svg {
     width: 100%;
     display: block;
+    height: auto;
   }
 
-  .title {
+  .custom-header {
     position: absolute;
-    top: 18px;
-    left: 30px;
-    color: #{$primary-blue};
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    // padding: 16px;
+    display: flex;
+    align-items: center;
     z-index: 2;
+    padding-top: calc(16px + var(--ion-safe-area-top, 0px)); 
+
+    .back-btn {
+      --color: #{$text-white};
+      margin: 0;
+      font-size: 24px;
+      height: 40px;
+    }
+
+    .header-title {
+      color: #{$primary-blue};
+      font-size: 24px;
+      font-weight: 700;
+    }
   }
 }
 
 
 // Cari .bottom-vector-container — tambahkan/update properti ini
 .bottom-vector-container {
-  line-height: 0;     // ← wajib ada
+  line-height: 0;
   margin-bottom: 0;
   padding: 0;
-  margin-top: auto;   // dorong wave ke paling bawah
+  margin-top: auto;
 
   svg {
     width: 100%;
     display: block;
+    height: auto;
   }
 }
 
