@@ -24,7 +24,6 @@ export class HomePage {
     private toast: ToastController
   ) {}
 
-  // Dipanggil setiap kali halaman ditampilkan (navigasi kembali ke tab ini)
   ionViewWillEnter(): void {
     this.loadProfile();
   }
@@ -32,7 +31,7 @@ export class HomePage {
   private loadProfile(): void {
     this.vendorService.getProfile().subscribe({
       next: (res) => {
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           this.vendorProfile = res.data;
         }
       },
@@ -59,7 +58,6 @@ export class HomePage {
     return this.vendorProfile?.company_name ?? '';
   }
 
-  // Baca langsung dari vendorProfile — satu sumber kebenaran (GET /api/vendors/me)
   get vendorStatus(): string {
     return this.vendorProfile?.verification_status ?? '';
   }

@@ -50,15 +50,14 @@ export class BidFormPage implements OnInit {
     // GET /api/tenders/{tender}/bids/me
     this.tenderService.getMyBid(this.tenderId).subscribe({
       next: (res) => {
-        if (res.status && res.data) {
+        if (res.status === 'success' && res.data) {
           // Sudah ada bid — mode UPDATE
           this.existingBid = res.data;
-          this.bidId = res.data.id;
-          this.bidAmount = res.data.bid_amount;  // backend: bid_amount (bukan price)
-          this.notes = res.data.notes ?? '';
-          this.mode = 'update';
+          this.bidId       = res.data.id;
+          this.bidAmount   = res.data.bid_amount;
+          this.notes       = res.data.notes ?? '';
+          this.mode        = 'update';
         } else {
-          // Response OK tapi data null — mode SUBMIT
           this.mode = 'submit';
         }
       },
@@ -67,8 +66,7 @@ export class BidFormPage implements OnInit {
           // 404 = belum ada bid → mode SUBMIT
           this.mode = 'submit';
         } else {
-          // Error lain (401, 403, 500)
-          this.mode = 'error';
+          this.mode      = 'error';
           this.loadError = err?.error?.message || 'Gagal memuat data penawaran.';
         }
       }
@@ -78,13 +76,12 @@ export class BidFormPage implements OnInit {
   // ── Submit / Update ───────────────────────────────────────────────────────
 
   onSubmit(): void {
-    // Validasi
     if (!this.bidAmount || this.bidAmount <= 0) {
       this.saveError = 'Jumlah penawaran wajib diisi dan harus lebih dari 0.';
       return;
     }
 
-    this.isSaving = true;
+    this.isSaving  = true;
     this.saveError = '';
 
     const payload: SubmitBidPayload = {
@@ -97,17 +94,17 @@ export class BidFormPage implements OnInit {
       this.tenderService.updateBid(this.tenderId, this.bidId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
-          if (res.status) {
+          if (res.status === 'success') {
             this.existingBid = res.data;
-            this.bidId = res.data?.id ?? this.bidId;
+            this.bidId       = res.data?.id ?? this.bidId;
             await this.showToast('Penawaran berhasil diperbarui!', 'success');
-            this.loadMyBid(); // reload untuk konfirmasi
+            this.loadMyBid();
           } else {
             this.saveError = res.message || 'Gagal memperbarui penawaran.';
           }
         },
         error: (err) => {
-          this.isSaving = false;
+          this.isSaving  = false;
           this.saveError = this.mapError(err);
         }
       });
@@ -116,17 +113,17 @@ export class BidFormPage implements OnInit {
       this.tenderService.submitBid(this.tenderId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
-          if (res.status) {
+          if (res.status === 'success') {
             this.existingBid = res.data;
-            this.bidId = res.data?.id ?? null;
-            this.mode = 'update'; // switch ke mode update setelah berhasil
+            this.bidId       = res.data?.id ?? null;
+            this.mode        = 'update';
             await this.showToast('Penawaran berhasil diajukan!', 'success');
           } else {
             this.saveError = res.message || 'Gagal mengajukan penawaran.';
           }
         },
         error: (err) => {
-          this.isSaving = false;
+          this.isSaving  = false;
           this.saveError = this.mapError(err);
         }
       });
@@ -137,7 +134,6 @@ export class BidFormPage implements OnInit {
 
   private mapError(err: any): string {
     const msg: string = (err?.error?.message || '').toLowerCase();
-    // Backend v2.0: 403 menyertakan data.verification_status
     const verificationStatus = err?.error?.data?.verification_status;
 
     if (verificationStatus === 'pending') {
@@ -162,7 +158,6 @@ export class BidFormPage implements OnInit {
       return 'Anda hanya dapat memperbarui penawaran Anda sendiri.';
     }
 
-    // Validation errors dari backend
     const errors = err?.error?.data;
     if (errors && typeof errors === 'object') {
       const firstKey = Object.keys(errors)[0];
@@ -176,14 +171,12 @@ export class BidFormPage implements OnInit {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void { this.location.back(); }
 
-  get isSubmitMode(): boolean { return this.mode === 'submit'; }
-  get isUpdateMode(): boolean { return this.mode === 'update'; }
+  get isSubmitMode(): boolean  { return this.mode === 'submit'; }
+  get isUpdateMode(): boolean  { return this.mode === 'update'; }
   get isLoadingMode(): boolean { return this.mode === 'loading'; }
-  get isErrorMode(): boolean { return this.mode === 'error'; }
+  get isErrorMode(): boolean   { return this.mode === 'error'; }
 
   get pageTitle(): string {
     return this.isUpdateMode ? 'Perbarui Penawaran' : 'Ajukan Penawaran';
@@ -197,12 +190,14 @@ export class BidFormPage implements OnInit {
   formatCurrency(amount: number | null): string {
     if (!amount) return '-';
     return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
+      style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(amount);
   }
 
+  /**
+   * Format waktu bid — gunakan new Date() agar toleran terhadap microsecond.
+   * submitted_at baru: "2026-05-26T10:00:00.123456+07:00"
+   */
   formatDate(dateStr: string): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
