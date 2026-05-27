@@ -48,22 +48,30 @@ ion-input, ion-textarea {
     top: 0;
     left: 0;
     width: 100%;
-    // padding: 16px;
     display: flex;
     align-items: center;
-    z-index: 2;
-    padding-top: calc(16px + var(--ion-safe-area-top, 0px)); 
+    justify-content: flex-start;
+    padding: calc(32px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-    .back-btn {
-      --color: #{$text-white};
+    .btn-header-back {
+      --color: #{$primary-blue};
+      --padding-start: 0;
+      --padding-end: 8px;
       margin: 0;
-      font-size: 24px;
-      height: 40px;
+      ion-icon {
+        font-size: 26px;
+      }
     }
 
     .header-title {
       color: #{$primary-blue};
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
     }
   }

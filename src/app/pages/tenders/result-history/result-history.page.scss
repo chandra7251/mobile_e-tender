@@ -1,54 +1,107 @@
+// Base page background
+ion-content {
+  --background: #FFFFFF;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(32px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-title {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}
+
 .page-content {
   max-width: 680px;
   margin: 0 auto;
+  margin-top: -16px;
 }
 
-.list-info {
-  font-size: 0.8rem;
-  color: var(--ion-color-medium);
-  margin-bottom: 8px;
+// ── Info Row ──
+.info-title-row {
+  margin-bottom: 16px;
+  padding-left: 8px;
+  
+  .info-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #3F51B5;
+  }
 }
 
-.history-card {
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+// ── Result Card ──
+.result-card {
+  border-radius: 16px;
+  margin: 0 0 16px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  background: #FFFFFF;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:active {
     transform: scale(0.98);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  ion-card-content {
+    padding: 20px;
   }
 }
 
 .status-row {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
-.status-badge {
-  font-size: 0.7rem;
-  padding: 4px 10px;
+.badge-selesai {
+  background: #1EC9C4;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 14px;
   border-radius: 20px;
+  display: inline-block;
 }
 
 .tender-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ion-color-dark);
-  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #3F51B5;
+  margin: 0 0 12px;
   line-height: 1.4;
 }
 
 .date-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--ion-color-medium);
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #A0ABC0;
+  font-weight: 500;
 
   ion-icon {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    color: #A0ABC0;
   }
 }
 
@@ -57,12 +110,118 @@
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
-  margin-top: 12px;
-  font-size: 0.85rem;
-  color: var(--ion-color-primary);
-  font-weight: 500;
+  margin-top: 16px;
+  
+  .cta-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #3F51B5;
+  }
+  
+  ion-icon {
+    font-size: 1rem;
+    color: #3F51B5;
+  }
 }
 
+// ── Pagination ──
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 0 4px;
+
+  button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-prev {
+    border: 1px solid #DCE3EE;
+    background: #FFFFFF;
+    color: #3F51B5;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+    .double-chevron-left {
+      margin-left: -8px;
+    }
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+    .btn-text {
+      margin-left: 2px;
+    }
+  }
+
+  .btn-next {
+    background: #3F51B5;
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 14px;
+    box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+
+    .double-chevron-right {
+      margin-left: -8px;
+    }
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+    .btn-text {
+      margin-right: 4px;
+    }
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .page-number {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3F51B5;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+
+      &.active-page {
+        background: #3F51B5;
+        color: #FFFFFF;
+      }
+    }
+
+    .page-dot {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3F51B5;
+      margin: 0 2px;
+    }
+  }
+}
+
+// ── Error & Empty State ──
 .error-box {
   display: flex;
   flex-direction: column;
@@ -79,26 +238,31 @@
 }
 
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 48px 24px;
-  color: var(--ion-color-medium);
-
+  padding: 80px 24px;
+  
   ion-icon {
-    font-size: 3.5rem;
-    margin-bottom: 12px;
+    font-size: 5rem;
+    margin: 0 auto 16px;
+    color: #3F51B5;
     display: block;
   }
 
   h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--ion-color-dark);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #3F51B5;
   }
 
   p {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     margin: 0;
+    color: #A0ABC0;
   }
 }

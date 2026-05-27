@@ -1,15 +1,23 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Dokumen Saya</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleUploadForm()" id="btn-toggle-upload">
+<ion-content>
+
+  <!-- Vector Gelombang Atas -->
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3451B2"/>
+    </svg>
+
+    <div class="custom-header">
+      <div class="header-left-group">
+        <ion-button fill="clear" class="btn-header-back" routerLink="/tabs/profile">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <span class="header-title">Dokumen Saya</span>
+      </div>
+      <ion-button fill="clear" class="btn-header-action" (click)="toggleUploadForm()" id="btn-toggle-upload">
         <ion-icon slot="icon-only" [name]="showUploadForm ? 'close-outline' : 'cloud-upload-outline'"></ion-icon>
       </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
+    </div>
+  </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
@@ -21,72 +29,70 @@
   <div class="page-content ion-padding">
 
     <!-- ════════════ UPLOAD FORM ════════════ -->
-    <ion-card class="upload-card" *ngIf="showUploadForm">
-      <ion-card-header>
-        <ion-card-title>Upload Dokumen</ion-card-title>
-        <ion-card-subtitle>Format yang didukung: PDF, JPG, PNG</ion-card-subtitle>
-      </ion-card-header>
+    <div class="upload-card" *ngIf="showUploadForm">
+      
+      <div class="upload-header">
+        <h2 class="upload-title">Upload Dokumen</h2>
+        <p class="upload-subtitle">Format yang didukung: PDF, JPG, PNG</p>
+      </div>
 
-      <ion-card-content>
+      <!-- Error box -->
+      <div class="error-box" *ngIf="uploadError">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ uploadError }}</span>
+      </div>
 
-        <!-- Error box -->
-        <div class="error-box" *ngIf="uploadError">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          <span>{{ uploadError }}</span>
-        </div>
+      <!-- Tipe dokumen -->
+      <div class="form-item custom-select-wrapper">
+        <label>Tipe Dokumen *</label>
+        <ion-select
+          [(ngModel)]="selectedType"
+          interface="action-sheet"
+          placeholder="Pilih tipe dokumen"
+          [disabled]="isUploading"
+          class="custom-select">
+          <ion-select-option
+            *ngFor="let type of docTypes"
+            [value]="type.value">
+            {{ type.label }}
+          </ion-select-option>
+        </ion-select>
+      </div>
 
-        <!-- Tipe dokumen -->
-        <ion-item class="form-item" lines="full">
-          <ion-label position="stacked">Tipe Dokumen *</ion-label>
-          <ion-select
-            [(ngModel)]="selectedType"
-            interface="action-sheet"
-            placeholder="Pilih tipe dokumen"
-            [disabled]="isUploading">
-            <ion-select-option
-              *ngFor="let type of docTypes"
-              [value]="type.value">
-              {{ type.label }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+      <!-- File picker -->
+      <div class="file-picker" [class.has-file]="!!selectedFileName">
+        <input
+          type="file"
+          id="file-input"
+          accept=".pdf,.jpg,.jpeg,.png"
+          (change)="onFileSelected($event)"
+          [disabled]="isUploading"
+          style="display:none">
 
-        <!-- File picker -->
-        <div class="file-picker" [class.has-file]="!!selectedFileName">
-          <input
-            type="file"
-            id="file-input"
-            accept=".pdf,.jpg,.jpeg,.png"
-            (change)="onFileSelected($event)"
-            [disabled]="isUploading"
-            style="display:none">
+        <label for="file-input" class="file-label">
+          <div class="file-icon">
+            <ion-icon [name]="selectedFileName ? 'document-text-outline' : 'cloud-upload-outline'"></ion-icon>
+          </div>
+          <div class="file-info">
+            <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+            <span class="file-placeholder" *ngIf="!selectedFileName">Klik untuk pilih file</span>
+            <span class="file-hint">PDF, JPG, PNG</span>
+          </div>
+        </label>
+      </div>
 
-          <label for="file-input" class="file-label">
-            <div class="file-icon">
-              <ion-icon [name]="selectedFileName ? 'document-attach-outline' : 'cloud-upload-outline'"></ion-icon>
-            </div>
-            <div class="file-info">
-              <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
-              <span class="file-placeholder" *ngIf="!selectedFileName">Klik untuk pilih file</span>
-              <span class="file-hint">PDF, JPG, PNG</span>
-            </div>
-          </label>
-        </div>
+      <!-- Tombol upload -->
+      <button
+        class="upload-btn"
+        (click)="onUpload()"
+        [disabled]="isUploading || !selectedFile"
+        id="btn-upload-submit">
+        <ion-spinner *ngIf="isUploading" name="crescent"></ion-spinner>
+        <ion-icon *ngIf="!isUploading" name="cloud-upload-outline"></ion-icon>
+        <span>UPLOAD DOKUMEN</span>
+      </button>
 
-        <!-- Tombol upload -->
-        <ion-button
-          expand="block"
-          (click)="onUpload()"
-          [disabled]="isUploading || !selectedFile"
-          class="upload-btn"
-          id="btn-upload-submit">
-          <ion-spinner *ngIf="isUploading" name="crescent" slot="start"></ion-spinner>
-          <ion-icon *ngIf="!isUploading" name="cloud-upload-outline" slot="start"></ion-icon>
-          <span>{{ isUploading ? 'Mengupload...' : 'Upload Dokumen' }}</span>
-        </ion-button>
-
-      </ion-card-content>
-    </ion-card>
+    </div>
 
     <!-- ════════════ LIST SKELETON ════════════ -->
     <div *ngIf="isLoading">
@@ -112,61 +118,101 @@
 
     <!-- ════════════ EMPTY STATE ════════════ -->
     <div class="empty-state" *ngIf="!isLoading && !listError && documents.length === 0">
-      <ion-icon name="folder-open-outline"></ion-icon>
-      <h3>Belum ada dokumen</h3>
-      <p>Upload dokumen untuk mendukung proses verifikasi akun vendor Anda.</p>
-      <ion-button fill="outline" (click)="toggleUploadForm()" *ngIf="!showUploadForm">
-        <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
-        Upload Sekarang
-      </ion-button>
+      <ion-icon name="folder" class="folder-icon"></ion-icon>
+      <h3 class="empty-title">Belum ada dokumen</h3>
+      <p class="empty-desc">Upload dokumen untuk mendukung proses verifikasi<br>akun vendor anda</p>
+      <button class="btn-upload-outline" (click)="toggleUploadForm()" *ngIf="!showUploadForm">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <span>Upload Sekarang</span>
+      </button>
     </div>
 
     <!-- ════════════ DOCUMENT LIST ════════════ -->
     <div *ngIf="!isLoading && documents.length > 0">
 
-      <div class="list-header">
-        <span>{{ documents.length }} dokumen ditemukan</span>
+      <div class="list-header-row">
+        <div class="list-header">
+          <span>{{ documents.length }} DOKUMEN DITEMUKAN</span>
+        </div>
+        <button class="btn-lihat-semua" *ngIf="showUploadForm && documents.length >= 3" (click)="toggleUploadForm()">
+          Lihat Semua <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
       </div>
 
       <ion-card
         class="doc-card"
-        *ngFor="let doc of documents">
+        *ngFor="let doc of paginatedDocuments">
         <ion-card-content>
           <div class="doc-row">
 
-            <!-- Icon -->
-            <div class="doc-icon-wrap">
-              <ion-icon [name]="getDocIcon(doc.document_type)" class="doc-icon"></ion-icon>
+            <!-- Icon & Status Symbol -->
+            <div class="doc-left-section">
+              <div class="doc-icon-wrap">
+                <ion-icon name="document-text" class="doc-icon"></ion-icon>
+              </div>
+              <ion-icon 
+                [name]="vendorStatus === 'approved' ? 'checkmark-circle' : 'time'" 
+                class="status-icon"
+                [class.approved]="vendorStatus === 'approved'">
+              </ion-icon>
             </div>
 
             <!-- Info -->
             <div class="doc-body">
-              <div class="doc-top">
-                <span class="doc-type">{{ getTypeLabel(doc.document_type) }}</span>
-              </div>
-              <span class="doc-filename" *ngIf="doc.file_name">{{ doc.file_name }}</span>
+              <span class="doc-title">{{ doc.file_name || getTypeLabel(doc.document_type) }}</span>
               <span class="doc-date">
-                <ion-icon name="time-outline"></ion-icon>
                 {{ formatDate(doc.uploaded_at) }}
               </span>
             </div>
 
-            <!-- Download button (authenticated — tidak ada URL publik) -->
+            <!-- Badge & Download -->
             <div class="doc-actions">
+              <span class="badge-status" [ngClass]="vendorStatus === 'approved' ? 'badge-approved' : 'badge-pending'">
+                {{ getStatusLabel(vendorStatus) }}
+              </span>
               <ion-button
                 fill="clear"
-                size="small"
+                class="btn-download"
                 [disabled]="isDownloading(doc.id)"
                 (click)="onDownload(doc)"
-                [id]="'btn-download-' + doc.id">
+                [id]="'btn-download-' + doc.id"
+                *ngIf="vendorStatus === 'approved'">
                 <ion-spinner *ngIf="isDownloading(doc.id)" name="crescent" slot="icon-only"></ion-spinner>
-                <ion-icon *ngIf="!isDownloading(doc.id)" name="download-outline" slot="icon-only"></ion-icon>
+                <ion-icon *ngIf="!isDownloading(doc.id)" name="download" slot="icon-only"></ion-icon>
               </ion-button>
             </div>
 
           </div>
         </ion-card-content>
       </ion-card>
+
+      <!-- ════ PAGINATION ════ -->
+      <div class="pagination-container" *ngIf="!showUploadForm && documents.length > 7">
+        <button class="btn-prev" (click)="prevPage()" [disabled]="currentPage === 1">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+          <ion-icon name="chevron-back-outline" class="double-chevron-left"></ion-icon>
+          <span class="btn-text">Previous</span>
+        </button>
+
+        <div class="page-numbers">
+          <ng-container *ngFor="let p of pagesArray">
+            <span class="page-dot" *ngIf="p === '...'">{{ p }}</span>
+            <button
+              class="page-number"
+              *ngIf="p !== '...'"
+              [class.active-page]="p === currentPage"
+              (click)="goToPage(p)">
+              {{ p }}
+            </button>
+          </ng-container>
+        </div>
+
+        <button class="btn-next" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span class="btn-text">Next</span>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon name="chevron-forward-outline" class="double-chevron-right"></ion-icon>
+        </button>
+      </div>
 
     </div>
 

@@ -1,113 +1,215 @@
+// Base page background
+ion-content {
+  --background: #FFFFFF;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // Space between title and upload icon
+    padding: calc(13px + var(--ion-safe-area-top, 0px)) 24px 0 13px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-header-back {
+      --color: #FFFFFF;
+      --padding-start: 0;
+      --padding-end: 8px;
+      margin: 0;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+
+    .header-title {
+      color: #FFFFFF; // Use white color on blue wave
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .btn-header-action {
+      --color: #FFFFFF;
+      --padding-start: 8px;
+      --padding-end: 0;
+      margin: 0;
+      ion-icon {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
 // ── Layout ────────────────────────────────────────────────────────────────
 
 .page-content {
-  padding-bottom: 80px; // ruang untuk bottom tabs
+  padding-bottom: 39px; // Ruang untuk bottom tabs yang lebih balance
+  margin-top: -24px; // Adjust for the wave
 }
 
 // ── Upload card ───────────────────────────────────────────────────────────
 
 .upload-card {
   border-radius: 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 20px rgba(var(--ion-color-primary-rgb), 0.12);
-  border: 1px solid rgba(var(--ion-color-primary-rgb), 0.15);
+  margin-bottom: 24px;
+  background-color: #3451B2;
+  color: #FFFFFF;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(52, 81, 178, 0.2);
 
-  ion-card-title {
-    font-size: 17px;
-    font-weight: 700;
-  }
+  .upload-header {
+    margin-bottom: 24px;
 
-  ion-card-subtitle {
-    font-size: 12px;
-    margin-top: 2px;
+    .upload-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: #FFFFFF;
+    }
+
+    .upload-subtitle {
+      font-size: 11px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
   }
 }
 
-.form-item {
-  --border-radius: 8px;
-  margin-bottom: 14px;
+// ── Form item ─────────────────────────────────────────────────────────────
 
-  ion-label {
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: var(--ion-color-medium) !important;
+.custom-select-wrapper {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 4px;
+  }
+
+  .custom-select {
+    width: 100%;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+
+    &::part(icon) {
+      color: #FFFFFF;
+      opacity: 0.8;
+    }
+    
+    &::part(text) {
+      color: #FFFFFF;
+    }
   }
 }
 
 // ── File picker ───────────────────────────────────────────────────────────
 
 .file-picker {
-  border: 2px dashed var(--ion-color-medium-tint);
+  border: 1.5px dashed rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s;
 
   &.has-file {
-    border-color: var(--ion-color-primary);
-    background: rgba(var(--ion-color-primary-rgb), 0.04);
-  }
-
-  &:hover {
-    border-color: var(--ion-color-primary-tint);
+    border-color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
 .file-label {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
+  gap: 16px;
+  padding: 20px 16px;
   cursor: pointer;
 }
 
 .file-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: rgba(var(--ion-color-primary-rgb), 0.1);
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   ion-icon {
-    font-size: 22px;
-    color: var(--ion-color-primary);
+    font-size: 36px;
+    color: #FFFFFF;
   }
 }
 
 .file-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   overflow: hidden;
 }
 
-.file-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ion-color-dark);
+.file-name, .file-placeholder {
+  font-size: 15px;
+  color: #FFFFFF;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.file-placeholder {
-  font-size: 14px;
-  color: var(--ion-color-medium);
-}
-
 .file-hint {
   font-size: 11px;
-  color: var(--ion-color-medium-shade);
+  color: rgba(255, 255, 255, 0.7);
 }
 
+// ── Upload Button ─────────────────────────────────────────────────────────
+
 .upload-btn {
-  --border-radius: 10px;
-  height: 48px;
+  width: 100%;
+  background: #1EC9C4;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  height: 44px;
+  font-size: 14px;
   font-weight: 600;
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  
+  ion-icon {
+    font-size: 20px;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 }
 
 // ── Error box ─────────────────────────────────────────────────────────────
@@ -152,59 +254,116 @@
   text-align: center;
   padding: 60px 24px;
 
-  ion-icon {
-    font-size: 72px;
-    color: var(--ion-color-medium-tint);
+  .folder-icon {
+    font-size: 100px;
+    color: #3451B2;
     margin-bottom: 16px;
   }
 
-  h3 {
-    font-size: 18px;
+  .empty-title {
+    font-size: 20px;
     font-weight: 700;
-    color: var(--ion-color-dark);
-    margin: 0 0 8px;
+    color: #3451B2;
+    margin: 0 0 12px;
   }
 
-  p {
-    font-size: 14px;
-    color: var(--ion-color-medium);
-    margin: 0 0 24px;
+  .empty-desc {
+    font-size: 13px;
+    color: #3451B2;
+    margin: 0 0 40px;
     line-height: 1.5;
+  }
+
+  .btn-upload-outline {
+    background: transparent;
+    border: 2px solid #3451B2;
+    color: #3451B2;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 14px 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 85%;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 32px;
+      font-weight: bold;
+    }
   }
 }
 
 // ── List ──────────────────────────────────────────────────────────────────
 
-.list-header {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ion-color-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
+// ── List ──────────────────────────────────────────────────────────────────
+
+.list-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  margin-left: 4px;
+
+  .list-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: #3F51B5; // Blue text
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .btn-lihat-semua {
+    background: rgba(63, 81, 181, 0.08); // Light blue background
+    color: #3F51B5;
+    border: none;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 12px;
+    }
+  }
 }
 
 .doc-card {
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  background: #FFFFFF;
 
   ion-card-content {
-    padding: 14px 16px;
+    padding: 16px;
   }
 }
 
 .doc-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+}
+
+// ── Left Section (Icon, Title, Date) ──
+.doc-left-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .doc-icon-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(var(--ion-color-primary-rgb), 0.1);
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid #3F51B5;
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -213,43 +372,172 @@
 
 .doc-icon {
   font-size: 24px;
-  color: var(--ion-color-primary);
+  color: #3F51B5;
+}
+
+.status-icon {
+  font-size: 22px;
+  color: #3F51B5; // Solid blue circle with white time
+  margin-right: 4px;
+  
+  &.approved {
+    color: #3F51B5; // Solid blue circle with white checkmark
+  }
 }
 
 .doc-body {
-  flex: 1;
-  overflow: hidden;
-}
-
-.doc-top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 4px;
+  flex-direction: column;
 }
 
-.doc-type {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ion-color-dark);
-}
-
-.doc-badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 20px;
+.doc-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #3F51B5;
+  margin-bottom: 2px;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .doc-date {
+  font-size: 11px;
+  color: #8CA0B8;
+  font-weight: 500;
+}
+
+// ── Right Section (Badge & Download) ──
+.doc-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.badge-status {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.badge-pending {
+  background: #E49360; // Soft orange/brown
+  color: #2F1C12;
+}
+
+.badge-approved {
+  background: #1EC9C4; // Cyan/Teal
+  color: #FFFFFF;
+}
+
+.btn-download {
+  --color: #3F51B5;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin-top: 8px;
+  height: 30px;
+  
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+// ── Pagination ──
+.pagination-container {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--ion-color-medium);
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 0 4px;
 
-  ion-icon {
-    font-size: 13px;
+  button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-prev {
+    border: 1px solid #DCE3EE;
+    background: #FFFFFF;
+    color: #3F51B5;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+    .double-chevron-left {
+      margin-left: -8px;
+    }
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+    .btn-text {
+      margin-left: 2px;
+    }
+  }
+
+  .btn-next {
+    background: #3F51B5;
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 14px;
+    box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+
+    .double-chevron-right {
+      margin-left: -8px;
+    }
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+    .btn-text {
+      margin-right: 4px;
+    }
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .page-number {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3F51B5;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+
+      &.active-page {
+        background: #3F51B5;
+        color: #FFFFFF;
+      }
+    }
+
+    .page-dot {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #3F51B5;
+      margin: 0 2px;
+    }
   }
 }
 

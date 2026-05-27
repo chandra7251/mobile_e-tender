@@ -1,18 +1,4 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Profil Vendor</ion-title>
-    <ion-buttons slot="end" *ngIf="!isEditMode">
-      <ion-button (click)="enterEditMode()" [disabled]="isLoading || !profile">
-        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end" *ngIf="isEditMode">
-      <ion-button (click)="cancelEdit()" color="light">Batal</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
+<ion-content class="view-mode-bg">
 
   <!-- ── Loading skeleton ── -->
   <div *ngIf="isLoading">
@@ -43,95 +29,119 @@
   <!-- ════════════════ VIEW MODE ════════════════ -->
   <ng-container *ngIf="profile && !isLoading && !isEditMode">
 
-    <!-- Avatar + nama card -->
-    <ion-card class="profile-card">
-      <ion-card-content class="ion-text-center">
-        <div class="avatar">
-          <ion-icon name="person-circle-outline"></ion-icon>
+    <div class="page-wrapper">
+      <!-- Top Vector -->
+      <div class="top-vector-container">
+        <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="white"/>
+        </svg>
+
+
+
+        <!-- Header inside top vector -->
+        <div class="custom-header">
+          <span class="header-title">Profile Vendor</span>
         </div>
-        <h2 class="profile-name">{{ profile.user.name }}</h2>
-        <p class="profile-email">{{ profile.user.email }}</p>
-
-        <!-- Status badge -->
-        <div class="status-row">
-          <ion-chip [color]="statusColor" class="status-chip">
-            <ion-label>{{ statusLabel }}</ion-label>
-          </ion-chip>
-        </div>
-
-        <!-- Catatan penolakan -->
-        <div class="rejection-note" *ngIf="verificationStatus === 'rejected' && verificationNotes">
-          <ion-note color="danger">
-            <ion-icon name="information-circle-outline"></ion-icon>
-            <span>{{ verificationNotes }}</span>
-          </ion-note>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Detail info -->
-    <ion-list class="detail-list" lines="full">
-      <ion-list-header>
-        <ion-label>Informasi Perusahaan</ion-label>
-      </ion-list-header>
-
-      <ion-item>
-        <ion-icon name="business-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <p>Nama Perusahaan</p>
-          <h3>{{ profile.company_name || '-' }}</h3>
-        </ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <p>Nomor Telepon</p>
-          <h3>{{ profile.phone || '-' }}</h3>
-        </ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-icon name="location-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <p>Alamat</p>
-          <h3 class="address-text">{{ profile.address || '-' }}</h3>
-        </ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <p>Email</p>
-          <h3>{{ profile.user.email }}</h3>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-
-      <!-- Aksi profil -->
-      <div class="ion-padding-top action-buttons">
-        <ion-button expand="block" (click)="enterEditMode()" id="btn-edit-profile">
-          <ion-icon slot="start" name="create-outline"></ion-icon>
-          Edit Profil
-        </ion-button>
-        <ion-button expand="block" fill="outline" color="medium" (click)="goToDocuments()" id="btn-go-documents">
-          <ion-icon slot="start" name="folder-outline"></ion-icon>
-          Dokumen Saya
-        </ion-button>
       </div>
 
+      <div class="auth-container profile-container-spacing">
+        <!-- Profile Card -->
+        <div class="profile-card-outline">
+          <div class="avatar-circle">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <h2 class="name">{{ profile.user.name }}</h2>
+          <p class="email">{{ profile.user.email }}</p>
+
+          <!-- Status badge -->
+          <div class="status-row">
+            <div class="status-badge" [ngClass]="verificationStatus">
+              <ion-icon name="checkmark-outline" *ngIf="verificationStatus === 'approved'"></ion-icon>
+              {{ statusLabel }}
+            </div>
+          </div>
+
+          <!-- Catatan penolakan -->
+          <div class="rejection-note" *ngIf="verificationStatus === 'rejected' && verificationNotes">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>{{ verificationNotes }}</span>
+          </div>
+        </div>
+
+        <!-- Detail info -->
+        <div class="info-title">INFORMASI PERUSAHAAN</div>
+
+        <div class="info-list">
+          <div class="info-item">
+            <ion-icon name="business"></ion-icon>
+            <span>{{ profile.company_name || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="call"></ion-icon>
+            <span>{{ profile.phone || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="location"></ion-icon>
+            <span>{{ profile.address || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <ion-icon name="mail"></ion-icon>
+            <span>{{ profile.user.email }}</span>
+          </div>
+        </div>
+
+        <!-- Dokumen Card -->
+        <div class="documents-card" (click)="goToDocuments()">
+          <div class="docs-info">
+            <h3>{{ totalDocuments }} Dokumen Di unggah</h3>
+            <div class="docs-badges" *ngIf="totalDocuments > 0">
+              <span class="badge-approved" *ngIf="verificationStatus === 'approved'">{{ totalDocuments }}
+                Diterima</span>
+              <span class="badge-pending" *ngIf="verificationStatus !== 'approved'">{{ totalDocuments }} Menunggu</span>
+            </div>
+            <div class="docs-badges" *ngIf="totalDocuments === 0">
+              <span class="badge-pending">0 Dokumen</span>
+            </div>
+          </div>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+
+        <!-- Aksi profil -->
+        <div class="action-buttons">
+          <button class="btn-edit" (click)="enterEditMode()">Edit Profile</button>
+          <button class="btn-logout" (click)="logout()">Logout</button>
+        </div>
+      </div>
+
+    </div>
   </ng-container>
 
   <!-- ════════════════ EDIT MODE ════════════════ -->
   <ng-container *ngIf="isEditMode">
 
-    <ion-card class="edit-card">
-      <ion-card-header>
-        <ion-card-title>Edit Profil</ion-card-title>
-        <ion-card-subtitle>Perbarui informasi perusahaan Anda</ion-card-subtitle>
-      </ion-card-header>
+    <div class="page-wrapper">
 
-      <ion-card-content>
+      <!-- Top Vector -->
+      <div class="top-vector-container">
+
+        <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="white"/>
+        </svg>
+
+        <div class="custom-header">
+          <span class="header-title">Edit Profile</span>
+        </div>
+      </div>
+
+      <div class="auth-container profile-container-spacing">
+
+        <!-- Center Avatar -->
+        <div class="edit-avatar-container">
+          <div class="avatar-circle">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <h2 class="edit-title">Edit Profile</h2>
+        </div>
 
         <!-- Error -->
         <div class="error-box" *ngIf="errorMessage">
@@ -139,74 +149,42 @@
           {{ errorMessage }}
         </div>
 
-        <!-- Nama lengkap -->
-        <ion-item class="form-item">
-          <ion-label position="stacked">Nama Lengkap *</ion-label>
-          <ion-input
-            [(ngModel)]="editForm.name"
-            type="text"
-            placeholder="Nama lengkap PIC"
-            [clearInput]="true">
-          </ion-input>
-        </ion-item>
+        <!-- Form fields custom tanpa ion-item -->
+        <div class="edit-form-container">
+          <div class="custom-input-row">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <input type="text" [(ngModel)]="editForm.name" placeholder="Masukan Nama Anda">
+          </div>
 
-        <!-- Nama perusahaan -->
-        <ion-item class="form-item">
-          <ion-label position="stacked">Nama Perusahaan *</ion-label>
-          <ion-input
-            [(ngModel)]="editForm.company_name"
-            type="text"
-            placeholder="PT / CV / UD ..."
-            [clearInput]="true">
-          </ion-input>
-        </ion-item>
+          <div class="custom-input-row">
+            <ion-icon name="business"></ion-icon>
+            <input type="text" [(ngModel)]="editForm.company_name" placeholder="Masukan Nama Perusahaan/Instannsi Anda">
+          </div>
 
-        <!-- Telepon -->
-        <ion-item class="form-item">
-          <ion-label position="stacked">Nomor Telepon *</ion-label>
-          <ion-input
-            [(ngModel)]="editForm.phone"
-            type="tel"
-            placeholder="08xxxxxxxxxx"
-            [clearInput]="true">
-          </ion-input>
-        </ion-item>
+          <div class="custom-input-row">
+            <ion-icon name="call"></ion-icon>
+            <input type="tel" [(ngModel)]="editForm.phone" placeholder="Masukan Nomor Telephone Anda">
+          </div>
 
-        <!-- Alamat -->
-        <ion-item class="form-item">
-          <ion-label position="stacked">Alamat *</ion-label>
-          <ion-textarea
-            [(ngModel)]="editForm.address"
-            placeholder="Jl. ..."
-            [rows]="3"
-            [autoGrow]="true">
-          </ion-textarea>
-        </ion-item>
-
-        <!-- Actions -->
-        <div class="form-actions">
-          <ion-button
-            expand="block"
-            (click)="onSave()"
-            [disabled]="isSaving"
-            class="save-btn">
-            <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
-            <span *ngIf="!isSaving">Simpan Perubahan</span>
-            <span *ngIf="isSaving">Menyimpan...</span>
-          </ion-button>
-
-          <ion-button
-            expand="block"
-            fill="outline"
-            color="medium"
-            (click)="cancelEdit()"
-            [disabled]="isSaving">
-            Batal
-          </ion-button>
+          <div class="custom-input-row">
+            <ion-icon name="location"></ion-icon>
+            <input type="text" [(ngModel)]="editForm.address" placeholder="Masukan Alamat Lengkap Anda.">
+          </div>
         </div>
 
-      </ion-card-content>
-    </ion-card>
+        <!-- Actions -->
+        <div class="action-buttons edit-actions">
+          <button class="btn-edit" (click)="onSave()" [disabled]="isSaving">
+            <ion-spinner *ngIf="isSaving" name="crescent" class="btn-spinner"></ion-spinner>
+            <span *ngIf="!isSaving">Confirm</span>
+          </button>
+          <button class="btn-cancel-outline" (click)="cancelEdit()" [disabled]="isSaving">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    </div>
 
   </ng-container>
 
