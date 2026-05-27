@@ -1,3 +1,58 @@
+// Base page background
+ion-content {
+  --background: #3451B2;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(32px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-title {
+      color: #3451B2;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}
+
+.search-container {
+  padding: 0 16px;
+  margin-top: -10px;
+  position: relative;
+  z-index: 10;
+
+  ion-searchbar {
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    padding: 0;
+  }
+}
+
 // ── Filter chips scroll ────────────────────────────────────────────────────
 
 .filter-scroll {
@@ -7,7 +62,9 @@
   padding: 10px 16px;
   scrollbar-width: none;
 
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   ion-chip {
     flex-shrink: 0;

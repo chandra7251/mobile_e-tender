@@ -1,3 +1,54 @@
+// Base page background
+ion-content {
+  --background: #3451B2;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-header-back {
+      --color: #3451B2;
+      --padding-start: 0;
+      --padding-end: 8px;
+      margin: 0;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+
+    .header-title {
+      color: #3451B2;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}
+
 // ── Layout ────────────────────────────────────────────────────────────────
 
 .page-content {
