@@ -53,12 +53,17 @@
         <div class="field-wrapper">
           <ion-icon name="lock-closed"></ion-icon>
           <ion-input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             name="password"
             [(ngModel)]="password"
             required
             placeholder="••••••••">
           </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" 
+            (click)="showPassword = !showPassword"
+            style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
+          </ion-icon>
         </div>
 
         <div class="auth-error" *ngIf="errorMessage">

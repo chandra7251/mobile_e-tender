@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.service';
 import { AuthService } from '../../core/services/auth.service';
+import { StorageService } from '../../core/services/storage.service';
 import { VendorProfile } from '../../core/models/user.model';
 
 @Component({
@@ -32,6 +33,7 @@ export class ProfilePage {
   constructor(
     private vendorService: VendorService,
     private authService: AuthService,
+    private storage: StorageService,
     private router: Router,
     private toast: ToastController,
     private alert: AlertController
@@ -150,10 +152,12 @@ export class ProfilePage {
 
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => {
+      next: async () => {
+        await this.showToast('Berhasil logout.', 'medium');
         this.router.navigate(['/login'], { replaceUrl: true });
       },
-      error: () => {
+      error: async () => {
+        await this.storage.clearAll();
         this.router.navigate(['/login'], { replaceUrl: true });
       }
     });

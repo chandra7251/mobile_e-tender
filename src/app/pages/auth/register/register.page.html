@@ -92,6 +92,11 @@
             required
             placeholder="Password">
           </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" 
+            (click)="showPassword = !showPassword"
+            style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
+          </ion-icon>
         </div>
 
         <div class="field-wrapper">
@@ -103,6 +108,11 @@
             required
             placeholder="Konfirmasi Password">
           </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" 
+            (click)="showPassword = !showPassword"
+            style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
+          </ion-icon>
         </div>
 
         <div class="auth-error" *ngIf="errorMessage">

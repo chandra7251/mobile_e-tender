@@ -1,77 +1,180 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Dashboard</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="onLogout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-
-  <!-- Welcome Card (loaded) -->
-  <div class="welcome-card" *ngIf="vendorProfile">
-    <div class="welcome-info">
-      <h2>Selamat datang,</h2>
-      <h3>{{ vendorProfile.user.name }}</h3>
-      <p>{{ companyName }}</p>
-
-      <!-- Status verifikasi -->
-      <ion-badge [color]="vendorStatus === 'approved' ? 'success' : vendorStatus === 'rejected' ? 'danger' : 'warning'" class="status-badge">
-        {{ vendorStatus === 'approved' ? 'Terverifikasi' : vendorStatus === 'rejected' ? 'Ditolak' : 'Menunggu Verifikasi' }}
-      </ion-badge>
+<ion-content class="dashboard-bg">
+  <div class="page-wrapper">
+    <!-- Top Vector -->
+    <div class="top-vector-container">
+      <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3F51B5"/>
+      </svg>
+      <div class="custom-header">
+        <span class="header-title">Dashboard</span>
+      </div>
     </div>
-    <ion-icon name="business-outline" class="welcome-icon"></ion-icon>
-  </div>
 
-  <!-- Welcome Card (skeleton) -->
-  <div class="welcome-card skeleton-card" *ngIf="!vendorProfile">
-    <div style="flex: 1">
-      <ion-skeleton-text animated style="width: 55%; height: 18px; border-radius: 6px;"></ion-skeleton-text>
-      <ion-skeleton-text animated style="width: 75%; height: 24px; margin-top: 8px; border-radius: 6px;"></ion-skeleton-text>
-      <ion-skeleton-text animated style="width: 45%; height: 14px; margin-top: 6px; border-radius: 6px;"></ion-skeleton-text>
+    <div class="dashboard-container">
+      
+      <!-- Welcome Card -->
+      <div class="welcome-card" *ngIf="vendorProfile; else welcomeSkeleton">
+        <div class="welcome-info">
+          <h2 class="welcome-text">Selamat Datang,</h2>
+          <h3 class="vendor-name">{{ vendorProfile.user.name }}</h3>
+          <div class="badge-status" [ngClass]="vendorStatus">
+            {{ vendorStatus === 'approved' ? 'Terverifikasi' : vendorStatus === 'rejected' ? 'Ditolak' : 'Menunggu Verifikasi' }}
+          </div>
+        </div>
+        <ion-icon name="business" class="welcome-icon"></ion-icon>
+      </div>
+
+      <ng-template #welcomeSkeleton>
+        <div class="welcome-card skeleton-card">
+          <div class="welcome-info" style="width: 100%;">
+            <ion-skeleton-text animated style="width: 60%; height: 20px; border-radius: 4px; margin-bottom: 8px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 100px; height: 26px; border-radius: 20px;"></ion-skeleton-text>
+          </div>
+          <ion-skeleton-text animated style="width: 48px; height: 48px; border-radius: 8px;"></ion-skeleton-text>
+        </div>
+      </ng-template>
+
+      <!-- Quick Action Card -->
+      <div class="quick-action-card">
+        <h3 class="section-title-white">Quick Action</h3>
+        <div class="quick-action-buttons">
+          <div class="action-btn" routerLink="/tabs/tenders">
+            <ion-icon name="search-outline"></ion-icon>
+            <span>Cari Tender</span>
+          </div>
+          <div class="action-btn" routerLink="/tabs/documents">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+            <span>Upload Dokumen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jadwal Tender Open Terdekat -->
+      <div class="section-header">
+        <h3 class="section-title">Jadwal Tender Open Terdekat</h3>
+        <a class="see-all" routerLink="/tabs/tenders" [queryParams]="{status: 'open'}">Lihat semua</a>
+      </div>
+      
+      <div class="horizontal-scroll" *ngIf="!isLoadingTenders && openTenders.length > 0">
+        <div class="tender-mini-card" *ngFor="let tender of openTenders" [routerLink]="['/tabs/tenders/detail', tender.id]">
+          <div class="badge-live">Live</div>
+          <div class="card-content">
+            <div class="title-row">
+              <h4>{{ tender.title }}</h4>
+              <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
+            </div>
+            <p class="date">{{ tender.start_date | date:'dd MMM yyyy' }}<br>{{ tender.start_date | date:'HH:mm' }} WIB</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div class="horizontal-scroll" *ngIf="isLoadingTenders">
+        <div class="tender-mini-card" *ngFor="let item of [1,2,3]">
+          <ion-skeleton-text animated style="width: 40px; height: 16px; border-radius: 6px; margin-bottom: 8px;"></ion-skeleton-text>
+          <div class="card-content">
+            <div class="title-row" style="margin-bottom: 16px;">
+              <ion-skeleton-text animated style="width: 70%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
+              <ion-icon name="hammer-outline" class="hammer-icon" style="opacity: 0.3;"></ion-icon>
+            </div>
+            <ion-skeleton-text animated style="width: 60%; height: 12px; border-radius: 4px; margin-bottom: 4px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 40%; height: 12px; border-radius: 4px;"></ion-skeleton-text>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingTenders && openTenders.length === 0" style="padding: 0 20px 16px; text-align: center; color: #9CA3AF; font-size: 13px;">
+        Belum ada jadwal tender open terdekat.
+      </div>
+
+      <!-- Tender Yang Anda Ikuti -->
+      <h3 class="section-title mt-24 mb-16">Tender Yang anda Ikuti :</h3>
+      <div class="stats-grid">
+        <div class="stat-card bg-bidding">
+          <ion-icon name="cash-outline" class="stat-icon text-yellow"></ion-icon>
+          <div class="stat-value text-yellow">2</div>
+          <div class="stat-label text-yellow">Sedang Bidding</div>
+        </div>
+        <div class="stat-card bg-open">
+          <ion-icon name="document-text-outline" class="stat-icon text-cyan"></ion-icon>
+          <div class="stat-value text-cyan">4</div>
+          <div class="stat-label text-cyan">Open</div>
+        </div>
+        <div class="stat-card bg-aanwijzing">
+          <ion-icon name="megaphone-outline" class="stat-icon text-pink"></ion-icon>
+          <div class="stat-value text-pink">3</div>
+          <div class="stat-label text-pink">Aanwijzing</div>
+        </div>
+        <div class="stat-card bg-finished">
+          <ion-icon name="checkmark-circle" class="stat-icon text-white"></ion-icon>
+          <div class="stat-value text-white">10</div>
+          <div class="stat-label text-white">Finished</div>
+        </div>
+      </div>
+
+      <!-- Countdown Bidding Closed -->
+      <h3 class="section-title mt-24 mb-16">Countdown Bidding Closed</h3>
+      <div class="horizontal-scroll">
+        <div class="countdown-card" *ngFor="let item of [1,2,3]">
+          <div class="countdown-header">
+            <h4>Furnitur Kantor</h4>
+            <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
+          </div>
+          <div class="divider"></div>
+          <p class="desc">Furnitur Kantor berisi 10 unit.<br><strong>Rp 500.000.000</strong></p>
+          <div class="countdown-footer">
+            <div class="date-range">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>25 Mei 2026 - 30 Mei 2026</span>
+            </div>
+            <div class="countdown-timer">14:24:14</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pengumuman Aanwijzing -->
+      <div class="announcement-card mt-24">
+        <div class="announcement-header">
+          <ion-icon name="megaphone-outline"></ion-icon>
+          <h3>Pengumuman Aanwijzing</h3>
+        </div>
+        <div class="announcement-body">
+          <ion-icon name="megaphone-outline" class="empty-icon"></ion-icon>
+          <p>Belum ada pengumuman aanwijzing</p>
+        </div>
+      </div>
+
+      <!-- Log Activity -->
+      <div class="activity-card mt-24 mb-32">
+        <h3 class="section-title text-primary">Log Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <ion-icon name="document-outline" class="activity-icon"></ion-icon>
+            <div class="activity-content">
+              <p>Bergabung dengan tender "Lelang Baju"</p>
+            </div>
+            <span class="activity-time">4 menit yang lalu</span>
+          </div>
+          <div class="activity-divider"></div>
+          <div class="activity-item">
+            <ion-icon name="folder-open-outline" class="activity-icon"></ion-icon>
+            <div class="activity-content">
+              <p>Upload Dokumen Perusahaan</p>
+            </div>
+            <span class="activity-time">2 hari yang lalu</span>
+          </div>
+          <div class="activity-divider"></div>
+          <div class="activity-item">
+            <ion-icon name="pricetag-outline" class="activity-icon"></ion-icon>
+            <div class="activity-content">
+              <p>Bidding pada tender "Lelang Komputer"</p>
+            </div>
+            <span class="activity-time">3 hari yang lalu</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <!-- Menu Utama -->
-  <ion-list-header>
-    <ion-label>Menu Utama</ion-label>
-  </ion-list-header>
-
-  <ion-grid>
-    <ion-row>
-
-      <ion-col size="6">
-        <div class="menu-card" routerLink="/tabs/tenders">
-          <ion-icon name="document-text-outline" color="primary"></ion-icon>
-          <span>Daftar Tender</span>
-        </div>
-      </ion-col>
-
-      <ion-col size="6">
-        <div class="menu-card" routerLink="/tabs/documents">
-          <ion-icon name="folder-open-outline" color="success"></ion-icon>
-          <span>Dokumen Saya</span>
-        </div>
-      </ion-col>
-
-      <ion-col size="6">
-        <div class="menu-card" routerLink="/tabs/profile">
-          <ion-icon name="person-circle-outline" color="tertiary"></ion-icon>
-          <span>Profil</span>
-        </div>
-      </ion-col>
-
-      <ion-col size="6">
-        <div class="menu-card" (click)="onLogout()">
-          <ion-icon name="log-out-outline" color="medium"></ion-icon>
-          <span>Logout</span>
-        </div>
-      </ion-col>
-
-    </ion-row>
-  </ion-grid>
-
 </ion-content>

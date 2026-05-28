@@ -1,35 +1,100 @@
+// Base page background
+ion-content {
+  --background: #3451B2;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-header-back {
+      --color: #3451B2;
+      --padding-start: 0;
+      --padding-end: 8px;
+      margin: 0;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+
+    .header-title {
+      color: #3451B2;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}
+
 // ── Layout ────────────────────────────────────────────────────────────────
 
 .page-content {
   padding: 16px 16px 80px;
 }
 
-// ── Result card ───────────────────────────────────────────────────────────
+// ── Result card (Hasil Penawaran Anda) ────────────────────────────────────
 
 .result-card {
-  border-radius: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: none;
+  border: 1px solid #FFFFFF;
+  background: transparent;
+
+  ion-card-header {
+    padding: 20px 20px 0 20px;
+  }
 
   ion-card-content {
-    padding: 16px;
+    padding: 16px 20px 20px 20px;
   }
 }
 
-// ── Winner card ───────────────────────────────────────────────────────────
+// ── Winner card (Pemenang Tender) ─────────────────────────────────────────
 
 .winner-card {
-  border-radius: 16px;
-  margin-bottom: 14px;
-  background: linear-gradient(135deg,
-    rgba(var(--ion-color-warning-rgb), 0.05) 0%,
-    rgba(var(--ion-color-warning-rgb), 0.02) 100%
-  );
-  border: 1.5px solid rgba(var(--ion-color-warning-rgb), 0.25);
-  box-shadow: 0 4px 16px rgba(var(--ion-color-warning-rgb), 0.08);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: none;
+  border: 1px solid #FBDB0B;
+  background: transparent;
+
+  ion-card-header {
+    padding: 20px 20px 0 20px;
+  }
 
   ion-card-content {
-    padding: 16px;
+    padding: 16px 20px 20px 20px;
+  }
+
+  .section-title {
+    color: #FFFFFF;
+    ion-icon {
+      color: #FBDB0B; // Yellow trophy
+    }
   }
 }
 
@@ -38,87 +103,89 @@
 .section-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
+  gap: 12px;
+  font-size: 16px;
   font-weight: 700;
-  color: var(--ion-color-dark);
+  color: #FFFFFF;
 
   ion-icon {
-    font-size: 20px;
+    font-size: 28px;
+    color: #FFFFFF;
   }
 }
 
 // ── Result badge ──────────────────────────────────────────────────────────
 
 .result-badge-row {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .result-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   padding: 6px 16px;
   border-radius: 24px;
   letter-spacing: 0.2px;
 
   ion-icon {
-    font-size: 17px;
+    font-size: 16px;
+  }
+
+  &[color="danger"] {
+    --background: #EF4444; // Red
+    color: #FFFFFF;
+  }
+
+  &[color="success"] {
+    --background: #10B981; // Green
+    color: #FFFFFF;
   }
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────
 
 .stat-row {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .winner-stats {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   margin-top: 4px;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .stat-label {
   font-size: 11px;
-  color: var(--ion-color-medium);
+  color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-weight: 700;
 }
 
 .stat-value {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ion-color-dark);
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  line-height: 1.5;
 
   &.winner-price {
     font-size: 20px;
     font-weight: 800;
-    color: var(--ion-color-warning-shade);
-  }
-
-  &.tender-title-val {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ion-color-medium-shade);
-    line-height: 1.4;
+    color: #FBDB0B;
   }
 
   &.notes-val {
-    font-size: 13px;
     font-weight: 400;
-    color: var(--ion-color-medium-shade);
-    line-height: 1.5;
   }
 }
 
@@ -127,17 +194,21 @@
 .winner-company {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--ion-color-dark);
+  gap: 12px;
   margin-bottom: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(var(--ion-color-warning-rgb), 0.2);
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
   ion-icon {
-    font-size: 22px;
+    font-size: 32px;
+    color: #FBDB0B;
     flex-shrink: 0;
+  }
+
+  span {
+    font-size: 18px;
+    font-weight: 800;
+    color: #FFFFFF;
   }
 }
 
