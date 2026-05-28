@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { VendorService } from '../../core/services/vendor.service';
 import { StorageService } from '../../core/services/storage.service';
-import { VendorProfile, Tender } from '../../core/models/user.model';
+import { VendorProfile, Tender, Announcement } from '../../core/models/user.model';
 import { TenderService } from '../../core/services/tender.service';
+import { ActivityService, ActivityLog } from '../../core/services/activity.service';
 
 @Component({
   standalone: false,
@@ -19,18 +20,39 @@ export class HomePage {
   openTenders: Tender[] = [];
   isLoadingTenders = false;
 
+  myTendersCount = { bidding: 0, open: 0, aanwijzing: 0, finished: 0 };
+  isLoadingMyTenders = false;
+
+  biddingTenders: Tender[] = [];
+  isLoadingBidding = false;
+  countdowns: { [id: number]: string } = {};
+  private timer: any;
+
+  aanwijzings: (Announcement & { tenderTitle?: string })[] = [];
+  isLoadingAanwijzing = false;
+
+  activities: ActivityLog[] = [];
+
   constructor(
     private auth: AuthService,
     private vendorService: VendorService,
     private storage: StorageService,
     private router: Router,
     private toast: ToastController,
-    private tenderService: TenderService
+    private tenderService: TenderService,
+    public activityService: ActivityService
   ) {}
 
   ionViewWillEnter(): void {
     this.loadProfile();
     this.loadOpenTenders();
+    this.loadMyTenders();
+    this.loadBiddingTenders();
+    this.loadActivities();
+  }
+
+  ngOnDestroy(): void {
+    if (this.timer) clearInterval(this.timer);
   }
 
   private loadProfile(): void {
@@ -59,6 +81,117 @@ export class HomePage {
         this.isLoadingTenders = false;
       }
     });
+  }
+
+  private loadMyTenders(): void {
+    this.isLoadingMyTenders = true;
+    this.vendorService.getMyTenders().subscribe({
+      next: (res) => {
+        this.isLoadingMyTenders = false;
+        if (res.status === 'success' && res.data) {
+          this.myTendersCount = {
+            bidding: res.data.filter(t => t.status === 'bidding').length,
+            open: res.data.filter(t => t.status === 'open').length,
+            aanwijzing: res.data.filter(t => t.status === 'aanwijzing').length,
+            finished: res.data.filter(t => t.status === 'finished').length
+          };
+          this.loadMyAnnouncements(res.data);
+        }
+      },
+      error: () => this.isLoadingMyTenders = false
+    });
+  }
+
+  private loadMyAnnouncements(tenders: Tender[]): void {
+    this.isLoadingAanwijzing = true;
+    this.aanwijzings = [];
+    
+    // Kita cek semua tender, karena aanwijzing bisa saja ada di status open atau aanwijzing
+    if (tenders.length === 0) {
+      this.isLoadingAanwijzing = false;
+      return;
+    }
+
+    let loadedCount = 0;
+    tenders.forEach(t => {
+      this.tenderService.getAnnouncements(t.id).subscribe({
+        next: (res) => {
+          if (res.status === 'success' && res.data && res.data.length > 0) {
+            // Kita inject title tender agar bisa ditampilkan di UI
+            const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
+            this.aanwijzings = [...this.aanwijzings, ...mapped];
+          }
+          loadedCount++;
+          if (loadedCount === tenders.length) {
+            this.finalizeAnnouncements();
+          }
+        },
+        error: () => {
+          loadedCount++;
+          if (loadedCount === tenders.length) {
+            this.finalizeAnnouncements();
+          }
+        }
+      });
+    });
+  }
+
+  private finalizeAnnouncements(): void {
+    this.aanwijzings.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    this.aanwijzings = this.aanwijzings.slice(0, 5);
+    this.isLoadingAanwijzing = false;
+  }
+
+  private loadActivities(): void {
+    this.activities = this.activityService.getActivities().slice(0, 5);
+  }
+
+  private loadBiddingTenders(): void {
+    this.isLoadingBidding = true;
+    this.tenderService.getTenders({ status: 'bidding' }).subscribe({
+      next: (res) => {
+        this.isLoadingBidding = false;
+        if (res.status === 'success' && res.data) {
+          this.biddingTenders = res.data;
+          this.startCountdown();
+        }
+      },
+      error: () => this.isLoadingBidding = false
+    });
+  }
+
+  private startCountdown(): void {
+    if (this.timer) clearInterval(this.timer);
+    this.updateCountdowns(); // initial call
+    this.timer = setInterval(() => {
+      this.updateCountdowns();
+    }, 1000);
+  }
+
+  private updateCountdowns(): void {
+    const now = new Date().getTime();
+    this.biddingTenders.forEach(t => {
+      // jika ada bidding_end, gunakan itu, jika tidak gunakan end_date
+      const endDateString = t.bidding_end || t.end_date;
+      if (endDateString) {
+        const end = new Date(endDateString).getTime();
+        const diff = end - now;
+        if (diff <= 0) {
+          this.countdowns[t.id] = '00:00:00';
+        } else {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          this.countdowns[t.id] = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+        }
+      } else {
+        this.countdowns[t.id] = '00:00:00';
+      }
+    });
+  }
+
+  private pad(n: number): string {
+    return n < 10 ? '0' + n : n.toString();
   }
 
   onLogout(): void {
