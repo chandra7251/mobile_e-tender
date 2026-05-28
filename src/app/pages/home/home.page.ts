@@ -4,7 +4,8 @@ import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { VendorService } from '../../core/services/vendor.service';
 import { StorageService } from '../../core/services/storage.service';
-import { VendorProfile } from '../../core/models/user.model';
+import { VendorProfile, Tender } from '../../core/models/user.model';
+import { TenderService } from '../../core/services/tender.service';
 
 @Component({
   standalone: false,
@@ -15,17 +16,21 @@ import { VendorProfile } from '../../core/models/user.model';
 export class HomePage {
 
   vendorProfile: VendorProfile | null = null;
+  openTenders: Tender[] = [];
+  isLoadingTenders = false;
 
   constructor(
     private auth: AuthService,
     private vendorService: VendorService,
     private storage: StorageService,
     private router: Router,
-    private toast: ToastController
+    private toast: ToastController,
+    private tenderService: TenderService
   ) {}
 
   ionViewWillEnter(): void {
     this.loadProfile();
+    this.loadOpenTenders();
   }
 
   private loadProfile(): void {
@@ -37,6 +42,21 @@ export class HomePage {
       },
       error: (err) => {
         console.warn('[vendors/me] error', err?.status);
+      }
+    });
+  }
+
+  private loadOpenTenders(): void {
+    this.isLoadingTenders = true;
+    this.tenderService.getTenders({ status: 'open' }).subscribe({
+      next: (res) => {
+        this.isLoadingTenders = false;
+        if (res.status === 'success' && res.data) {
+          this.openTenders = res.data.slice(0, 5);
+        }
+      },
+      error: () => {
+        this.isLoadingTenders = false;
       }
     });
   }

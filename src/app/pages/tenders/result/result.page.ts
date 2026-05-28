@@ -100,7 +100,7 @@ export class ResultPage implements OnInit {
 
   getResultLabel(result: string): string {
     switch (result) {
-      case 'won':  return '🏆 Anda Menang!';
+      case 'won':  return 'Anda Menang!';
       case 'lost': return 'Belum Beruntung';
       case 'pending': return 'Menunggu Hasil';
       default: return 'Belum Tersedia';

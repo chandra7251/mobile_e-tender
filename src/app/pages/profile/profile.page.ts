@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular';
 import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.service';
+import { AuthService } from '../../core/services/auth.service';
+import { StorageService } from '../../core/services/storage.service';
 import { VendorProfile } from '../../core/models/user.model';
 
 @Component({
@@ -13,6 +15,7 @@ import { VendorProfile } from '../../core/models/user.model';
 export class ProfilePage {
 
   profile: VendorProfile | null = null;
+  totalDocuments = 0;
 
   // Form edit
   isEditMode = false;
@@ -29,6 +32,8 @@ export class ProfilePage {
 
   constructor(
     private vendorService: VendorService,
+    private authService: AuthService,
+    private storage: StorageService,
     private router: Router,
     private toast: ToastController,
     private alert: AlertController
@@ -37,6 +42,7 @@ export class ProfilePage {
   // Dipanggil setiap kali halaman ditampilkan
   ionViewWillEnter(): void {
     this.loadProfile();
+    this.loadDocumentsCount();
   }
 
   // ─── Load data ──────────────────────────────────────────────────────────────
@@ -56,6 +62,19 @@ export class ProfilePage {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err?.error?.message || 'Gagal memuat profil.';
+      }
+    });
+  }
+
+  loadDocumentsCount(): void {
+    this.vendorService.getDocuments().subscribe({
+      next: (res) => {
+        if (res.status === 'success' && res.data) {
+          this.totalDocuments = res.data.length;
+        }
+      },
+      error: () => {
+        this.totalDocuments = 0;
       }
     });
   }
@@ -125,6 +144,21 @@ export class ProfilePage {
         } else {
           this.errorMessage = err?.error?.message || 'Terjadi kesalahan.';
         }
+      }
+    });
+  }
+
+  // ─── Logout ───────────────────────────────────────────────────────────────────
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: async () => {
+        await this.showToast('Berhasil logout.', 'medium');
+        this.router.navigate(['/login'], { replaceUrl: true });
+      },
+      error: async () => {
+        await this.storage.clearAll();
+        this.router.navigate(['/login'], { replaceUrl: true });
       }
     });
   }

@@ -1,3 +1,54 @@
+// Base page background
+ion-content {
+  --background: #3451B2;
+}
+
+// ── Top Vector & Header ──
+.top-vector-container {
+  line-height: 0;
+  margin-top: 0;
+  padding: 0;
+  position: relative; // for absolute header
+
+  svg {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-header-back {
+      --color: #3451B2;
+      --padding-start: 0;
+      --padding-end: 8px;
+      margin: 0;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+
+    .header-title {
+      color: #3451B2;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}
+
 // ── Layout ────────────────────────────────────────────────────────────────
 
 .page-content {
@@ -69,9 +120,11 @@
 // ── Form card ─────────────────────────────────────────────────────────────
 
 .form-card {
-  border-radius: 16px;
+  border-radius: 12px;
   margin-bottom: 14px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  box-shadow: none;
+  border: 1px solid #FBDB0B;
+  background: transparent;
 
   ion-card-content {
     padding: 16px;
@@ -84,11 +137,18 @@
   gap: 8px;
   font-size: 16px;
   font-weight: 700;
-  color: var(--ion-color-dark);
+  color: #FFFFFF;
 
   ion-icon {
     font-size: 20px;
+    color: #FBDB0B;
   }
+}
+
+ion-card-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 // ── Field ────────────────────────────────────────────────────────────────
@@ -101,17 +161,17 @@
   display: block;
   font-size: 13px;
   font-weight: 700;
-  color: var(--ion-color-dark-tint);
+  color: #FFFFFF;
   margin-bottom: 8px;
 
   .required {
-    color: var(--ion-color-danger);
+    color: #FF4A4A;
     margin-left: 2px;
   }
 
   .optional {
     font-weight: 400;
-    color: var(--ion-color-medium);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 12px;
   }
 }
@@ -121,15 +181,15 @@
 .currency-input-wrap {
   display: flex;
   align-items: center;
-  border: 1.5px solid var(--ion-color-light-shade);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   overflow: hidden;
-  background: var(--ion-color-light);
+  background: rgba(255, 255, 255, 0.15);
   transition: border-color 0.2s;
 
   &:focus-within {
-    border-color: var(--ion-color-primary);
-    background: white;
+    border-color: #FBDB0B;
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -137,12 +197,12 @@
   padding: 0 12px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--ion-color-medium);
-  background: var(--ion-color-light-shade);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
   height: 48px;
   display: flex;
   align-items: center;
-  border-right: 1.5px solid var(--ion-color-light-shade);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
 
@@ -154,11 +214,11 @@
   padding: 0 14px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--ion-color-dark);
+  color: #FFFFFF;
   background: transparent;
 
   &::placeholder {
-    color: var(--ion-color-medium-tint);
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 400;
     font-size: 14px;
   }
@@ -173,7 +233,7 @@
 
 .field-hint {
   font-size: 12px;
-  color: var(--ion-color-primary);
+  color: #FBDB0B;
   font-weight: 600;
   margin: 6px 0 0 2px;
 }
@@ -182,12 +242,12 @@
 
 .notes-textarea {
   width: 100%;
-  border: 1.5px solid var(--ion-color-light-shade);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 14px;
-  color: var(--ion-color-dark);
-  background: var(--ion-color-light);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.15);
   resize: none;
   outline: none;
   line-height: 1.5;
@@ -196,23 +256,26 @@
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: var(--ion-color-primary);
-    background: white;
+    border-color: #FBDB0B;
+    background: rgba(255, 255, 255, 0.2);
   }
 
   &::placeholder {
-    color: var(--ion-color-medium-tint);
+    color: rgba(255, 255, 255, 0.5);
   }
 }
 
 // ── Submit button ─────────────────────────────────────────────────────────
 
 .submit-btn {
-  --border-radius: 12px;
-  height: 52px;
-  font-size: 16px;
+  --border-radius: 8px;
+  height: 48px;
+  font-size: 14px;
   font-weight: 700;
+  text-transform: uppercase;
   margin-top: 8px;
+  --background: #FBDB0B;
+  color: #000000;
 }
 
 .submit-note {
@@ -220,8 +283,8 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  font-size: 12px;
-  color: var(--ion-color-medium);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
   text-align: center;
   margin: 10px 0 0;
 

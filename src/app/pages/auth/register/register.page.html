@@ -1,89 +1,148 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Daftar Akun Vendor</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="page-wrapper">
+    
+    <!-- Top Vector Area -->
+    <div class="top-vector-container">
+      <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3451B2"/>
+      </svg>
 
-<ion-content class="ion-padding">
+      <!-- Header inside top vector -->
+      <div class="custom-header">
+        <div class="header-left-group">
+          <ion-button fill="clear" class="btn-header-back" routerLink="/login">
+            <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+          </ion-button>
+          <span class="header-title">Register</span>
+        </div>
+      </div>
+    </div>
 
-  <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+    <!-- Form Area -->
+    <div class="auth-container">
+      <div class="auth-header">
+        <!-- Logo -->
+        <img src="assets/logo.png" class="auth-logo" alt="E-Tender Logo" />
+        <h2 class="title">Daftar Sebagai Vendor</h2>
+      </div>
 
-    <ion-list lines="none" class="auth-form-list">
+      <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+        
+        <div class="field-wrapper">
+          <ion-icon name="person"></ion-icon>
+          <ion-input
+            type="text"
+            name="name"
+            [(ngModel)]="form.name"
+            required
+            placeholder="Nama PIC / Penanggung Jawab Perusahaan">
+          </ion-input>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Nama Lengkap *</ion-label>
-        <ion-input name="name" [(ngModel)]="form.name" required placeholder="Nama lengkap"></ion-input>
-      </ion-item>
+        <div class="field-wrapper">
+          <ion-icon name="mail"></ion-icon>
+          <ion-input
+            type="email"
+            name="email"
+            [(ngModel)]="form.email"
+            required
+            placeholder="Email">
+          </ion-input>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Email *</ion-label>
-        <ion-input type="email" name="email" [(ngModel)]="form.email" required placeholder="email@perusahaan.com"></ion-input>
-      </ion-item>
+        <div class="field-wrapper textarea-wrapper">
+          <ion-icon name="location"></ion-icon>
+          <ion-textarea
+            name="address"
+            [(ngModel)]="form.address"
+            required
+            placeholder="Alamat Perusahaan"
+            rows="3">
+          </ion-textarea>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Nama Perusahaan *</ion-label>
-        <ion-input name="company_name" [(ngModel)]="form.company_name" required placeholder="PT. Contoh Jaya"></ion-input>
-      </ion-item>
+        <div class="field-wrapper">
+          <ion-icon name="business"></ion-icon>
+          <ion-input
+            type="text"
+            name="company_name"
+            [(ngModel)]="form.company_name"
+            required
+            placeholder="Nama Perusahaan">
+          </ion-input>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Nomor Telepon *</ion-label>
-        <ion-input type="tel" name="phone" [(ngModel)]="form.phone" required placeholder="08xxxxxxxxxx"></ion-input>
-      </ion-item>
+        <div class="field-wrapper">
+          <ion-icon name="call"></ion-icon>
+          <ion-input
+            type="tel"
+            name="phone"
+            [(ngModel)]="form.phone"
+            required
+            placeholder="Nomor Telepon">
+          </ion-input>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Alamat *</ion-label>
-        <ion-textarea name="address" [(ngModel)]="form.address" required placeholder="Alamat lengkap perusahaan" rows="3"></ion-textarea>
-      </ion-item>
+        <div class="field-wrapper">
+          <ion-icon name="lock-closed"></ion-icon>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            [(ngModel)]="form.password"
+            required
+            placeholder="Password">
+          </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" 
+            (click)="showPassword = !showPassword"
+            style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
+          </ion-icon>
+        </div>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Password *</ion-label>
-        <ion-input
-          [type]="showPassword ? 'text' : 'password'"
-          name="password"
-          [(ngModel)]="form.password"
-          required
-          placeholder="Min. 8 karakter">
-        </ion-input>
-        <ion-button slot="end" fill="clear" (click)="togglePassword()">
-          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        <div class="field-wrapper">
+          <ion-icon name="lock-closed"></ion-icon>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            name="password_confirmation"
+            [(ngModel)]="form.password_confirmation"
+            required
+            placeholder="Konfirmasi Password">
+          </ion-input>
+          <ion-icon 
+            [name]="showPassword ? 'eye-outline' : 'eye-off-outline'" 
+            (click)="showPassword = !showPassword"
+            style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
+          </ion-icon>
+        </div>
+
+        <div class="auth-error" *ngIf="errorMessage">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errorMessage }}
+        </div>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="btn-cta"
+          [disabled]="isLoading || !registerForm.valid">
+          <span *ngIf="!isLoading">Daftar</span>
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
         </ion-button>
-      </ion-item>
 
-      <ion-item class="auth-item">
-        <ion-label position="stacked">Konfirmasi Password *</ion-label>
-        <ion-input
-          [type]="showPassword ? 'text' : 'password'"
-          name="password_confirmation"
-          [(ngModel)]="form.password_confirmation"
-          required
-          placeholder="Ulangi password">
-        </ion-input>
-      </ion-item>
+        <div class="auth-footer">
+          <span class="text-muted">Sudah Punya Akun?</span>
+          <a routerLink="/login" class="link-login">Masuk</a>
+        </div>
 
-    </ion-list>
-
-    <div class="auth-error" *ngIf="errorMessage">
-      <ion-icon name="alert-circle-outline"></ion-icon>
-      {{ errorMessage }}
+      </form>
     </div>
 
-    <ion-button
-      expand="block"
-      type="submit"
-      class="auth-btn"
-      [disabled]="isLoading || !registerForm.valid">
-      <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-      <span *ngIf="!isLoading">Daftar Sekarang</span>
-    </ion-button>
-
-    <div class="auth-footer">
-      <span>Sudah punya akun?</span>
-      <ion-button fill="clear" routerLink="/login">Masuk</ion-button>
+    <!-- Bottom Vector -->
+    <div class="bottom-vector-container">
+      <svg width="360" height="100" viewBox="0 0 360 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M322.346 35.1045C349.913 33.9009 359.508 11.2 360.859 0L409 168L-3.49336 155.463V67.7015C-16.0607 38.0131 21.6752 33.6 42.114 35.1045C124.038 35.606 294.779 36.3081 322.346 35.1045Z" fill="#3451B2"/>
+      </svg>
     </div>
 
-  </form>
-
+  </div>
 </ion-content>

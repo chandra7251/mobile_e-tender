@@ -20,8 +20,8 @@ ion-content {
   min-height: 100%;
 }
 
-// Reset default ion-input
-ion-input {
+// Reset default ion-input and ion-textarea
+ion-input, ion-textarea {
   --padding-start: 0;
   --padding-end: 0;
   --background: transparent;
@@ -32,38 +32,63 @@ ion-input {
 // Vectors
 // Cari .top-vector-container — tambahkan/update properti ini
 .top-vector-container {
-  line-height: 0;     // ← wajib ada, hilangkan gap whitespace
+  line-height: 0;
   margin-top: 0;
   padding: 0;
+  position: relative; // for absolute header
 
   svg {
     width: 100%;
     display: block;
+    height: auto;
   }
 
-  .title {
+  .custom-header {
     position: absolute;
-    top: 18px;
-    left: 30px;
-    color: #{$primary-blue};
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(32px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-header-back {
+      --color: #{$primary-blue};
+      --padding-start: 0;
+      --padding-end: 8px;
+      margin: 0;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+
+    .header-title {
+      color: #{$primary-blue};
+      font-size: 20px;
+      font-weight: 700;
+    }
   }
 }
 
 
 // Cari .bottom-vector-container — tambahkan/update properti ini
 .bottom-vector-container {
-  line-height: 0;     // ← wajib ada
+  line-height: 0;
   margin-bottom: 0;
   padding: 0;
-  margin-top: auto;   // dorong wave ke paling bawah
+  margin-top: auto;
 
   svg {
     width: 100%;
     display: block;
+    height: auto;
   }
 }
 

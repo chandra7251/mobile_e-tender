@@ -18,6 +18,10 @@ export class DocumentsPage implements OnInit {
   isLoading = false;
   listError = '';
 
+  // ── Paginasi ──────────────────────────────────────────────────────────────
+  currentPage = 1;
+  itemsPerPage = 7;
+
   // ── Upload form ───────────────────────────────────────────────────────────
   selectedType: AllowedType = 'legalitas';
   selectedFile: File | null = null;
@@ -35,20 +39,43 @@ export class DocumentsPage implements OnInit {
     { value: 'dokumen_pendukung', label: 'Dokumen Pendukung' },
   ];
 
+  vendorStatus = '';
+
   constructor(
     private vendorService: VendorService,
     private toast: ToastController
   ) {}
 
   ngOnInit(): void {
-    this.loadDocuments();
+    this.loadProfileAndDocuments();
   }
 
   // ── Load list ─────────────────────────────────────────────────────────────
 
-  loadDocuments(): void {
+  loadProfileAndDocuments(): void {
     this.isLoading = true;
     this.listError = '';
+    
+    // Ambil status profil vendor terlebih dahulu
+    this.vendorService.getProfile().subscribe({
+      next: (res) => {
+        if (res.status === 'success' && res.data) {
+          this.vendorStatus = res.data.verification_status;
+        }
+        this.loadDocuments(false); // Lanjut load dokumen
+      },
+      error: () => {
+        this.vendorStatus = 'pending';
+        this.loadDocuments(false);
+      }
+    });
+  }
+
+  loadDocuments(setLoading = true): void {
+    if (setLoading) {
+      this.isLoading = true;
+      this.listError = '';
+    }
 
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
@@ -199,6 +226,46 @@ export class DocumentsPage implements OnInit {
     return new Date(dateStr).toLocaleDateString('id-ID', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
+  }
+
+  // ── Paginasi Helpers ──────────────────────────────────────────────────────
+
+  get paginatedDocuments(): VendorDocument[] {
+    if (this.showUploadForm) {
+      return this.documents.slice(0, 3); // Maksimal 3 dokumen saat form upload tampil
+    }
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.documents.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.documents.length / this.itemsPerPage);
+  }
+
+  get pagesArray(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number') {
+      this.currentPage = page;
+    }
   }
 
   private async showToast(message: string, color: string): Promise<void> {

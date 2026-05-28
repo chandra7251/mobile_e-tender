@@ -1,15 +1,20 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()" id="btn-back-detail">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Detail Tender</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+
+  <!-- Vector Gelombang Atas -->
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="white"/>
+    </svg>
+
+    <div class="custom-header">
+      <div class="header-left-group">
+        <ion-button fill="clear" class="btn-header-back" (click)="goBack()">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <span class="header-title">Detail Tender</span>
+      </div>
+    </div>
+  </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
@@ -103,20 +108,20 @@
     <ion-card class="bid-card" *ngIf="showBidButton">
       <ion-card-content>
         <div class="bid-info">
-          <ion-icon name="pricetag-outline" color="warning"></ion-icon>
+          <!-- Atribut color dihapus agar SCSS mengambil alih -->
+          <ion-icon name="pricetag-outline"></ion-icon>
           <div>
             <span class="bid-title">Fase Bidding Sedang Berlangsung</span>
-            <span class="bid-subtitle">Ajukan atau perbarui penawaran harga Anda sekarang.</span>
+            <span class="bid-subtitle">Ajukan atau perbarui penawaran harga anda sekarang</span>
           </div>
         </div>
         <ion-button
           expand="block"
-          color="warning"
           (click)="goBid()"
           id="btn-go-bid"
           class="bid-btn">
           <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-          Ajukan Penawaran
+          AJUKAN PENAWARAN
         </ion-button>
       </ion-card-content>
     </ion-card>
@@ -125,15 +130,14 @@
     <ion-card class="result-card" *ngIf="showResultButton">
       <ion-card-content>
         <div class="result-info">
-          <ion-icon name="trophy-outline" color="primary"></ion-icon>
+          <ion-icon name="trophy-outline"></ion-icon>
           <div>
-            <span class="result-title">Tender Telah Selesai</span>
-            <span class="result-subtitle">Lihat pemenang dan hasil penawaran Anda.</span>
+            <span class="result-title">TENDER TELAH SELESAI</span>
+            <span class="result-subtitle">Lihat pemenang dan hasil penawaran anda</span>
           </div>
         </div>
         <ion-button
           expand="block"
-          color="primary"
           (click)="goResult()"
           id="btn-go-result"
           class="result-btn">

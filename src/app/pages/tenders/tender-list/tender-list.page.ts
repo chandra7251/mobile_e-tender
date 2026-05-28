@@ -21,6 +21,10 @@ export class TenderListPage {
   searchQuery = '';
   activeFilter: FilterStatus = 'all';
 
+  // ── Paginasi ──────────────────────────────────────────────────────────────
+  currentPage = 1;
+  itemsPerPage = 3;
+
   readonly filterOptions: { value: FilterStatus; label: string }[] = [
     { value: 'all',        label: 'Semua' },
     { value: 'open',       label: 'Open' },
@@ -108,6 +112,7 @@ export class TenderListPage {
     }
 
     this.filteredTenders = result;
+    this.currentPage = 1;
   }
 
   // ── Navigation ────────────────────────────────────────────────────────────
@@ -157,5 +162,42 @@ export class TenderListPage {
 
   get skeletonItems(): number[] {
     return [1, 2, 3, 4];
+  }
+
+  // ── Paginasi Helpers ──────────────────────────────────────────────────────
+
+  get paginatedTenders(): Tender[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredTenders.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredTenders.length / this.itemsPerPage);
+  }
+
+  get pagesArray(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number') {
+      this.currentPage = page;
+    }
   }
 }

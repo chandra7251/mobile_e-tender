@@ -1,22 +1,29 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Daftar Tender</ion-title>
-  </ion-toolbar>
+<ion-content>
+
+  <!-- Vector Gelombang Atas -->
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="white"/>
+    </svg>
+
+    <div class="custom-header">
+      <div class="header-left-group">
+        <span class="header-title">Tender</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Search bar -->
-  <ion-toolbar>
+  <div class="search-container">
     <ion-searchbar
       [(ngModel)]="searchQuery"
       (ionInput)="onSearchChange()"
-      placeholder="Cari tender..."
+      placeholder="Cari Tender"
       debounce="300"
       animated
       id="search-tender">
     </ion-searchbar>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
+  </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
@@ -31,7 +38,6 @@
       *ngFor="let opt of filterOptions"
       [id]="'filter-' + opt.value"
       [class.active-chip]="activeFilter === opt.value"
-      [color]="activeFilter === opt.value ? 'primary' : 'light'"
       (click)="setFilter(opt.value)">
       <ion-label>{{ opt.label }}</ion-label>
     </ion-chip>
@@ -79,13 +85,13 @@
 
     <!-- ── Tender count ── -->
     <div class="result-info" *ngIf="!isLoading && filteredTenders.length > 0">
-      {{ filteredTenders.length }} tender ditemukan
+      {{ filteredTenders.length }} Tender Ditemukan
     </div>
 
     <!-- ── Tender cards ── -->
     <ion-card
       class="tender-card"
-      *ngFor="let tender of filteredTenders"
+      *ngFor="let tender of paginatedTenders"
       (click)="goToDetail(tender)"
       [id]="'tender-' + tender.id"
       button>
@@ -104,9 +110,6 @@
 
         <!-- Description (max 2 lines) -->
         <p class="tender-desc">{{ tender.description }}</p>
-
-
-        <div class="divider"></div>
 
         <!-- Dates grid -->
         <div class="dates-grid">
@@ -130,21 +133,43 @@
 
           <ng-container *ngIf="tender.bidding_end">
             <div class="date-item">
-              <span class="date-label">Bid Tutup</span>
+              <span class="date-label">Bid Selesai</span>
               <span class="date-value bid-date">{{ formatDate(tender.bidding_end) }}</span>
             </div>
           </ng-container>
 
         </div>
 
-        <!-- Arrow indicator -->
-        <div class="card-footer">
-          <span class="detail-link">Lihat Detail</span>
-          <ion-icon name="chevron-forward-outline" color="primary"></ion-icon>
-        </div>
-
       </ion-card-content>
     </ion-card>
+
+    <!-- ════ PAGINATION ════ -->
+    <div class="pagination-container" *ngIf="filteredTenders.length >= 3">
+      <button class="btn-prev" (click)="prevPage()" [style.visibility]="currentPage === 1 ? 'hidden' : 'visible'">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        <ion-icon name="chevron-back-outline" class="double-chevron-left"></ion-icon>
+        <span class="btn-text">Previous</span>
+      </button>
+
+      <div class="page-numbers">
+        <ng-container *ngFor="let p of pagesArray">
+          <span class="page-dot" *ngIf="p === '...'">{{ p }}</span>
+          <button
+            class="page-number"
+            *ngIf="p !== '...'"
+            [class.active-page]="p === currentPage"
+            (click)="goToPage(p)">
+            {{ p }}
+          </button>
+        </ng-container>
+      </div>
+
+      <button class="btn-next" (click)="nextPage()" [style.visibility]="currentPage === totalPages ? 'hidden' : 'visible'">
+        <span class="btn-text">Next</span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+        <ion-icon name="chevron-forward-outline" class="double-chevron-right"></ion-icon>
+      </button>
+    </div>
 
   </div>
 

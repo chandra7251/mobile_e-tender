@@ -1,10 +1,16 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Riwayat Hasil Tender</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  
+  <!-- Vector Gelombang Atas -->
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3451B2"/>
+    </svg>
+
+    <!-- Header inside top vector -->
+    <div class="custom-header">
+      <span class="header-title">Riwayat Hasil Tender</span>
+    </div>
+  </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
@@ -15,13 +21,18 @@
 
   <div class="page-content ion-padding">
 
+    <!-- ════ INFO TENDER DITEMUKAN ════ -->
+    <div class="info-title-row" *ngIf="!isLoading && results.length > 0">
+      <span class="info-text">{{ results.length }} Tender ditemukan</span>
+    </div>
+
     <!-- ════ SKELETON ════ -->
     <ng-container *ngIf="isLoading">
-      <ion-card class="history-card" *ngFor="let i of skeletonItems">
+      <ion-card class="result-card" *ngFor="let i of skeletonItems">
         <ion-card-content>
-          <ion-skeleton-text animated style="width:30%; height:20px; border-radius:12px; margin-bottom:10px;"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width:80%; height:16px; margin-bottom:6px;"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width:50%; height:13px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:20%; height:20px; border-radius:12px; margin-bottom:12px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:90%; height:18px; margin-bottom:8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:50%; height:14px;"></ion-skeleton-text>
         </ion-card-content>
       </ion-card>
     </ng-container>
@@ -43,56 +54,64 @@
     <!-- ════ LIST ════ -->
     <ng-container *ngIf="!isLoading && results.length > 0">
 
-      <p class="list-info">{{ results.length }} hasil tender</p>
-
       <ion-card
-        class="history-card"
-        *ngFor="let result of results"
+        class="result-card"
+        *ngFor="let result of paginatedResults"
         (click)="goToResult(result)"
         button
         id="btn-tender-result-{{ result.tender_id }}">
         <ion-card-content>
 
-          <!-- Badge menang / tidak -->
+          <!-- Badge Selesai -->
           <div class="status-row">
-            <ion-badge [color]="getResultColor(result.is_winner)" class="status-badge">
-              <ion-icon [name]="getResultIcon(result.is_winner)" style="margin-right:4px;"></ion-icon>
-              {{ getResultLabel(result.is_winner) }}
-            </ion-badge>
+            <span class="badge-selesai">Selesai</span>
           </div>
 
           <!-- Judul tender -->
           <h2 class="tender-title">{{ result.tender_title }}</h2>
 
-          <!-- Bid saya vs pemenang -->
-          <div class="bid-info">
-            <div class="bid-row">
-              <span class="bid-label">Penawaran saya:</span>
-              <span class="bid-value">{{ formatCurrency(result.my_bid_amount) }}</span>
-            </div>
-            <div class="bid-row" *ngIf="!result.is_winner">
-              <span class="bid-label">Penawaran menang:</span>
-              <span class="bid-value winner-amount">{{ formatCurrency(result.winning_bid_amount) }}</span>
-            </div>
-            <div class="bid-row" *ngIf="!result.is_winner">
-              <span class="bid-label">Pemenang:</span>
-              <span class="bid-value">{{ result.winner_company }}</span>
-            </div>
-          </div>
-
-          <!-- Tanggal keputusan -->
+          <!-- Tanggal berakhir -->
           <div class="date-row">
             <ion-icon name="calendar-outline"></ion-icon>
-            <span>Diputuskan: {{ formatDate(result.decided_at) }}</span>
+            <span>Berakhir {{ formatDate(result.decided_at) }}</span>
           </div>
 
+          <!-- CTA -->
           <div class="cta-row">
-            <span class="cta-text">Lihat Detail</span>
+            <span class="cta-text">Lihat Hasil</span>
             <ion-icon name="chevron-forward-outline"></ion-icon>
           </div>
 
         </ion-card-content>
       </ion-card>
+
+      <!-- ════ PAGINATION ════ -->
+      <div class="pagination-container" *ngIf="results.length > 3">
+        <button class="btn-prev" (click)="prevPage()" [disabled]="currentPage === 1">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+          <ion-icon name="chevron-back-outline" class="double-chevron-left"></ion-icon>
+          <span class="btn-text">Previous</span>
+        </button>
+
+        <div class="page-numbers">
+          <ng-container *ngFor="let p of pagesArray">
+            <span class="page-dot" *ngIf="p === '...'">{{ p }}</span>
+            <button
+              class="page-number"
+              *ngIf="p !== '...'"
+              [class.active-page]="p === currentPage"
+              (click)="goToPage(p)">
+              {{ p }}
+            </button>
+          </ng-container>
+        </div>
+
+        <button class="btn-next" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <span class="btn-text">Next</span>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon name="chevron-forward-outline" class="double-chevron-right"></ion-icon>
+        </button>
+      </div>
 
     </ng-container>
 
