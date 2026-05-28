@@ -138,9 +138,9 @@ ion-content.dashboard-bg {
 }
 
 /* ── Typography & Spacing ── */
-.mt-24 { margin-top: 24px; }
-.mb-16 { margin-bottom: 16px; }
-.mb-32 { margin-bottom: 32px; }
+.mt-24 { margin-top: 24px !important; }
+.mb-16 { margin-bottom: 16px !important; }
+.mb-32 { margin-bottom: 32px !important; }
 
 .section-header {
   display: flex;
@@ -187,6 +187,8 @@ ion-content.dashboard-bg {
   padding: 12px;
   position: relative;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
   
   .badge-live {
     display: inline-block;
@@ -197,6 +199,13 @@ ion-content.dashboard-bg {
     padding: 3px 8px;
     border-radius: 6px;
     margin-bottom: 8px;
+    align-self: flex-start;
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
   
   .title-row {
@@ -225,6 +234,7 @@ ion-content.dashboard-bg {
     color: #6B7280;
     margin: 0;
     line-height: 1.4;
+    margin-top: auto;
   }
 }
 
@@ -382,6 +392,35 @@ ion-content.dashboard-bg {
     p {
       margin: 0;
       font-size: 12px;
+    }
+  }
+
+  .announcement-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    .announcement-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      
+      h4 {
+        margin: 0 0 4px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #FFF;
+      }
+      p {
+        margin: 0 0 6px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .date {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.6);
+      }
     }
   }
 }

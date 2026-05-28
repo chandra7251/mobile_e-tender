@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TenderService } from '../../../core/services/tender.service';
 import { Tender, TenderStatus } from '../../../core/models/user.model';
 
@@ -36,11 +36,16 @@ export class TenderListPage {
 
   constructor(
     private tenderService: TenderService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   // Dipanggil setiap kali halaman ditampilkan (navigasi kembali ke tab ini)
   ionViewWillEnter(): void {
+    const statusParam = this.route.snapshot.queryParamMap.get('status') as FilterStatus;
+    if (statusParam && this.filterOptions.some(opt => opt.value === statusParam)) {
+      this.activeFilter = statusParam;
+    }
     this.loadTenders();
   }
 

@@ -57,7 +57,7 @@
       
       <div class="horizontal-scroll" *ngIf="!isLoadingTenders && openTenders.length > 0">
         <div class="tender-mini-card" *ngFor="let tender of openTenders" [routerLink]="['/tabs/tenders/detail', tender.id]">
-          <div class="badge-live">Live</div>
+          <div class="badge-live">Open</div>
           <div class="card-content">
             <div class="title-row">
               <h4>{{ tender.title }}</h4>
@@ -93,44 +93,79 @@
       <div class="stats-grid">
         <div class="stat-card bg-bidding">
           <ion-icon name="cash-outline" class="stat-icon text-yellow"></ion-icon>
-          <div class="stat-value text-yellow">2</div>
+          <div class="stat-value text-yellow">
+            <span *ngIf="!isLoadingMyTenders">{{ myTendersCount.bidding }}</span>
+            <ion-spinner name="dots" *ngIf="isLoadingMyTenders" color="warning"></ion-spinner>
+          </div>
           <div class="stat-label text-yellow">Sedang Bidding</div>
         </div>
         <div class="stat-card bg-open">
           <ion-icon name="document-text-outline" class="stat-icon text-cyan"></ion-icon>
-          <div class="stat-value text-cyan">4</div>
+          <div class="stat-value text-cyan">
+            <span *ngIf="!isLoadingMyTenders">{{ myTendersCount.open }}</span>
+            <ion-spinner name="dots" *ngIf="isLoadingMyTenders" color="info"></ion-spinner>
+          </div>
           <div class="stat-label text-cyan">Open</div>
         </div>
         <div class="stat-card bg-aanwijzing">
           <ion-icon name="megaphone-outline" class="stat-icon text-pink"></ion-icon>
-          <div class="stat-value text-pink">3</div>
+          <div class="stat-value text-pink">
+            <span *ngIf="!isLoadingMyTenders">{{ myTendersCount.aanwijzing }}</span>
+            <ion-spinner name="dots" *ngIf="isLoadingMyTenders" color="tertiary"></ion-spinner>
+          </div>
           <div class="stat-label text-pink">Aanwijzing</div>
         </div>
         <div class="stat-card bg-finished">
           <ion-icon name="checkmark-circle" class="stat-icon text-white"></ion-icon>
-          <div class="stat-value text-white">10</div>
+          <div class="stat-value text-white">
+            <span *ngIf="!isLoadingMyTenders">{{ myTendersCount.finished }}</span>
+            <ion-spinner name="dots" *ngIf="isLoadingMyTenders" color="light"></ion-spinner>
+          </div>
           <div class="stat-label text-white">Finished</div>
         </div>
       </div>
 
       <!-- Countdown Bidding Closed -->
       <h3 class="section-title mt-24 mb-16">Countdown Bidding Closed</h3>
-      <div class="horizontal-scroll">
-        <div class="countdown-card" *ngFor="let item of [1,2,3]">
+      <div class="horizontal-scroll" *ngIf="!isLoadingBidding && biddingTenders.length > 0">
+        <div class="countdown-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders/detail', tender.id]">
           <div class="countdown-header">
-            <h4>Furnitur Kantor</h4>
+            <h4>{{ tender.title }}</h4>
             <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
           </div>
           <div class="divider"></div>
-          <p class="desc">Furnitur Kantor berisi 10 unit.<br><strong>Rp 500.000.000</strong></p>
+          <p class="desc">{{ tender.description ? (tender.description.length > 40 ? (tender.description | slice:0:40) + '...' : tender.description) : '-' }}<br><strong>{{ tender.specification || '' }}</strong></p>
           <div class="countdown-footer">
             <div class="date-range">
               <ion-icon name="calendar-outline"></ion-icon>
-              <span>25 Mei 2026 - 30 Mei 2026</span>
+              <span>{{ tender.start_date | date:'dd MMM yyyy' }} - {{ tender.end_date | date:'dd MMM yyyy' }}</span>
             </div>
-            <div class="countdown-timer">14:24:14</div>
+            <!-- <div class="countdown-timer">{{ countdowns[tender.id] || '00:00:00' }}</div> -->
           </div>
         </div>
+      </div>
+
+      <!-- Loading Skeleton for Bidding -->
+      <div class="horizontal-scroll" *ngIf="isLoadingBidding">
+        <div class="countdown-card" *ngFor="let item of [1,2]">
+          <div class="countdown-header">
+            <ion-skeleton-text animated style="width: 70%; height: 16px; border-radius: 4px;"></ion-skeleton-text>
+          </div>
+          <div class="divider"></div>
+          <p class="desc">
+            <ion-skeleton-text animated style="width: 100%; height: 12px; margin-bottom: 4px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 50%; height: 12px;"></ion-skeleton-text>
+          </p>
+          <div class="countdown-footer">
+            <ion-skeleton-text animated style="width: 60%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State for Bidding -->
+      <div *ngIf="!isLoadingBidding && biddingTenders.length === 0" style="padding: 0 20px 16px; text-align: center; color: #9CA3AF; font-size: 13px;">
+        Saat ini tidak ada tender dalam masa bidding.
       </div>
 
       <!-- Pengumuman Aanwijzing -->
@@ -139,39 +174,42 @@
           <ion-icon name="megaphone-outline"></ion-icon>
           <h3>Pengumuman Aanwijzing</h3>
         </div>
-        <div class="announcement-body">
+        
+        <div class="announcement-body" *ngIf="!isLoadingAanwijzing && aanwijzings.length === 0">
           <ion-icon name="megaphone-outline" class="empty-icon"></ion-icon>
           <p>Belum ada pengumuman aanwijzing</p>
+        </div>
+
+        <div class="announcement-list" *ngIf="!isLoadingAanwijzing && aanwijzings.length > 0">
+           <div class="announcement-item" *ngFor="let a of aanwijzings">
+             <h4>{{ a.tenderTitle }}</h4>
+             <p>{{ a.title }}</p>
+             <span class="date">{{ a.created_at | date:'dd MMM yyyy, HH:mm' }}</span>
+           </div>
+        </div>
+
+        <div class="announcement-body" *ngIf="isLoadingAanwijzing">
+           <ion-spinner name="crescent" color="light"></ion-spinner>
         </div>
       </div>
 
       <!-- Log Activity -->
       <div class="activity-card mt-24 mb-32">
         <h3 class="section-title text-primary">Log Activity</h3>
-        <div class="activity-list">
-          <div class="activity-item">
-            <ion-icon name="document-outline" class="activity-icon"></ion-icon>
-            <div class="activity-content">
-              <p>Bergabung dengan tender "Lelang Baju"</p>
+        <div class="activity-list" *ngIf="activities.length > 0">
+          <ng-container *ngFor="let act of activities; let last = last">
+            <div class="activity-item">
+              <ion-icon [name]="act.icon" class="activity-icon"></ion-icon>
+              <div class="activity-content">
+                <p>{{ act.action }}</p>
+              </div>
+              <span class="activity-time">{{ activityService.timeAgo(act.timestamp) }}</span>
             </div>
-            <span class="activity-time">4 menit yang lalu</span>
-          </div>
-          <div class="activity-divider"></div>
-          <div class="activity-item">
-            <ion-icon name="folder-open-outline" class="activity-icon"></ion-icon>
-            <div class="activity-content">
-              <p>Upload Dokumen Perusahaan</p>
-            </div>
-            <span class="activity-time">2 hari yang lalu</span>
-          </div>
-          <div class="activity-divider"></div>
-          <div class="activity-item">
-            <ion-icon name="pricetag-outline" class="activity-icon"></ion-icon>
-            <div class="activity-content">
-              <p>Bidding pada tender "Lelang Komputer"</p>
-            </div>
-            <span class="activity-time">3 hari yang lalu</span>
-          </div>
+            <div class="activity-divider" *ngIf="!last"></div>
+          </ng-container>
+        </div>
+        <div class="activity-body" *ngIf="activities.length === 0" style="padding: 20px; text-align: center;">
+          <p style="color: #6B7280; font-size: 12px; margin: 0;">Belum ada aktivitas yang terekam.</p>
         </div>
       </div>
 
