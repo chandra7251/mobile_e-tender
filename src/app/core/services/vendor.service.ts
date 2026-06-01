@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, switchMap, throwError } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Preferences } from '@capacitor/preferences';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 import {
@@ -30,8 +32,19 @@ export class VendorService {
   ) {}
 
   // GET /api/vendors/me
+  // Setelah fetch sukses, cache VendorProfile ke Preferences (key: vendor_data)
+  // agar VendorApprovedGuard bisa baca status tanpa API call tambahan.
   getProfile(): Observable<ApiResponse<VendorProfile>> {
-    return this.api.get<VendorProfile>('vendors/me');
+    return this.api.get<VendorProfile>('vendors/me').pipe(
+      tap(res => {
+        if (res?.status === 'success' && res.data) {
+          Preferences.set({
+            key: 'vendor_data',
+            value: JSON.stringify(res.data),
+          });
+        }
+      })
+    );
   }
 
   // PUT /api/vendors/me

@@ -209,3 +209,43 @@ export interface ApiResponse<T = any> {
   data: T;
   errors?: any;
 }
+
+// ─── Vendor Submission ──────────────────────────────────────────────────────
+
+export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
+
+export interface VendorSubmissionPhoto {
+  id: number;
+  photo_url: string;
+}
+
+/**
+ * Response item dari GET /api/vendor/submissions (list & detail)
+ */
+export interface VendorSubmission {
+  id: number;
+  nama_barang: string;
+  deskripsi: string;
+  spesifikasi: string | null;
+  kategori: string | null;
+  estimasi_harga: number | null;
+  catatan: string | null;
+  status: SubmissionStatus;
+  catatan_admin: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  photos: VendorSubmissionPhoto[];
+}
+
+/**
+ * Payload form pengajuan tender vendor.
+ * Dipakai oleh VendorSubmissionService.createSubmission()
+ */
+export interface SubmissionForm {
+  nama_barang: string;
+  deskripsi: string;
+  spesifikasi?: string;
+  kategori?: string;
+  estimasi_harga?: number;
+  catatan?: string;
+}

@@ -138,6 +138,31 @@
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </div>
 
+        <!-- Pengajuan Tender Section -->
+        <div class="pengajuan-section">
+          <div class="pengajuan-title">PENGAJUAN TENDER</div>
+          <div class="pengajuan-row" routerLink="/vendor/pengajuan">
+            <div class="pengajuan-icon-wrap">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </div>
+            <div class="pengajuan-info">
+              <span class="pengajuan-label">Ajukan Tender Baru</span>
+              <span class="pengajuan-sub">Kirim barang/jasa untuk dilelangkan</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="pengajuan-arrow"></ion-icon>
+          </div>
+          <div class="pengajuan-row" routerLink="/vendor/pengajuan/riwayat">
+            <div class="pengajuan-icon-wrap pengajuan-icon-secondary">
+              <ion-icon name="time-outline"></ion-icon>
+            </div>
+            <div class="pengajuan-info">
+              <span class="pengajuan-label">Riwayat Pengajuan</span>
+              <span class="pengajuan-sub">Lihat status pengajuan Anda</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="pengajuan-arrow"></ion-icon>
+          </div>
+        </div>
+
         <!-- Aksi profil -->
         <div class="action-buttons">
           <button class="btn-edit" (click)="enterEditMode()">Edit Profile</button>

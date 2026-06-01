@@ -1,0 +1,165 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Pengajuan Tender</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- ── Nama Barang / Jasa ───────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label required">Nama Barang / Jasa</ion-label>
+      <ion-input
+        id="input-nama-barang"
+        formControlName="nama_barang"
+        placeholder="Contoh: Laptop Dell Latitude"
+        fill="outline"
+        [class.input-error]="isFieldInvalid('nama_barang')">
+      </ion-input>
+      <p class="error-text" *ngIf="isFieldInvalid('nama_barang')">
+        Nama barang wajib diisi (maks. 255 karakter)
+      </p>
+    </div>
+
+    <!-- ── Deskripsi ────────────────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label required">Deskripsi</ion-label>
+      <ion-textarea
+        id="input-deskripsi"
+        formControlName="deskripsi"
+        placeholder="Jelaskan barang/jasa yang ingin ditenderkan..."
+        fill="outline"
+        [autoGrow]="true"
+        rows="3"
+        [class.input-error]="isFieldInvalid('deskripsi')">
+      </ion-textarea>
+      <p class="error-text" *ngIf="isFieldInvalid('deskripsi')">
+        Deskripsi wajib diisi
+      </p>
+    </div>
+
+    <!-- ── Spesifikasi Teknis ───────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label required">Spesifikasi Teknis</ion-label>
+      <ion-textarea
+        id="input-spesifikasi"
+        formControlName="spesifikasi"
+        placeholder="Tuliskan spesifikasi teknis secara detail..."
+        fill="outline"
+        [autoGrow]="true"
+        rows="3"
+        [class.input-error]="isFieldInvalid('spesifikasi')">
+      </ion-textarea>
+      <p class="error-text" *ngIf="isFieldInvalid('spesifikasi')">
+        Spesifikasi teknis wajib diisi
+      </p>
+    </div>
+
+    <!-- ── Kategori ─────────────────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label required">Kategori</ion-label>
+      <ion-select
+        id="select-kategori"
+        formControlName="kategori"
+        placeholder="Pilih kategori"
+        fill="outline"
+        interface="action-sheet"
+        [class.input-error]="isFieldInvalid('kategori')">
+        <ion-select-option *ngFor="let k of kategoriOptions" [value]="k">
+          {{ k }}
+        </ion-select-option>
+      </ion-select>
+      <p class="error-text" *ngIf="isFieldInvalid('kategori')">
+        Kategori wajib dipilih
+      </p>
+    </div>
+
+    <!-- ── Estimasi Harga ───────────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label required">Estimasi Harga (Rp)</ion-label>
+      <ion-input
+        id="input-estimasi-harga"
+        type="number"
+        formControlName="estimasi_harga"
+        placeholder="0"
+        fill="outline"
+        [class.input-error]="isFieldInvalid('estimasi_harga')">
+        <ion-text slot="start" class="currency-prefix">Rp&nbsp;</ion-text>
+      </ion-input>
+      <p class="error-text" *ngIf="isFieldInvalid('estimasi_harga')">
+        Estimasi harga wajib diisi
+      </p>
+    </div>
+
+    <!-- ── Catatan Tambahan ─────────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label">Catatan Tambahan <span class="optional">(opsional)</span></ion-label>
+      <ion-textarea
+        id="input-catatan"
+        formControlName="catatan"
+        placeholder="Informasi tambahan yang perlu diketahui admin..."
+        fill="outline"
+        [autoGrow]="true"
+        rows="2">
+      </ion-textarea>
+    </div>
+
+    <!-- ── Upload Foto ──────────────────────────────────────────────────── -->
+    <div class="form-group">
+      <ion-label class="field-label">
+        Foto Barang
+        <span class="optional">(maks. {{ MAX_PHOTOS }} foto, opsional)</span>
+      </ion-label>
+
+      <!-- Preview foto -->
+      <div class="photo-grid" *ngIf="photos.length > 0">
+        <div class="photo-item" *ngFor="let photo of photos; let i = index">
+          <img [src]="getPhotoSrc(photo)" alt="Foto {{ i + 1 }}" class="photo-preview" />
+          <ion-button
+            fill="clear"
+            color="danger"
+            size="small"
+            class="btn-remove-photo"
+            (click)="removePhoto(i)">
+            <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Tombol tambah foto -->
+      <ion-button
+        id="btn-add-photo"
+        fill="outline"
+        color="medium"
+        expand="block"
+        class="btn-add-photo"
+        [disabled]="photos.length >= MAX_PHOTOS"
+        (click)="openPhotoOptions()">
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        {{ photos.length === 0 ? 'Tambah Foto' : 'Tambah Foto Lagi' }}
+        ({{ photos.length }}/{{ MAX_PHOTOS }})
+      </ion-button>
+    </div>
+
+    <!-- ── Submit ───────────────────────────────────────────────────────── -->
+    <ion-button
+      id="btn-submit-pengajuan"
+      type="submit"
+      expand="block"
+      color="primary"
+      size="large"
+      class="btn-submit">
+      <ion-icon slot="start" name="send-outline"></ion-icon>
+      Kirim Pengajuan
+    </ion-button>
+
+  </form>
+
+</ion-content>

@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { ActivityService } from './core/services/activity.service';
+import { NetworkService } from './core/services/network.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,12 @@ import { ActivityService } from './core/services/activity.service';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
   constructor(
     private router: Router,
-    private activityService: ActivityService
+    private activityService: ActivityService,
+    private networkService: NetworkService,
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -30,5 +34,13 @@ export class AppComponent {
         this.activityService.log('Membuka daftar Tender', 'list-outline');
       }
     });
+  }
+
+  async ngOnInit(): Promise<void> {
+    // Mulai monitoring jaringan
+    await this.networkService.startListening();
+
+    // Sembunyikan splash screen setelah app siap
+    await SplashScreen.hide();
   }
 }

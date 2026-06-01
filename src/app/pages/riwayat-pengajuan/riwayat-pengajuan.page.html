@@ -1,0 +1,110 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Riwayat Pengajuan</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToPengajuan()" title="Buat Pengajuan Baru">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="loadSubmissions($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Tarik untuk refresh"
+      refreshingSpinner="crescent"
+      refreshingText="Memuat...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Memuat riwayat pengajuan...</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="empty-state" *ngIf="!isLoading && hasError">
+    <ion-icon name="cloud-offline-outline" color="medium"></ion-icon>
+    <h3>Gagal memuat data</h3>
+    <p>Periksa koneksi internet Anda dan coba lagi.</p>
+    <ion-button fill="outline" (click)="loadSubmissions()">Coba Lagi</ion-button>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading && !hasError && submissions.length === 0">
+    <ion-icon name="document-text-outline" color="medium"></ion-icon>
+    <h3>Belum ada pengajuan</h3>
+    <p>Anda belum pernah mengajukan tender. Mulai pengajuan pertama Anda sekarang!</p>
+    <ion-button color="primary" (click)="goToPengajuan()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Buat Pengajuan
+    </ion-button>
+  </div>
+
+  <!-- Submission list -->
+  <div class="list-container" *ngIf="!isLoading && !hasError && submissions.length > 0">
+
+    <p class="total-info">{{ submissions.length }} pengajuan ditemukan</p>
+
+    <ion-card class="submission-card" *ngFor="let item of submissions">
+
+      <!-- Foto thumbnail (jika ada) -->
+      <div class="card-photo" *ngIf="item.photos && item.photos.length > 0">
+        <img [src]="item.photos[0].photo_url" [alt]="item.nama_barang" />
+      </div>
+
+      <ion-card-content>
+
+        <!-- Header: nama + status badge -->
+        <div class="card-header">
+          <h2 class="item-name">{{ item.nama_barang }}</h2>
+          <ion-badge [color]="getStatusColor(item.status)" class="status-badge">
+            {{ getStatusLabel(item.status) }}
+          </ion-badge>
+        </div>
+
+        <!-- Meta info -->
+        <div class="meta-row" *ngIf="item.kategori">
+          <ion-icon name="pricetag-outline" color="medium"></ion-icon>
+          <span>{{ item.kategori }}</span>
+        </div>
+
+        <div class="meta-row">
+          <ion-icon name="cash-outline" color="medium"></ion-icon>
+          <span>{{ formatCurrency(item.estimasi_harga) }}</span>
+        </div>
+
+        <div class="meta-row">
+          <ion-icon name="calendar-outline" color="medium"></ion-icon>
+          <span>{{ formatDate(item.created_at) }}</span>
+        </div>
+
+        <!-- Catatan admin (jika ditolak) -->
+        <div class="catatan-admin" *ngIf="item.status === 'rejected' && item.catatan_admin">
+          <ion-icon name="information-circle-outline" color="danger"></ion-icon>
+          <span>{{ item.catatan_admin }}</span>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>
+
+<!-- FAB: tambah pengajuan baru -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isLoading && !hasError">
+  <ion-fab-button id="fab-buat-pengajuan" color="primary" (click)="goToPengajuan()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

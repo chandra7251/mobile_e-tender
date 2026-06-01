@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { GuestGuard } from './core/guards/guest.guard';
+import { VendorApprovedGuard } from './core/guards/vendor-approved.guard';
 
 const routes: Routes = [
   // Root redirect
@@ -38,6 +39,20 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [AuthGuard]
+  },
+
+  // Vendor Submission — full-screen (hanya vendor approved)
+  {
+    path: 'vendor/pengajuan',
+    loadChildren: () => import('./pages/pengajuan-tender/pengajuan-tender.module')
+      .then(m => m.PengajuanTenderPageModule),
+    canActivate: [AuthGuard, VendorApprovedGuard]
+  },
+  {
+    path: 'vendor/pengajuan/riwayat',
+    loadChildren: () => import('./pages/riwayat-pengajuan/riwayat-pengajuan.module')
+      .then(m => m.RiwayatPengajuanPageModule),
+    canActivate: [AuthGuard, VendorApprovedGuard]
   },
 
   // Wildcard fallback

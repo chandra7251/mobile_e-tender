@@ -1,0 +1,36 @@
+.offline-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--ion-color-danger);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  z-index: 999;
+
+  // Default: tersembunyi (height 0, overflow hidden)
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  &.visible {
+    max-height: 48px;
+    opacity: 1;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1.3;
+  }
+}
