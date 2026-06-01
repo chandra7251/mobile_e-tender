@@ -107,6 +107,7 @@ export interface Tender {
   bidding_start?: string | null;
   bidding_end?: string | null;
   created_at?: string;
+  photo_url?: string | null;   // URL foto barang/jasa (null jika belum ada foto)
   // ── Baru (Mobile_Integration.md — 26 Mei 2026) ──
   is_participant: boolean;   // tersedia langsung di TenderResource (guest = false)
   joined_at: string | null;  // null jika belum join

@@ -68,6 +68,24 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- ── Foto Barang / Jasa ── -->
+    <ion-card class="detail-card photo-card" *ngIf="tender.photo_url">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="image-outline"></ion-icon>
+          Foto Barang / Jasa
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content style="padding: 0 0 12px 0;">
+        <img
+          [src]="tender.photo_url"
+          [alt]="tender.title"
+          class="tender-photo"
+          loading="lazy"
+          (error)="onPhotoError($event)">
+      </ion-card-content>
+    </ion-card>
+
     <!-- ── Join tender ── -->
     <ion-card class="join-card" *ngIf="showJoinButton">
       <ion-card-content>

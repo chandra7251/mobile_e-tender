@@ -164,6 +164,12 @@ export class TenderDetailPage {
 
   goBack(): void { this.location.back(); }
 
+  /** Sembunyikan gambar jika URL foto gagal dimuat */
+  onPhotoError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) img.style.display = 'none';
+  }
+
   goBid(): void {
     this.router.navigate(['/tabs/tenders', this.tenderId, 'bid']);
   }
