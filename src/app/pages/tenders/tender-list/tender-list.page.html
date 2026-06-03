@@ -111,6 +111,12 @@
         <!-- Description (max 2 lines) -->
         <p class="tender-desc">{{ tender.description }}</p>
 
+        <!-- Harga Pembukaan Bidding (HPS) -->
+        <div class="tender-price" *ngIf="tender.open_bidding_price">
+          <ion-icon name="pricetag-outline"></ion-icon>
+          <span>HPS: {{ formatCurrency(tender.open_bidding_price) }}</span>
+        </div>
+
         <!-- Dates grid -->
         <div class="dates-grid">
 

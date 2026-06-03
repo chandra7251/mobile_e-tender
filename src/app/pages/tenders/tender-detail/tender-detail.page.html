@@ -86,6 +86,19 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- ── Harga Pembukaan Bidding (HPS) ── -->
+    <ion-card class="detail-card price-card" *ngIf="tender.open_bidding_price">
+      <ion-card-content>
+        <div class="price-row">
+          <div class="price-label">
+            <ion-icon name="pricetag-outline"></ion-icon>
+            <span>Harga Pembukaan Bidding (HPS)</span>
+          </div>
+          <span class="price-value">{{ formatCurrency(tender.open_bidding_price) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
     <!-- ── Join tender ── -->
     <ion-card class="join-card" *ngIf="showJoinButton">
       <ion-card-content>

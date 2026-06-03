@@ -100,6 +100,7 @@ export interface Tender {
   title: string;
   description: string;
   specification?: string;   // backend pakai 'specification' (bukan 'requirements')
+  open_bidding_price?: number | null;  // HPS — Harga Pembukaan Bidding (nullable)
   status: TenderStatus;
   start_date: string;
   end_date: string;
