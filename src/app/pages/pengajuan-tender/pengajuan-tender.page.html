@@ -1,165 +1,259 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Pengajuan Tender</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [scrollY]="true">
 
-<ion-content class="ion-padding">
+  <!-- ════════ TAMPILAN LIST (Ketik Form Ditutup) ════════ -->
+  <ng-container *ngIf="!isFormOpen">
+    
+    <!-- Vector Gelombang Atas -->
+    <div class="top-vector-container">
+      <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3451B2"/>
+      </svg>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-    <!-- ── Nama Barang / Jasa ───────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label required">Nama Barang / Jasa</ion-label>
-      <ion-input
-        id="input-nama-barang"
-        formControlName="nama_barang"
-        placeholder="Contoh: Laptop Dell Latitude"
-        fill="outline"
-        [class.input-error]="isFieldInvalid('nama_barang')">
-      </ion-input>
-      <p class="error-text" *ngIf="isFieldInvalid('nama_barang')">
-        Nama barang wajib diisi (maks. 255 karakter)
-      </p>
+      <div class="custom-header">
+        <span class="header-title">Pengajuan Tender</span>
+      </div>
     </div>
 
-    <!-- ── Deskripsi ────────────────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label required">Deskripsi</ion-label>
-      <ion-textarea
-        id="input-deskripsi"
-        formControlName="deskripsi"
-        placeholder="Jelaskan barang/jasa yang ingin ditenderkan..."
-        fill="outline"
-        [autoGrow]="true"
-        rows="3"
-        [class.input-error]="isFieldInvalid('deskripsi')">
-      </ion-textarea>
-      <p class="error-text" *ngIf="isFieldInvalid('deskripsi')">
-        Deskripsi wajib diisi
-      </p>
-    </div>
+    <div class="page-content ion-padding-horizontal">
 
-    <!-- ── Spesifikasi Teknis ───────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label required">Spesifikasi Teknis</ion-label>
-      <ion-textarea
-        id="input-spesifikasi"
-        formControlName="spesifikasi"
-        placeholder="Tuliskan spesifikasi teknis secara detail..."
-        fill="outline"
-        [autoGrow]="true"
-        rows="3"
-        [class.input-error]="isFieldInvalid('spesifikasi')">
-      </ion-textarea>
-      <p class="error-text" *ngIf="isFieldInvalid('spesifikasi')">
-        Spesifikasi teknis wajib diisi
-      </p>
-    </div>
-
-    <!-- ── Kategori ─────────────────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label required">Kategori</ion-label>
-      <ion-select
-        id="select-kategori"
-        formControlName="kategori"
-        placeholder="Pilih kategori"
-        fill="outline"
-        interface="action-sheet"
-        [class.input-error]="isFieldInvalid('kategori')">
-        <ion-select-option *ngFor="let k of kategoriOptions" [value]="k">
-          {{ k }}
-        </ion-select-option>
-      </ion-select>
-      <p class="error-text" *ngIf="isFieldInvalid('kategori')">
-        Kategori wajib dipilih
-      </p>
-    </div>
-
-    <!-- ── Estimasi Harga ───────────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label required">Estimasi Harga (Rp)</ion-label>
-      <ion-input
-        id="input-estimasi-harga"
-        type="number"
-        formControlName="estimasi_harga"
-        placeholder="0"
-        fill="outline"
-        [class.input-error]="isFieldInvalid('estimasi_harga')">
-        <ion-text slot="start" class="currency-prefix">Rp&nbsp;</ion-text>
-      </ion-input>
-      <p class="error-text" *ngIf="isFieldInvalid('estimasi_harga')">
-        Estimasi harga wajib diisi
-      </p>
-    </div>
-
-    <!-- ── Catatan Tambahan ─────────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label">Catatan Tambahan <span class="optional">(opsional)</span></ion-label>
-      <ion-textarea
-        id="input-catatan"
-        formControlName="catatan"
-        placeholder="Informasi tambahan yang perlu diketahui admin..."
-        fill="outline"
-        [autoGrow]="true"
-        rows="2">
-      </ion-textarea>
-    </div>
-
-    <!-- ── Upload Foto ──────────────────────────────────────────────────── -->
-    <div class="form-group">
-      <ion-label class="field-label">
-        Foto Barang
-        <span class="optional">(maks. {{ MAX_PHOTOS }} foto, opsional)</span>
-      </ion-label>
-
-      <!-- Preview foto -->
-      <div class="photo-grid" *ngIf="photos.length > 0">
-        <div class="photo-item" *ngFor="let photo of photos; let i = index">
-          <img [src]="getPhotoSrc(photo)" alt="Foto {{ i + 1 }}" class="photo-preview" />
-          <ion-button
-            fill="clear"
-            color="danger"
-            size="small"
-            class="btn-remove-photo"
-            (click)="removePhoto(i)">
-            <ion-icon slot="icon-only" name="close-circle"></ion-icon>
-          </ion-button>
+      <!-- ── Empty State ── -->
+      <div class="empty-state" *ngIf="pengajuanList.length === 0">
+        <div class="empty-icon-container">
+          <ion-icon name="clipboard-outline"></ion-icon>
+          <span class="cross-mark">x</span>
         </div>
+        <h3 class="title-blue">Belum ada pengajuan tender</h3>
+        <p class="desc-light">Ajukan tender yang anda buat untuk event tender selanjutnya</p>
       </div>
 
-      <!-- Tombol tambah foto -->
-      <ion-button
-        id="btn-add-photo"
-        fill="outline"
-        color="medium"
-        expand="block"
-        class="btn-add-photo"
-        [disabled]="photos.length >= MAX_PHOTOS"
-        (click)="openPhotoOptions()">
-        <ion-icon slot="start" name="camera-outline"></ion-icon>
-        {{ photos.length === 0 ? 'Tambah Foto' : 'Tambah Foto Lagi' }}
-        ({{ photos.length }}/{{ MAX_PHOTOS }})
-      </ion-button>
+      <!-- ── Filled State ── -->
+      <div class="filled-state" *ngIf="pengajuanList.length > 0">
+        
+        <div class="result-info">
+          <span class="text-blue">{{ pengajuanList.length }} PENGAJUAN DITEMUKAN</span>
+        </div>
+
+        <!-- ── Tender cards ── -->
+        <ion-card class="tender-card" *ngFor="let item of paginatedList">
+          
+          <!-- Jika ada foto -->
+          <div class="card-image-container" *ngIf="item.foto">
+            <img [src]="item.foto" alt="Foto Pengajuan" />
+          </div>
+
+          <ion-card-content>
+            <div class="card-top-row">
+              <h2 class="tender-title text-white">{{ item.judul | uppercase }}</h2>
+              <ion-badge [color]="item.status === 'Disetujui' ? 'success' : (item.status === 'Menunggu' ? 'warning' : 'medium')" class="status-badge" [class.badge-disetujui]="item.status === 'Disetujui'" [class.badge-menunggu]="item.status === 'Menunggu'">
+                {{ item.status }}
+              </ion-badge>
+            </div>
+
+            <div class="info-row">
+              <ion-icon name="pricetag-outline"></ion-icon>
+              <span>{{ item.kategori | uppercase }}</span>
+            </div>
+            
+            <div class="info-row">
+              <ion-icon name="cash-outline"></ion-icon>
+              <span>{{ formatCurrency(item.harga) }}</span>
+            </div>
+            
+            <div class="info-row">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>{{ formatDate(item.tanggal) }}</span>
+            </div>
+
+          </ion-card-content>
+        </ion-card>
+
+        <!-- ════ PAGINATION ════ -->
+        <div class="pagination-container" *ngIf="pengajuanList.length > itemsPerPage">
+          <button class="btn-prev" (click)="prevPage()" [style.visibility]="currentPage === 1 ? 'hidden' : 'visible'">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+            <ion-icon name="chevron-back-outline" class="double-chevron-left"></ion-icon>
+            <span class="btn-text">Previous</span>
+          </button>
+
+          <div class="page-numbers">
+            <ng-container *ngFor="let p of pagesArray">
+              <span class="page-dot" *ngIf="p === '...'">{{ p }}</span>
+              <button
+                class="page-number"
+                *ngIf="p !== '...'"
+                [class.active-page]="p === currentPage"
+                (click)="goToPage(p)">
+                {{ p }}
+              </button>
+            </ng-container>
+          </div>
+
+          <button class="btn-next" (click)="nextPage()" [style.visibility]="currentPage === totalPages ? 'hidden' : 'visible'">
+            <span class="btn-text">Next</span>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+            <ion-icon name="chevron-forward-outline" class="double-chevron-right"></ion-icon>
+          </button>
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- ── Submit ───────────────────────────────────────────────────────── -->
-    <ion-button
-      id="btn-submit-pengajuan"
-      type="submit"
-      expand="block"
-      color="primary"
-      size="large"
-      class="btn-submit">
-      <ion-icon slot="start" name="send-outline"></ion-icon>
-      Kirim Pengajuan
-    </ion-button>
+    <!-- ── FAB Button ── -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-bottom-right">
+      <ion-fab-button (click)="openForm()">
+        <ion-icon name="add" style="font-size: 32px; font-weight: bold; color: white;"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
-  </form>
+  </ng-container>
+
+
+  <!-- ════════ TAMPILAN FORM (Ketika Tombol Plus Diklik) ════════ -->
+  <ng-container *ngIf="isFormOpen">
+
+    <!-- Vector Gelombang Atas Form -->
+    <div class="top-vector-container form-header-vector">
+      <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#3451B2"/>
+      </svg>
+
+      <div class="custom-header custom-form-header">
+        <span class="header-title text-white">Tambahkan Pengajuan Tender</span>
+        <ion-button fill="clear" (click)="closeForm()" class="btn-close">
+          <ion-icon slot="icon-only" name="close" style="color: white; font-weight: bold; font-size: 24px;"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="form-content-container ion-padding-horizontal">
+      <div class="form-card-wrapper">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- ── Nama Barang / Jasa ── -->
+          <div class="form-group">
+            <ion-label class="field-label required">Nama barang / jasa</ion-label>
+            <ion-input
+              id="input-nama-barang"
+              formControlName="nama_barang"
+              fill="outline"
+              [class.input-error]="isFieldInvalid('nama_barang')">
+            </ion-input>
+          </div>
+
+          <!-- ── Deskripsi ── -->
+          <div class="form-group">
+            <ion-label class="field-label required">Deskripsi</ion-label>
+            <ion-textarea
+              id="input-deskripsi"
+              formControlName="deskripsi"
+              fill="outline"
+              [autoGrow]="true"
+              rows="2"
+              [class.input-error]="isFieldInvalid('deskripsi')">
+            </ion-textarea>
+          </div>
+
+          <!-- ── Spesifikasi Teknis ── -->
+          <div class="form-group">
+            <ion-label class="field-label required">Spesifikasi Teknis</ion-label>
+            <ion-textarea
+              id="input-spesifikasi"
+              formControlName="spesifikasi"
+              fill="outline"
+              [autoGrow]="true"
+              rows="2"
+              [class.input-error]="isFieldInvalid('spesifikasi')">
+            </ion-textarea>
+          </div>
+
+          <!-- ── Kategori ── -->
+          <div class="form-group">
+            <ion-label class="field-label required">Kategori</ion-label>
+            <ion-select
+              id="select-kategori"
+              formControlName="kategori"
+              placeholder="Kategori *"
+              fill="outline"
+              interface="action-sheet"
+              [class.input-error]="isFieldInvalid('kategori')">
+              <ion-select-option *ngFor="let k of kategoriOptions" [value]="k">
+                {{ k }}
+              </ion-select-option>
+            </ion-select>
+            <p class="error-text-small" *ngIf="isFieldInvalid('kategori')">Kategori wajib dipilih</p>
+          </div>
+
+          <!-- ── Estimasi Harga ── -->
+          <div class="form-group">
+            <ion-label class="field-label required">Estimasi Harga (Rp)</ion-label>
+            <ion-input
+              id="input-estimasi-harga"
+              type="number"
+              formControlName="estimasi_harga"
+              placeholder="Rp."
+              fill="outline"
+              [class.input-error]="isFieldInvalid('estimasi_harga')">
+            </ion-input>
+          </div>
+
+          <!-- ── Catatan Tambahan ── -->
+          <div class="form-group">
+            <ion-label class="field-label">Catatan Tambahan <span class="optional">(Opsional)</span></ion-label>
+            <ion-textarea
+              id="input-catatan"
+              formControlName="catatan"
+              fill="outline"
+              [autoGrow]="true"
+              rows="2">
+            </ion-textarea>
+          </div>
+
+          <!-- ── Upload Foto ── -->
+          <div class="form-group">
+            <ion-label class="field-label">
+              Foto Barang
+              <span class="optional">Maks. {{ MAX_PHOTOS }} foto, opsional</span>
+            </ion-label>
+
+            <div class="photo-grid" *ngIf="photos.length > 0">
+              <div class="photo-item" *ngFor="let photo of photos; let i = index">
+                <img [src]="getPhotoSrc(photo)" alt="Foto {{ i + 1 }}" class="photo-preview" />
+                <ion-button
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  class="btn-remove-photo"
+                  (click)="removePhoto(i)">
+                  <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="btn-add-photo"
+              class="btn-add-photo-outline"
+              [disabled]="photos.length >= MAX_PHOTOS"
+              (click)="openPhotoOptions()">
+              <ion-icon name="camera-outline"></ion-icon>
+              <span>TAMBAH FOTO ({{ photos.length }}/{{ MAX_PHOTOS }})</span>
+            </button>
+          </div>
+
+          <!-- ── Submit ── -->
+          <button
+            id="btn-submit-pengajuan"
+            type="submit"
+            class="btn-submit-cyan">
+            <ion-icon name="send"></ion-icon>
+            KIRIM PENGAJUAN
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+  </ng-container>
 
 </ion-content>
