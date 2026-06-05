@@ -22,7 +22,7 @@ Setelah selesai membaca, kamu **WAJIB** melakukan hal berikut:
 
 | Properti | Nilai |
 |---|---|
-| Nama Aplikasi | **E-Tender** |
+| Nama Aplikasi | **ZETA** |
 | Platform | **Mobile — Ionic Framework + Angular** |
 | Fokus Kerja | **View Only** (HTML + SCSS per halaman) |
 | Design Style | Minimalist Design + Material Design |

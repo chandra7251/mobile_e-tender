@@ -36,6 +36,8 @@ export class TabsPage implements OnInit, OnDestroy {
       this.activeTab = 'home';
     } else if (url.includes('/tabs/tenders')) {
       this.activeTab = 'tenders';
+    } else if (url.includes('/tabs/pengajuan-tender')) {
+      this.activeTab = 'pengajuan-tender';
     } else if (url.includes('/tabs/results')) {
       this.activeTab = 'results';
     } else if (url.includes('/tabs/profile')) {
@@ -46,7 +48,7 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   get themeClass(): string {
-    if (this.activeTab === 'home' || this.activeTab === 'results' || this.activeTab === 'documents') {
+    if (this.activeTab === 'home' || this.activeTab === 'results' || this.activeTab === 'documents' || this.activeTab === 'pengajuan-tender') {
       return 'theme-blue';
     }
     return 'theme-white';

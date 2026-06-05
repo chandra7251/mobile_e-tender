@@ -26,8 +26,8 @@ ion-content {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding: calc(39px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    justify-content: space-between;
+    padding: calc(17px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
     
     .header-title {
       color: #FFFFFF;
@@ -38,8 +38,8 @@ ion-content {
 }
 
 .page-content {
-  padding-top: 20px;
-  padding-bottom: 100px; // space for bottom tabs & fab
+  padding-top: 4px;
+  padding-bottom: 50px; // space for bottom tabs & fab
 }
 
 // ── Empty State ──
@@ -91,6 +91,10 @@ ion-content {
 
 // ── Filled State ──
 .filled-state {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 160px); // Fill available space below header
+
   .result-info {
     font-size: 14px;
     font-weight: 700;
@@ -182,8 +186,9 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 24px;
-  margin-bottom: 40px;
+  margin-top: auto;
+  margin-bottom: 12px;
+  padding: 0 4px;
 
   button {
     background: transparent;
@@ -241,22 +246,6 @@ ion-content {
       color: $primary-blue;
       font-weight: bold;
     }
-  }
-}
-
-// ── FAB Button ──
-ion-fab {
-  margin-bottom: 20px;
-  margin-right: 10px;
-
-  ion-fab-button {
-    --background: #3451B2;
-    --border-color: #FFFFFF;
-    --border-style: solid;
-    --border-width: 2px;
-    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    width: 64px;
-    height: 64px;
   }
 }
 
