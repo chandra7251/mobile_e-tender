@@ -1,106 +1,437 @@
+// Variables
+$primary-blue: #3451B2;
+$accent-cyan: #40C4FF;
+$text-light: #81A2DF;
+$bg-light: #F8F9FA;
+
 ion-content {
-  --background: var(--ion-color-light);
+  --background: #FFFFFF;
 }
 
-.form-group {
-  margin-bottom: 20px;
-
-  .field-label {
+// ── Top Vector ──
+.top-vector-container {
+  position: relative;
+  line-height: 0;
+  
+  svg {
+    width: 100%;
+    height: auto;
     display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ion-color-dark);
-    margin-bottom: 6px;
-    letter-spacing: 0.02em;
-
-    &.required::after {
-      content: ' *';
-      color: var(--ion-color-danger);
+  }
+  
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(39px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-title {
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 700;
     }
-
-    .optional {
-      font-weight: 400;
-      font-size: 12px;
-      color: var(--ion-color-medium);
-    }
-  }
-
-  ion-input,
-  ion-textarea,
-  ion-select {
-    --border-radius: 10px;
-    --background: #fff;
-  }
-
-  .input-error {
-    --border-color: var(--ion-color-danger);
-  }
-
-  .error-text {
-    font-size: 12px;
-    color: var(--ion-color-danger);
-    margin: 4px 4px 0;
-  }
-
-  .currency-prefix {
-    font-weight: 600;
-    color: var(--ion-color-medium);
   }
 }
 
-// ── Photo Grid ────────────────────────────────────────────────────────────────
+.page-content {
+  padding-top: 20px;
+  padding-bottom: 100px; // space for bottom tabs & fab
+}
 
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 10px;
+// ── Empty State ──
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 50vh;
+  padding: 0 20px;
 
-  .photo-item {
+  .empty-icon-container {
     position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    aspect-ratio: 1;
-    background: var(--ion-color-light-shade);
+    font-size: 80px;
+    color: $primary-blue;
+    margin-bottom: 20px;
 
-    .photo-preview {
+    ion-icon {
+      stroke-width: 32px;
+    }
+
+    .cross-mark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-weight: bold;
+      color: $primary-blue;
+    }
+  }
+
+  .title-blue {
+    font-size: 20px;
+    font-weight: 700;
+    color: $primary-blue;
+    margin: 0 0 10px;
+  }
+
+  .desc-light {
+    font-size: 14px;
+    color: $primary-blue;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// ── Filled State ──
+.filled-state {
+  .result-info {
+    font-size: 14px;
+    font-weight: 700;
+    color: $primary-blue;
+    margin-bottom: 16px;
+    padding-left: 5px;
+  }
+}
+
+.tender-card {
+  margin: 0 0 16px 0;
+  border-radius: 12px;
+  background-color: #3F51B5; // Slightly lighter/vibrant blue for cards
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  .card-image-container {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+
+    img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+  }
 
-    .btn-remove-photo {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      --padding-start: 0;
-      --padding-end: 0;
+  ion-card-content {
+    padding: 16px;
+  }
+
+  .card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+
+    .tender-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFFFFF;
       margin: 0;
+      flex: 1;
+      line-height: 1.4;
+    }
 
-      ion-icon {
-        font-size: 22px;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+    .status-badge {
+      margin-left: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: capitalize;
+
+      &.badge-disetujui {
+        --background: #00BCD4; // Cyan
+        color: #FFFFFF;
       }
+
+      &.badge-menunggu {
+        --background: #FFC107; // Yellow
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    span {
+      font-weight: 500;
     }
   }
 }
 
-.btn-add-photo {
-  --border-radius: 10px;
-  --border-width: 1.5px;
-  --border-style: dashed;
-  height: 48px;
-  font-size: 14px;
+// ── Pagination ──
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 40px;
+
+  button {
+    background: transparent;
+    border: none;
+    color: $primary-blue;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+
+    &.btn-prev {
+      border: 1px solid rgba($primary-blue, 0.2);
+      border-radius: 20px;
+      padding: 6px 16px;
+      
+      ion-icon { margin-right: 4px; }
+      .double-chevron-left { margin-right: 4px; margin-left: -8px; }
+    }
+
+    &.btn-next {
+      background: $primary-blue;
+      color: white;
+      border-radius: 20px;
+      padding: 6px 16px;
+
+      ion-icon { margin-left: 4px; }
+      .double-chevron-right { margin-left: -8px; margin-right: 4px; }
+    }
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .page-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: $primary-blue;
+
+      &.active-page {
+        background-color: $primary-blue;
+        color: white;
+      }
+    }
+
+    .page-dot {
+      color: $primary-blue;
+      font-weight: bold;
+    }
+  }
 }
 
-// ── Submit Button ─────────────────────────────────────────────────────────────
+// ── FAB Button ──
+ion-fab {
+  margin-bottom: 20px;
+  margin-right: 10px;
 
-.btn-submit {
-  margin-top: 10px;
-  margin-bottom: 24px;
-  --border-radius: 12px;
-  height: 52px;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.03em;
+  ion-fab-button {
+    --background: #3451B2;
+    --border-color: #FFFFFF;
+    --border-style: solid;
+    --border-width: 2px;
+    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 64px;
+    height: 64px;
+  }
+}
+
+// ── Form Header ──
+.form-header-vector {
+  position: relative;
+  line-height: 0;
+  margin-bottom: -1px; // prevent subpixel gap with white background
+  
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .custom-form-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+    }
+
+    .btn-close {
+      margin: 0;
+      --padding-start: 8px;
+      --padding-end: 8px;
+    }
+  }
+}
+
+// ── Form Body ──
+.form-content-container {
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+
+.form-card-wrapper {
+  background-color: #3451B2;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(52, 81, 178, 0.2);
+
+  .form-group {
+    margin-bottom: 16px;
+
+    .field-label {
+      display: block;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+
+      &.required::after {
+        content: " *";
+        color: #EF5350; // Red
+      }
+
+      .optional {
+        font-weight: 400;
+        opacity: 0.7;
+        font-size: 10px;
+        margin-left: 4px;
+      }
+    }
+
+    ion-input, ion-textarea, ion-select {
+      --background: transparent;
+      --border-color: rgba(255, 255, 255, 0.8);
+      --border-width: 1px;
+      --border-radius: 8px;
+      --color: white;
+      --placeholder-color: rgba(255, 255, 255, 0.6);
+      --padding-start: 12px;
+      --padding-end: 12px;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+
+      &.input-error {
+        --border-color: #EF5350;
+        border-color: #EF5350;
+      }
+    }
+
+    .error-text-small {
+      color: #EF5350;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+  }
+
+  .btn-add-photo-outline {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 24px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  .photo-grid {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    .photo-item {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .photo-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .btn-remove-photo {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        margin: 0;
+        --padding-start: 0;
+        --padding-end: 0;
+      }
+    }
+  }
+
+  .btn-submit-cyan {
+    width: 100%;
+    height: 48px;
+    background-color: #40C4FF;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
 }

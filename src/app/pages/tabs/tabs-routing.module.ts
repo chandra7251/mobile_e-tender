@@ -12,6 +12,10 @@ const routes: Routes = [
         loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
       },
       {
+        path: 'pengajuan-tender',
+        loadChildren: () => import('../pengajuan-tender/pengajuan-tender.module').then(m => m.PengajuanTenderPageModule)
+      },
+      {
         path: 'profile',
         loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
       },

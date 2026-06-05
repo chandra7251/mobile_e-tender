@@ -15,20 +15,24 @@ import { NetworkService } from '../../core/services/network.service';
 export class PengajuanTenderPage implements OnInit {
 
   form!: FormGroup;
-
-  /** Array base64 foto yang dipilih (maks 3) */
+  kategoriOptions = [
+    'Peralatan IT',
+    'Furniture',
+    'Kendaraan',
+    'Alat Tulis Kantor',
+    'Jasa',
+    'Lainnya'
+  ];
   photos: string[] = [];
-
   readonly MAX_PHOTOS = 3;
 
-  readonly kategoriOptions = [
-    'Elektronik',
-    'Furnitur',
-    'Kendaraan',
-    'Konstruksi',
-    'IT & Software',
-    'Lainnya',
-  ];
+  // ── Pagination State ──────────────────────────────────────────────────────────
+  pengajuanList: any[] = [];
+  currentPage = 1;
+  itemsPerPage = 4;
+
+  // ── Form State ──────────────────────────────────────────────────────────────
+  isFormOpen = false;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +55,61 @@ export class PengajuanTenderPage implements OnInit {
       catatan:        [''],
     });
   }
+
+  ionViewWillEnter() {
+    this.loadData();
+  }
+
+  async loadData(event?: any) {
+    try {
+      const submissions = await this.submissionService.getMySubmissions();
+      this.pengajuanList = submissions.map(sub => ({
+        id: sub.id,
+        judul: sub.nama_barang,
+        kategori: sub.kategori || '-',
+        harga: sub.estimasi_harga || 0,
+        tanggal: sub.created_at,
+        status: this.getStatusLabel(sub.status),
+        foto: this.resolveImageUrl((sub as any)['photo_url'] || (sub as any)['foto'] || (sub.photos?.length ? sub.photos[0].photo_url : null))
+      }));
+    } catch (err) {
+      console.error('Gagal memuat pengajuan:', err);
+    } finally {
+      if (event) {
+        event.target.complete();
+      }
+    }
+  }
+
+  resolveImageUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    if (url.startsWith('data:')) return url;
+
+    let fixedUrl = url;
+    // Fix typical backend URL issues when APP_URL is missing the port or using localhost
+    fixedUrl = fixedUrl.replace('http://localhost/', 'http://127.0.0.1:8080/');
+    fixedUrl = fixedUrl.replace('http://localhost:8000/', 'http://127.0.0.1:8080/');
+    fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'http://127.0.0.1:8080/');
+
+    if (fixedUrl.startsWith('http')) {
+      return fixedUrl;
+    }
+
+    // Jika path relatif (seperti 'storage/...'), arahkan langsung ke backend port 8080
+    const cleanUrl = fixedUrl.startsWith('/') ? fixedUrl.substring(1) : fixedUrl;
+    return `http://127.0.0.1:8080/${cleanUrl}`;
+  }
+
+  getStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      pending: 'Menunggu',
+      approved: 'Disetujui',
+      rejected: 'Ditolak',
+    };
+    return map[status] || status;
+  }
+
+
 
   // ── Photo Handling ───────────────────────────────────────────────────────────
 
@@ -135,7 +194,12 @@ export class PengajuanTenderPage implements OnInit {
         buttons: [
           {
             text: 'Lihat Riwayat',
-            handler: () => this.router.navigate(['/vendor/pengajuan/riwayat'], { replaceUrl: true }),
+            handler: () => {
+              this.closeForm();
+              this.form.reset();
+              this.photos = [];
+              this.loadData();
+            },
           },
         ],
       });
@@ -162,6 +226,75 @@ export class PengajuanTenderPage implements OnInit {
   isFieldInvalid(field: string): boolean {
     const ctrl = this.form.get(field);
     return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  }
+
+  // ── Modal & Pagination Helpers ──────────────────────────────────────────────────────────────
+
+  openForm() {
+    this.isFormOpen = true;
+  }
+
+  closeForm() {
+    this.isFormOpen = false;
+  }
+
+  get paginatedList(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.pengajuanList.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.pengajuanList.length / this.itemsPerPage);
+  }
+
+  get pagesArray(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number') {
+      this.currentPage = page;
+    }
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(amount);
+  }
+
+  formatDate(dateStr: string | null | undefined): string {
+    if (!dateStr) return '-';
+    return new Date(dateStr).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+
+  getStatusColor(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'disetujui': return 'success';
+      case 'menunggu': return 'warning';
+      case 'ditolak': return 'danger';
+      default: return 'medium';
+    }
   }
 
   goBack(): void {
