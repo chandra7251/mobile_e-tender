@@ -106,7 +106,7 @@ export class HomePage {
     this.isLoadingAanwijzing = true;
     this.aanwijzings = [];
     
-    // Kita cek semua tender, karena aanwijzing bisa saja ada di status open atau aanwijzing
+    // Cek semua tender
     if (tenders.length === 0) {
       this.isLoadingAanwijzing = false;
       return;
@@ -117,7 +117,7 @@ export class HomePage {
       this.tenderService.getAnnouncements(t.id).subscribe({
         next: (res) => {
           if (res.status === 'success' && res.data && res.data.length > 0) {
-            // Kita inject title tender agar bisa ditampilkan di UI
+            // Inject title
             const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
             this.aanwijzings = [...this.aanwijzings, ...mapped];
           }
@@ -171,7 +171,7 @@ export class HomePage {
   private updateCountdowns(): void {
     const now = new Date().getTime();
     this.biddingTenders.forEach(t => {
-      // jika ada bidding_end, gunakan itu, jika tidak gunakan end_date
+      // Fallback ke end_date
       const endDateString = t.bidding_end || t.end_date;
       if (endDateString) {
         const end = new Date(endDateString).getTime();

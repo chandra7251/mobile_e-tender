@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  // Relative URL → request diforward oleh Angular proxy (proxy.conf.json) ke http://127.0.0.1:8080
-  // Ini menghindari CORS error saat ionic serve di localhost:8100
+  // API URL via proxy
   apiUrl: '/api'
 };
 

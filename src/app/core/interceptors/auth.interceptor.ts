@@ -16,7 +16,7 @@ import { StorageService } from '../services/storage.service';
 import { ApiResponse, RefreshData } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
-// ── Endpoint publik — tidak di-handle saat 401 ─────────────────────────────
+// Public endpoints
 const PUBLIC_ENDPOINTS = [
   'auth/login',
   'auth/register',
@@ -24,19 +24,17 @@ const PUBLIC_ENDPOINTS = [
   'auth/reset-password'
 ];
 
-// ── Endpoint refresh — tidak boleh trigger refresh ulang ────────────────────
+// Refresh endpoint
 const REFRESH_ENDPOINT = 'auth/refresh';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  // ── Refresh state — mencegah multiple concurrent refresh calls ─────────────
+  // Refresh state
   private isRefreshing = false;
   private refreshSubject = new BehaviorSubject<string | null>(null);
 
-  // HttpClient yang bypass interceptor (via HttpBackend) — dipakai untuk
-  // memanggil /auth/refresh tanpa menyebabkan circular dependency atau
-  // infinite loop.
+  // HttpClient bypass interceptor
   private httpDirect: HttpClient;
 
   constructor(
@@ -83,8 +81,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // ── 401 handler — auto-refresh dengan queue concurrent requests ────────────
-
+  // 401 handler
   private handle401(
     req: HttpRequest<any>,
     next: HttpHandler,
@@ -92,7 +89,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
 
     if (this.isRefreshing) {
-      // Refresh sedang berjalan — tunggu hingga selesai, lalu retry
+      // Wait for refresh
       return this.refreshSubject.pipe(
         filter(token => token !== null),
         take(1),
@@ -110,13 +107,13 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap(newToken => {
         this.isRefreshing = false;
         this.refreshSubject.next(newToken);
-        // Retry request asal dengan token baru
+        // Retry
         return next.handle(
           req.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } })
         );
       }),
       catchError(() => {
-        // Refresh gagal → paksa logout
+        // Logout on fail
         this.isRefreshing = false;
         this.forceLogout();
         return throwError(() => originalErr);
@@ -124,7 +121,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // ── Panggil POST /api/auth/refresh via HttpBackend (bypass interceptor) ────
+  // Refresh request
 
   private doRefresh(): Observable<string> {
     return from(this.storage.getToken()).pipe(
@@ -141,7 +138,7 @@ export class AuthInterceptor implements HttpInterceptor {
           switchMap(res => {
             if (res.status === 'success' && res.data?.token) {
               const newToken = res.data.token;
-              // Simpan token baru ke storage, lalu emit token baru
+              // Save token
               return from(
                 this.storage.setToken(newToken).then(() => newToken)
               );
@@ -153,7 +150,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // ── Force logout — hapus sesi + redirect ke login ─────────────────────────
+  // Force logout
 
   private forceLogout(): void {
     this.storage.clearAll().then(() => {

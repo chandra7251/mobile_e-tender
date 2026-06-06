@@ -11,16 +11,7 @@ export interface User {
 }
 
 /**
- * Struktur response dari GET /api/vendors/me, GET /api/auth/me,
- * POST /api/auth/login, POST /api/auth/register
- *
- * Backend mengembalikan VendorResource (flat) dengan nested user:
- * {
- *   id: vendor.id,
- *   company_name, phone, address,
- *   verification_status, verification_notes, verified_at,
- *   user: { id, name, email }
- * }
+ * Profile Vendor
  */
 export interface VendorProfile {
   id: number;                    // vendor.id
@@ -38,11 +29,7 @@ export interface VendorProfile {
 }
 
 /**
- * AuthData — backend v2.0 (JWT)
- * Response dari POST /api/auth/login dan POST /api/auth/register.
- *
- * Catatan: backend mengembalikan 'user' (bukan 'vendor') di dalam data.
- * VendorProfile yang lengkap di-fetch terpisah via GET /api/vendors/me.
+ * Auth Data
  */
 export interface AuthData {
   token: string;
@@ -57,7 +44,7 @@ export interface AuthData {
 }
 
 /**
- * RefreshData — response dari POST /api/auth/refresh
+ * Refresh Data
  */
 export interface RefreshData {
   token: string;
@@ -70,8 +57,7 @@ export interface RefreshData {
 export type DocumentType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
 
 /**
- * Response dari GET /api/vendors/documents dan POST /api/vendors/documents
- * Backend mengembalikan: id, document_type, file_name, mime_type, file_size, uploaded_at
+ * Vendor Document
  */
 export interface VendorDocument {
   id: number;
@@ -85,13 +71,7 @@ export interface VendorDocument {
 // ─── Tenders ───────────────────────────────────────────────────────────────
 
 /**
- * State machine: draft → open → aanwijzing → bidding → closed → finished
- * - `draft`     : belum dipublikasi (filter di frontend, tidak ditampilkan)
- * - `open`      : vendor bisa daftar peserta
- * - `aanwijzing`: masa penjelasan tender
- * - `bidding`   : vendor bisa submit penawaran
- * - `closed`    : masa bidding selesai, menunggu penetapan pemenang
- * - `finished`  : pemenang sudah ditetapkan, result tersedia
+ * Tender Status
  */
 export type TenderStatus = 'draft' | 'open' | 'aanwijzing' | 'bidding' | 'closed' | 'finished';
 
@@ -116,14 +96,13 @@ export interface Tender {
 
 // ─── Vendor Tenders (GET /api/vendors/tenders) ─────────────────────────────
 
-/** Alias — response /vendors/tenders menggunakan shape yang sama dengan Tender */
+/** Vendor Tender Alias */
 export type VendorTender = Tender;
 
 // ─── Vendor Results (GET /api/vendors/results) ─────────────────────────────
 
 /**
- * Response item dari GET /api/vendors/results
- * Menggantikan workaround filter tenders.status === 'finished'
+ * Vendor Result
  */
 export interface VendorResult {
   tender_id: number;
@@ -148,12 +127,7 @@ export interface Announcement {
 }
 
 /**
- * Response dari GET/POST/PUT /api/tenders/{id}/bids
- * Backend BidResource: id, ulid, tender_id, bid_amount, notes, submitted_at, updated_at
- *
- * submitted_at format baru (setelah 26 Mei 2026): ISO8601 dengan microsecond
- * Contoh: "2026-05-26T10:00:00.123456+07:00"
- * → Selalu parse dengan new Date() — JANGAN gunakan format strict.
+ * Bid model
  */
 export interface Bid {
   id: number;
@@ -168,8 +142,7 @@ export interface Bid {
 // ─── Winner & Result ───────────────────────────────────────────────────────
 
 /**
- * Response dari GET /api/tenders/{id}/winner
- * Backend: winner_company, winning_bid_amount, selection_method, decided_at, is_winner, my_bid_amount
+ * Winner model
  */
 export interface Winner {
   winner_company: string;         // nama perusahaan pemenang
@@ -181,9 +154,7 @@ export interface Winner {
 }
 
 /**
- * Response dari GET /api/tenders/{id}/result
- * Backend TenderResultResource: tender_id, winner_company, winning_bid_amount,
- *   selection_method, notes, decided_at
+ * Tender Result model
  */
 export interface TenderResult {
   tender_id: number;
@@ -197,13 +168,7 @@ export interface TenderResult {
 // ─── Generic wrapper ───────────────────────────────────────────────────────
 
 /**
- * ApiResponse — wrapper standar backend v2.0
- *
- * Backend selalu mengembalikan:
- *   "status": "success"  → request berhasil
- *   "status": "error"    → request gagal
- *
- * BUKAN boolean. Gunakan: if (res.status === 'success' && res.data) { ... }
+ * ApiResponse
  */
 export interface ApiResponse<T = any> {
   status: 'success' | 'error';
@@ -222,7 +187,7 @@ export interface VendorSubmissionPhoto {
 }
 
 /**
- * Response item dari GET /api/vendor/submissions (list & detail)
+ * Vendor Submission model
  */
 export interface VendorSubmission {
   id: number;
@@ -240,8 +205,7 @@ export interface VendorSubmission {
 }
 
 /**
- * Payload form pengajuan tender vendor.
- * Dipakai oleh VendorSubmissionService.createSubmission()
+ * Submission Form payload
  */
 export interface SubmissionForm {
   nama_barang: string;

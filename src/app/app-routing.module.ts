@@ -12,7 +12,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
 
-  // Public routes — dilindungi GuestGuard (user sudah login diarahkan ke home)
+  // Public routes
   {
     path: 'login',
     loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule),
@@ -34,14 +34,14 @@ const routes: Routes = [
     canActivate: [GuestGuard]
   },
 
-  // Protected: tabs shell (home, profile, documents live inside tabs)
+  // Protected routes
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [AuthGuard]
   },
 
-  // Vendor Submission — full-screen (hanya vendor approved)
+  // Vendor submission
   {
     path: 'vendor/pengajuan',
     loadChildren: () => import('./pages/pengajuan-tender/pengajuan-tender.module')

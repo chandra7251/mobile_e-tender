@@ -54,16 +54,13 @@ export class BidFormPage implements OnInit {
     const tender$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError((err) => of({ error: err })));
 
     forkJoin([bid$, tender$]).subscribe(([bidRes, tenderRes]) => {
-      // Type assertion untuk menghindari TypeScript errors pada union types
       const bidAny = bidRes as any;
       const tenderAny = tenderRes as any;
 
-      // 1. Set Tender Data (untuk mendapatkan open_bidding_price)
       if (tenderAny && !tenderAny.error && tenderAny.status === 'success' && tenderAny.data) {
         this.tender = tenderAny.data;
       }
 
-      // 2. Set Bid Data
       if (bidAny.error) {
         const err = bidAny.error;
         if (err?.status === 404) {
@@ -101,7 +98,6 @@ export class BidFormPage implements OnInit {
     };
 
     if (this.mode === 'update' && this.bidId) {
-      // PUT /api/tenders/{tender}/bids/{bid}
       this.tenderService.updateBid(this.tenderId, this.bidId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
@@ -120,7 +116,6 @@ export class BidFormPage implements OnInit {
         }
       });
     } else {
-      // POST /api/tenders/{tender}/bids
       this.tenderService.submitBid(this.tenderId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
@@ -205,10 +200,6 @@ export class BidFormPage implements OnInit {
     }).format(amount);
   }
 
-  /**
-   * Format waktu bid — gunakan new Date() agar toleran terhadap microsecond.
-   * submitted_at baru: "2026-05-26T10:00:00.123456+07:00"
-   */
   formatDate(dateStr: string): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
