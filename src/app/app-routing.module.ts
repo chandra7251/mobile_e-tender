@@ -3,13 +3,19 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { GuestGuard } from './core/guards/guest.guard';
 import { VendorApprovedGuard } from './core/guards/vendor-approved.guard';
+import { IntroGuard } from './core/guards/intro.guard';
 
 const routes: Routes = [
   // Root redirect
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'welcome',
     pathMatch: 'full'
+  },
+  {
+    path: 'welcome',
+    loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule),
+    canActivate: [IntroGuard]
   },
 
   // Public routes
@@ -58,7 +64,7 @@ const routes: Routes = [
   // Wildcard fallback
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'welcome'
   }
 ];
 
