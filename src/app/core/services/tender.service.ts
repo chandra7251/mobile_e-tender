@@ -57,7 +57,7 @@ export class TenderService {
         }
         return false;
       }),
-        // Fallback check
+      catchError(err => {
         if (err?.status === 403 || err?.status === 404) {
           return of(false);
         }
