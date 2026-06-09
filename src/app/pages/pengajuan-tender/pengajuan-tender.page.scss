@@ -24,22 +24,31 @@ ion-content {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: calc(39px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    height: 100%;
     
     .header-title {
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       color: #FFFFFF;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
+      line-height: 38px;
+    }
+
+    ion-button {
+      position: absolute;
+      right: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
+      margin: 0;
+      height: 38px;
     }
   }
 }
 
 .page-content {
-  padding-top: 20px;
-  padding-bottom: 100px; // space for bottom tabs & fab
+  padding-top: 4px;
+  padding-bottom: 50px; // space for bottom tabs & fab
 }
 
 // ── Empty State ──
@@ -91,6 +100,10 @@ ion-content {
 
 // ── Filled State ──
 .filled-state {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 160px); // Fill available space below header
+
   .result-info {
     font-size: 14px;
     font-weight: 700;
@@ -182,8 +195,9 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 24px;
-  margin-bottom: 40px;
+  margin-top: auto;
+  margin-bottom: 12px;
+  padding: 0 4px;
 
   button {
     background: transparent;
@@ -244,22 +258,6 @@ ion-content {
   }
 }
 
-// ── FAB Button ──
-ion-fab {
-  margin-bottom: 20px;
-  margin-right: 10px;
-
-  ion-fab-button {
-    --background: #3451B2;
-    --border-color: #FFFFFF;
-    --border-style: solid;
-    --border-width: 2px;
-    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    width: 64px;
-    height: 64px;
-  }
-}
-
 // ── Form Header ──
 .form-header-vector {
   position: relative;
@@ -277,22 +275,27 @@ ion-fab {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    height: 100%;
 
     .header-title {
-      font-size: 18px;
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
+      font-size: 22px;
       font-weight: 700;
       color: white;
       margin: 0;
+      line-height: 38px;
     }
 
     .btn-close {
+      position: absolute;
+      right: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       margin: 0;
       --padding-start: 8px;
       --padding-end: 8px;
+      height: 38px;
     }
   }
 }

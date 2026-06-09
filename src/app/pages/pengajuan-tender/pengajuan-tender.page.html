@@ -11,6 +11,9 @@
 
       <div class="custom-header">
         <span class="header-title">Pengajuan Tender</span>
+        <ion-button fill="clear" (click)="openForm()" style="margin: 0; --padding-start: 8px; --padding-end: 8px;">
+          <ion-icon slot="icon-only" name="add" style="color: white; font-size: 28px; font-weight: bold;"></ion-icon>
+        </ion-button>
       </div>
     </div>
 
@@ -99,12 +102,7 @@
 
     </div>
 
-    <!-- ── FAB Button ── -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-bottom-right">
-      <ion-fab-button (click)="openForm()">
-        <ion-icon name="add" style="font-size: 32px; font-weight: bold; color: white;"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+
 
   </ng-container>
 

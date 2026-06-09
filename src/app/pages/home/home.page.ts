@@ -234,6 +234,10 @@ export class HomePage {
     return this.vendorProfile?.verification_status ?? '';
   }
 
+  goAjukanTender(): void {
+    this.router.navigate(['/tabs/pengajuan-tender'], { queryParams: { openForm: 'true' } });
+  }
+
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2000, color, position: 'top' });
     await t.present();

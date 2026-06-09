@@ -108,6 +108,14 @@
         <!-- Title -->
         <h2 class="tender-title">{{ tender.title }}</h2>
 
+        <!-- Foto Barang / Jasa -->
+        <div class="tender-list-photo-container">
+          <img *ngIf="tender.photo_url" [src]="tender.photo_url" [alt]="tender.title" class="tender-list-photo" />
+          <div *ngIf="!tender.photo_url" class="no-photo-placeholder">
+            <p>Tender ini tidak memiliki foto Barang atau Jasa</p>
+          </div>
+        </div>
+
         <!-- Description (max 2 lines) -->
         <p class="tender-desc">{{ tender.description }}</p>
 
