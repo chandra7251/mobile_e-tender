@@ -69,7 +69,7 @@
     </ion-card>
 
     <!-- ── Foto Barang / Jasa ── -->
-    <ion-card class="detail-card photo-card" *ngIf="tender.photo_url">
+    <ion-card class="detail-card photo-card">
       <ion-card-header>
         <ion-card-title class="section-title">
           <ion-icon name="image-outline"></ion-icon>
@@ -78,11 +78,15 @@
       </ion-card-header>
       <ion-card-content style="padding: 0 0 12px 0;">
         <img
+          *ngIf="tender.photo_url"
           [src]="tender.photo_url"
           [alt]="tender.title"
           class="tender-photo"
           loading="lazy"
           (error)="onPhotoError($event)">
+        <div *ngIf="!tender.photo_url" class="no-photo-placeholder" style="padding: 16px;">
+          <p>Tender ini tidak memiliki foto Barang atau Jasa</p>
+        </div>
       </ion-card-content>
     </ion-card>
 
