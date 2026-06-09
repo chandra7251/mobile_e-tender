@@ -12,10 +12,10 @@ export class IntroGuard implements CanActivate {
     const hasSeenIntro = await Preferences.get({ key: 'hasSeenIntro' });
     
     // SEMENTARA DINONAKTIFKAN UNTUK DEVELOPMENT DESAIN WELCOME PAGE
-    // if (hasSeenIntro && hasSeenIntro.value === 'true') {
-    //   this.router.navigateByUrl('/login', { replaceUrl: true });
-    //   return false;
-    // }
+    if (hasSeenIntro && hasSeenIntro.value === 'true') {
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+      return false;
+    }
     
     return true;
   }
