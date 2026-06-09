@@ -1,6 +1,7 @@
 // Base page background
 ion-content {
   --background: #FFFFFF;
+  --padding-top: 0px !important;
 }
 
 // ── Top Vector & Header ──
@@ -9,6 +10,7 @@ ion-content {
   margin-top: 0;
   padding: 0;
   position: relative; // for absolute header
+  border-top: var(--ion-safe-area-top, 0px) solid #3451B2;
 
   svg {
     width: 100%;
@@ -25,7 +27,7 @@ ion-content {
     .header-title {
       position: absolute;
       left: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       color: #ffffff;
       font-size: 22px;
       font-weight: 700;
