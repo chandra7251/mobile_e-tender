@@ -100,6 +100,7 @@ export class PengajuanTenderPage implements OnInit {
     return `http://127.0.0.1:8080/${cleanUrl}`;
   }
 
+
   getStatusLabel(status: string): string {
     const map: Record<string, string> = {
       pending: 'Menunggu',

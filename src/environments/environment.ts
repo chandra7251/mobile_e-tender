@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  // API URL via proxy
-  apiUrl: '/api'
+  apiUrl: 'http://e-tender.test/api'
 };
 
 /*

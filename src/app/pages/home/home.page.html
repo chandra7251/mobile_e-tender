@@ -7,6 +7,13 @@
       </svg>
       <div class="custom-header">
         <span class="header-title">Dashboard</span>
+        <!-- Tombol notifikasi -->
+        <div class="notif-header-btn" routerLink="/tabs/notifications">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span class="notif-badge" *ngIf="unreadCount > 0">
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </span>
+        </div>
       </div>
     </div>
 

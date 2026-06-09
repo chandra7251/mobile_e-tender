@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://vandrafcy.my.id/api'
+  apiUrl: 'http://e-tender.test/api'
 };
