@@ -29,15 +29,16 @@ ion-content.view-mode-bg {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: calc(32px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    height: 100%;
     
     .header-title {
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       color: #3F51B5;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
+      line-height: 38px;
     }
   }
 }

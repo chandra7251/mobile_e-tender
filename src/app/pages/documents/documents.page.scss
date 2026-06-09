@@ -20,15 +20,16 @@ ion-content {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; // Space between title and upload icon
-    padding: calc(13px + var(--ion-safe-area-top, 0px)) 24px 0 13px;
+    height: 100%;
     
     .header-left-group {
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       display: flex;
       align-items: center;
       gap: 4px;
+      height: 38px;
     }
 
     .btn-header-back {
@@ -43,11 +44,16 @@ ion-content {
 
     .header-title {
       color: #FFFFFF; // Use white color on blue wave
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
+      line-height: 38px;
     }
 
     .btn-header-action {
+      position: absolute;
+      right: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
+      height: 38px;
       --color: #FFFFFF;
       --padding-start: 8px;
       --padding-end: 0;

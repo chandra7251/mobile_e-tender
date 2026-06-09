@@ -24,15 +24,24 @@ ion-content {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(17px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    height: 100%;
     
     .header-title {
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       color: #FFFFFF;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
+      line-height: 38px;
+    }
+
+    ion-button {
+      position: absolute;
+      right: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
+      margin: 0;
+      height: 38px;
     }
   }
 }
@@ -266,22 +275,27 @@ ion-content {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(18px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    height: 100%;
 
     .header-title {
-      font-size: 18px;
+      position: absolute;
+      left: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
+      font-size: 22px;
       font-weight: 700;
       color: white;
       margin: 0;
+      line-height: 38px;
     }
 
     .btn-close {
+      position: absolute;
+      right: 24px;
+      top: calc(20px + var(--ion-safe-area-top, 0px));
       margin: 0;
       --padding-start: 8px;
       --padding-end: 8px;
+      height: 38px;
     }
   }
 }

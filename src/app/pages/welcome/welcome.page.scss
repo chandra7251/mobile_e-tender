@@ -699,11 +699,22 @@ ion-content {
     background: $primary-blue;
     height: 100%;
     width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scroll-content-wrapper {
+    position: relative;
+    min-height: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    position: relative;
   }
 
   .pattern-corner {
@@ -744,8 +755,8 @@ ion-content {
 
     // 5. Pojok kanan bawah
     &.bottom-right {
-      bottom: 0;
-      right: 0;
+      bottom: -20px;
+      right: -20px;
       transform: scale(1.15);
       transform-origin: bottom right;
     }
