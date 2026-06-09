@@ -18,6 +18,7 @@ ion-content.view-mode-bg {
   margin-top: 0;
   padding: 0;
   position: relative; // for absolute header
+  border-top: var(--ion-safe-area-top, 0px) solid white;
 
   svg {
     width: 100%;
@@ -34,7 +35,7 @@ ion-content.view-mode-bg {
     .header-title {
       position: absolute;
       left: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       color: #3F51B5;
       font-size: 22px;
       font-weight: 700;

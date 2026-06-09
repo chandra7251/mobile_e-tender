@@ -9,9 +9,14 @@ ion-content.dashboard-bg {
   flex-direction: column;
 }
 
+ion-content.dashboard-bg {
+  --padding-top: 0px !important;
+}
+
 .top-vector-container {
   position: relative;
   line-height: 0;
+  border-top: var(--ion-safe-area-top, 0px) solid #3F51B5;
   
   svg {
     width: 100%;
@@ -29,7 +34,7 @@ ion-content.dashboard-bg {
     .header-title {
       position: absolute;
       left: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       color: #FFFFFF;
       font-size: 22px;
       font-weight: 700;
@@ -39,7 +44,7 @@ ion-content.dashboard-bg {
     .notif-header-btn {
       position: absolute;
       right: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       width: 38px;
       height: 38px;
       display: flex;
