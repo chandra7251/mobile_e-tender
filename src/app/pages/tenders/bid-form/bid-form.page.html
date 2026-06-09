@@ -91,6 +91,15 @@
             <span>{{ saveError }}</span>
           </div>
 
+          <!-- Field: Estimasi Harga (HPS) -->
+          <div class="hps-info-box" *ngIf="tender?.open_bidding_price">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <div class="hps-text">
+              <span class="hps-label">Estimasi Harga (HPS)</span>
+              <span class="hps-value">{{ formatCurrency(tender?.open_bidding_price!) }}</span>
+            </div>
+          </div>
+
           <!-- Field: Harga Penawaran -->
           <div class="field-group">
             <label class="field-label" for="inp-bid-amount">

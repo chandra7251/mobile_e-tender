@@ -7,14 +7,12 @@ const CACHE_KEYS = {
 } as const;
 
 /**
- * OfflineCacheService — simpan & ambil data dari Preferences untuk offline mode.
- *
- * Digunakan oleh halaman yang perlu menampilkan data saat tidak ada koneksi.
+ * Cache service for offline mode.
  */
 @Injectable({ providedIn: 'root' })
 export class OfflineCacheService {
 
-  // ── Tender List ──────────────────────────────────────────────────────────────
+  // Tender List
 
   async cacheTenderList(data: any[]): Promise<void> {
     await Preferences.set({
@@ -33,7 +31,7 @@ export class OfflineCacheService {
     }
   }
 
-  // ── Vendor Profile ───────────────────────────────────────────────────────────
+  // Vendor Profile
 
   async cacheVendorProfile(data: any): Promise<void> {
     await Preferences.set({
@@ -52,7 +50,7 @@ export class OfflineCacheService {
     }
   }
 
-  // ── Utility ──────────────────────────────────────────────────────────────────
+  // Utility
 
   async clearAllCache(): Promise<void> {
     await Preferences.remove({ key: CACHE_KEYS.TENDER_LIST });

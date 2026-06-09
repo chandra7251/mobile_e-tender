@@ -5,7 +5,7 @@ import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 import { ApiResponse, AuthData, RefreshData } from '../models/user.model';
 
-// ─── Payload interfaces ────────────────────────────────────────────────────
+// Payload interfaces
 
 export interface LoginPayload {
   email: string;
@@ -39,7 +39,7 @@ export interface ResetPasswordPayload {
   password_confirmation: string;
 }
 
-// ─── Service ───────────────────────────────────────────────────────────────
+// Service
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -49,7 +49,6 @@ export class AuthService {
     private storage: StorageService
   ) {}
 
-  // POST /api/auth/login
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
     return this.api.post<AuthData>('auth/login', payload).pipe(
       tap(async (res) => {
@@ -60,7 +59,6 @@ export class AuthService {
     );
   }
 
-  // POST /api/auth/register
   register(payload: RegisterPayload): Observable<ApiResponse<AuthData>> {
     return this.api.post<AuthData>('auth/register', payload).pipe(
       tap(async (res) => {
@@ -71,7 +69,6 @@ export class AuthService {
     );
   }
 
-  // POST /api/auth/logout
   logout(): Observable<ApiResponse<null>> {
     return this.api.post<null>('auth/logout', {}).pipe(
       tap(async () => {
@@ -80,9 +77,6 @@ export class AuthService {
     );
   }
 
-  // POST /api/auth/refresh
-  // Dipanggil manual dari komponen jika diperlukan.
-  // Auto-refresh oleh interceptor (via HttpBackend) tidak melalui method ini.
   refreshToken(): Observable<string> {
     return this.api.post<RefreshData>('auth/refresh', {}).pipe(
       tap(async (res) => {
@@ -99,22 +93,18 @@ export class AuthService {
     );
   }
 
-  // GET /api/auth/me
   me(): Observable<ApiResponse<any>> {
     return this.api.get<any>('auth/me');
   }
 
-  // PUT /api/auth/change-password
   changePassword(payload: ChangePasswordPayload): Observable<ApiResponse<null>> {
     return this.api.put<null>('auth/change-password', payload);
   }
 
-  // POST /api/auth/forgot-password  — PUBLIC
   forgotPassword(email: string): Observable<ApiResponse<null>> {
     return this.api.post<null>('auth/forgot-password', { email });
   }
 
-  // POST /api/auth/reset-password  — PUBLIC
   resetPassword(payload: ResetPasswordPayload): Observable<ApiResponse<null>> {
     return this.api.post<null>('auth/reset-password', payload);
   }

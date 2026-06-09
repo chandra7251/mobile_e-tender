@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifikasi</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="markAllRead()" fill="clear">
+        <ion-icon slot="icon-only" name="checkmark-done-outline" style="color: #fff;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+
+  <!-- Pull-to-refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Tarik untuk refresh"
+      refreshingSpinner="crescent"
+      refreshingText="Memperbarui...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading skeleton (halaman pertama) -->
+  <div *ngIf="isLoading" class="skeleton-container">
+    <div class="notif-skeleton" *ngFor="let i of [1,2,3,4,5]">
+      <ion-skeleton-text animated class="skel-icon"></ion-skeleton-text>
+      <div class="skel-content">
+        <ion-skeleton-text animated style="width: 70%; height: 14px; border-radius: 6px; margin-bottom: 8px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 90%; height: 11px; border-radius: 6px; margin-bottom: 6px;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%; height: 10px; border-radius: 6px;"></ion-skeleton-text>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!isLoading && hasError" class="empty-state">
+    <ion-icon name="cloud-offline-outline" class="empty-icon" color="medium"></ion-icon>
+    <p class="empty-title">Gagal memuat notifikasi</p>
+    <p class="empty-sub">Periksa koneksi internet Anda dan coba lagi.</p>
+    <ion-button fill="outline" color="primary" size="small" (click)="fetchNotifications(1)">
+      Coba Lagi
+    </ion-button>
+  </div>
+
+  <!-- Daftar notifikasi -->
+  <div *ngIf="!isLoading && !hasError">
+
+    <ion-list class="notif-list" *ngIf="notifications.length > 0">
+      <div
+        *ngFor="let notif of notifications"
+        class="notif-card"
+        [class.notif-unread]="!notif.read_at"
+        (click)="onNotificationClick(notif)">
+
+        <!-- Icon status -->
+        <div class="notif-icon-wrap" [class.unread-icon-bg]="!notif.read_at">
+          <ion-icon
+            [name]="notif.read_at ? 'document-text-outline' : 'document-text'"
+            color="primary">
+          </ion-icon>
+        </div>
+
+        <!-- Konten -->
+        <div class="notif-content">
+          <div class="notif-title">{{ notif.data.tender_title }}</div>
+          <div class="notif-message">{{ notif.data.message }}</div>
+
+          <!-- Status badge -->
+          <div class="notif-meta">
+            <span class="status-change" *ngIf="notif.data.new_status">
+              <ion-icon name="arrow-forward-outline" style="vertical-align: middle; font-size: 10px;"></ion-icon>
+              {{ notif.data.new_status | uppercase }}
+            </span>
+            <span class="notif-time">{{ notif.created_at | date:'dd MMM yyyy, HH:mm' }}</span>
+          </div>
+        </div>
+
+        <!-- Titik merah: belum dibaca -->
+        <div class="unread-dot" *ngIf="!notif.read_at"></div>
+
+      </div>
+    </ion-list>
+
+    <!-- Empty state -->
+    <div *ngIf="notifications.length === 0" class="empty-state">
+      <ion-icon name="notifications-off-outline" class="empty-icon" color="medium"></ion-icon>
+      <p class="empty-title">Belum ada notifikasi</p>
+      <p class="empty-sub">Notifikasi perubahan status tender akan muncul di sini.</p>
+    </div>
+
+  </div>
+
+  <!-- Infinite scroll -->
+  <ion-infinite-scroll (ionInfinite)="loadData($event)" [disabled]="currentPage >= lastPage">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Memuat lebih banyak...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

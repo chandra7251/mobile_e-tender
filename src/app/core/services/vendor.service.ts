@@ -31,9 +31,7 @@ export class VendorService {
     private http: HttpClient
   ) {}
 
-  // GET /api/vendors/me
-  // Setelah fetch sukses, cache VendorProfile ke Preferences (key: vendor_data)
-  // agar VendorApprovedGuard bisa baca status tanpa API call tambahan.
+  // Fetch profile and cache
   getProfile(): Observable<ApiResponse<VendorProfile>> {
     return this.api.get<VendorProfile>('vendors/me').pipe(
       tap(res => {
@@ -47,26 +45,23 @@ export class VendorService {
     );
   }
 
-  // PUT /api/vendors/me
   updateProfile(payload: UpdateProfilePayload): Observable<ApiResponse<VendorProfile>> {
     return this.api.put<VendorProfile>('vendors/me', payload);
   }
 
-  // GET /api/vendors/status
   getStatus(): Observable<ApiResponse<{ verification_status: string; verification_notes: string | null }>> {
     return this.api.get<{ verification_status: string; verification_notes: string | null }>('vendors/status');
   }
 
-  // GET /api/vendors/documents
   getDocuments(): Observable<ApiResponse<VendorDocument[]>> {
     return this.api.get<VendorDocument[]>('vendors/documents');
   }
 
-  // POST /api/vendors/documents  (multipart/form-data)
+  // Upload document
   uploadDocument(type: DocumentType, file: File): Observable<ApiResponse<VendorDocument>> {
     return from(this.storage.getToken()).pipe(
       switchMap(token => {
-        // Guard: jangan kirim request jika token tidak ada
+        // Check token
         if (!token) {
           return throwError(() => ({
             error: { message: 'Sesi tidak valid, silakan login ulang.' }
@@ -88,9 +83,7 @@ export class VendorService {
     );
   }
 
-  // GET /api/vendors/documents/{doc_id}/download  — 🔒 Protected
-  // File dokumen tidak punya URL publik — WAJIB pakai endpoint ini
-  // Response: binary blob (PDF/JPG/PNG) + header Content-Disposition: attachment
+  // Download document
   downloadDocument(docId: number): Observable<Blob> {
     return from(this.storage.getToken()).pipe(
       switchMap(token => {
@@ -110,14 +103,12 @@ export class VendorService {
     );
   }
 
-  // GET /api/vendors/tenders  — 🔒 Protected
-  // Daftar tender yang diikuti vendor (sudah join sebagai peserta)
+  // Get my tenders
   getMyTenders(): Observable<ApiResponse<VendorTender[]>> {
     return this.api.get<VendorTender[]>('vendors/tenders');
   }
 
-  // GET /api/vendors/results  — 🔒 Protected
-  // Hasil tender vendor — menggantikan filter manual tenders.status === 'finished'
+  // Get my results
   getMyResults(): Observable<ApiResponse<VendorResult[]>> {
     return this.api.get<VendorResult[]>('vendors/results');
   }

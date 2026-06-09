@@ -40,7 +40,11 @@ export class AppComponent implements OnInit {
     // Mulai monitoring jaringan
     await this.networkService.startListening();
 
-    // Sembunyikan splash screen setelah app siap
-    await SplashScreen.hide();
+    // Sembunyikan splash screen setelah app siap (best-effort, sudah ada auto-hide)
+    try {
+      await SplashScreen.hide();
+    } catch (e) {
+      // Diabaikan — splash sudah auto-hide via launchAutoHide: true
+    }
   }
 }

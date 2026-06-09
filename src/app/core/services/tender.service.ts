@@ -28,7 +28,6 @@ export class TenderService {
 
   constructor(private api: ApiService) {}
 
-  // GET /api/tenders  — PUBLIC (tidak perlu token)
   getTenders(params?: { status?: TenderStatus; search?: string }): Observable<ApiResponse<Tender[]>> {
     let endpoint = 'tenders';
     if (params) {
@@ -40,19 +39,16 @@ export class TenderService {
     return this.api.get<Tender[]>(endpoint);
   }
 
-  // GET /api/tenders/{tender}  — PUBLIC (tidak perlu token)
-  // Response menyertakan is_participant (false jika guest)
+  // Detail tender
   getTenderDetail(id: number): Observable<ApiResponse<Tender>> {
     return this.api.get<Tender>(`tenders/${id}`);
   }
 
-  // POST /api/tenders/{tender}/participants  — 🔒 Protected
   joinTender(tenderId: number): Observable<ApiResponse<any>> {
     return this.api.post<any>(`tenders/${tenderId}/participants`, {});
   }
 
-  // GET /api/tenders/{tender}/participants/check  — 🔒 Protected
-  // Menggantikan workaround lama via bids/me
+  // Cek partisipasi
   checkParticipation(tenderId: number): Observable<boolean> {
     return this.api.get<ParticipationCheck>(`tenders/${tenderId}/participants/check`).pipe(
       map(res => {
@@ -62,74 +58,58 @@ export class TenderService {
         return false;
       }),
       catchError(err => {
-        // 403 → bukan peserta; 404 → tidak ditemukan → anggap false
         if (err?.status === 403 || err?.status === 404) {
           return of(false);
         }
-        // Error lain (network, 500) → anggap false, jangan crash
         return of(false);
       })
     );
   }
 
-  // GET /api/tenders/{tender}/announcements  — 🔒 Protected
   getAnnouncements(tenderId: number): Observable<ApiResponse<Announcement[]>> {
     return this.api.get<Announcement[]>(`tenders/${tenderId}/announcements`);
   }
 
-  // GET /api/tenders/{tender}/bids/me  — 🔒 Protected (HARUS sebelum POST bids)
+  // Get my bid
   getMyBid(tenderId: number): Observable<ApiResponse<Bid>> {
     return this.api.get<Bid>(`tenders/${tenderId}/bids/me`);
   }
 
-  // POST /api/tenders/{tender}/bids  — 🔒 Protected
   submitBid(tenderId: number, payload: SubmitBidPayload): Observable<ApiResponse<Bid>> {
     return this.api.post<Bid>(`tenders/${tenderId}/bids`, payload);
   }
 
-  // PUT /api/tenders/{tender}/bids/{bid}  — 🔒 Protected
   updateBid(tenderId: number, bidId: number, payload: SubmitBidPayload): Observable<ApiResponse<Bid>> {
     return this.api.put<Bid>(`tenders/${tenderId}/bids/${bidId}`, payload);
   }
 
-  // GET /api/tenders/{tender}/result  — 🔒 Protected
   getTenderResult(tenderId: number): Observable<ApiResponse<TenderResult>> {
     return this.api.get<TenderResult>(`tenders/${tenderId}/result`);
   }
 
-  // GET /api/tenders/{tender}/winner  — 🔒 Protected
   getWinner(tenderId: number): Observable<ApiResponse<Winner>> {
     return this.api.get<Winner>(`tenders/${tenderId}/winner`);
   }
 
-  // ─── Utility: sort bid untuk tampilkan pemenang (konsisten dengan backend) ───
+  // Sort bid
 
   /**
-   * Urutkan daftar bid sesuai logika 3-level tie-breaker backend:
-   *  1. bid_amount terendah menang
-   *  2. submitted_at lebih awal menang (microsecond precision via new Date())
-   *  3. ulid lebih kecil menang (sortable string comparison)
-   *
-   * Pemenang = bids[0] setelah sort.
+   * Mengurutkan daftar penawaran (bid) untuk menentukan pemenang.
    */
   sortBidsForWinner(bids: Bid[]): Bid[] {
     return [...bids].sort((a, b) => {
-      // Level 1: harga terendah
       if (a.bid_amount !== b.bid_amount) {
         return a.bid_amount - b.bid_amount;
       }
-      // Level 2: waktu submit lebih awal (new Date() handle microsecond)
       const tA = new Date(a.submitted_at).getTime();
       const tB = new Date(b.submitted_at).getTime();
       if (tA !== tB) return tA - tB;
-      // Level 3: ULID lebih kecil (sortable — dibuat sebelumnya = lebih kecil)
       return a.ulid.localeCompare(b.ulid);
     });
   }
 
   /**
-   * Format waktu bid untuk tampilan ke user.
-   * Menggunakan new Date() agar toleran terhadap microsecond (ISO8601 baru).
+   * Format waktu bid untuk tampilan UI.
    */
   formatBidTime(submittedAt: string): string {
     const date = new Date(submittedAt);
