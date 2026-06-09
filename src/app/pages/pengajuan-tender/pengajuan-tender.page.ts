@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, ActionSheetController } from '@ionic/angular';
 import { PhotoService } from '../../core/services/photo.service';
 import { VendorSubmissionService } from '../../core/services/vendor-submission.service';
@@ -36,6 +36,7 @@ export class PengajuanTenderPage implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
@@ -58,6 +59,17 @@ export class PengajuanTenderPage implements OnInit {
 
   ionViewWillEnter() {
     this.loadData();
+    // Cek query param dari Quick Action dashboard
+    const openForm = this.route.snapshot.queryParamMap.get('openForm');
+    if (openForm === 'true') {
+      this.isFormOpen = true;
+      // Bersihkan query param agar tidak re-open saat refresh
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {},
+        replaceUrl: true,
+      });
+    }
   }
 
   async loadData(event?: any) {
