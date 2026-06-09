@@ -46,7 +46,14 @@ export class LoginPage {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err?.error?.message || 'Terjadi kesalahan. Coba lagi.';
+        const serverMsg = err?.error?.message;
+        if (err?.status === 0) {
+          this.errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet kamu.';
+        } else if (err?.status === 401 || serverMsg) {
+          this.errorMessage = serverMsg || 'Email atau password salah.';
+        } else {
+          this.errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
+        }
       }
     });
   }

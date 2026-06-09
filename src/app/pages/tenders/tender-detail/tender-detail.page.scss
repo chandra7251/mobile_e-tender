@@ -166,6 +166,47 @@ ion-badge.status-badge {
   color: var(--ion-color-success-shade);
 }
 
+// ── Price Card (HPS) ───────────────────────────────────────────────────────
+
+.price-card {
+  border-radius: 12px;
+  margin-bottom: 14px;
+  border: 1px solid #FBDB0B; /* Border emas/kuning */
+  box-shadow: none;
+  background: rgba(251, 219, 11, 0.05); /* Latar belakang kuning transparan */
+
+  ion-card-content {
+    padding: 16px;
+  }
+}
+
+.price-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #FBDB0B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.price-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
 // ── Join card ─────────────────────────────────────────────────────────────
 
 .join-card {

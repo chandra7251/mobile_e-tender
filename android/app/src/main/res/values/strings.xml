@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">lelang-2.0</string>
-    <string name="title_activity_main">lelang-2.0</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">ZETA</string>
+    <string name="title_activity_main">ZETA</string>
+    <string name="package_name">com.vandrafcy.zeta</string>
+    <string name="custom_url_scheme">com.vandrafcy.zeta</string>
 </resources>

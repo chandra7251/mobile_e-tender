@@ -1,12 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { VendorService } from '../../core/services/vendor.service';
 import { StorageService } from '../../core/services/storage.service';
 import { VendorProfile, Tender, Announcement } from '../../core/models/user.model';
 import { TenderService } from '../../core/services/tender.service';
 import { ActivityService, ActivityLog } from '../../core/services/activity.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   standalone: false,
@@ -19,6 +21,10 @@ export class HomePage {
   vendorProfile: VendorProfile | null = null;
   openTenders: Tender[] = [];
   isLoadingTenders = false;
+
+  // Notifikasi badge
+  unreadCount: number = 0;
+  private unreadSub?: Subscription;
 
   myTendersCount = { bidding: 0, open: 0, aanwijzing: 0, finished: 0 };
   isLoadingMyTenders = false;
@@ -40,7 +46,8 @@ export class HomePage {
     private router: Router,
     private toast: ToastController,
     private tenderService: TenderService,
-    public activityService: ActivityService
+    public activityService: ActivityService,
+    private notificationService: NotificationService
   ) {}
 
   ionViewWillEnter(): void {
@@ -49,10 +56,22 @@ export class HomePage {
     this.loadMyTenders();
     this.loadBiddingTenders();
     this.loadActivities();
+    this.subscribeUnreadCount();
   }
 
   ngOnDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    this.unreadSub?.unsubscribe();
+  }
+
+  private subscribeUnreadCount(): void {
+    // Unsubscribe sebelumnya agar tidak double-subscribe
+    this.unreadSub?.unsubscribe();
+    this.unreadSub = this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
+    });
+    // Fetch page 1 untuk update badge
+    this.notificationService.getNotifications(1).subscribe();
   }
 
   private loadProfile(): void {
@@ -106,7 +125,7 @@ export class HomePage {
     this.isLoadingAanwijzing = true;
     this.aanwijzings = [];
     
-    // Kita cek semua tender, karena aanwijzing bisa saja ada di status open atau aanwijzing
+    // Cek semua tender
     if (tenders.length === 0) {
       this.isLoadingAanwijzing = false;
       return;
@@ -117,7 +136,7 @@ export class HomePage {
       this.tenderService.getAnnouncements(t.id).subscribe({
         next: (res) => {
           if (res.status === 'success' && res.data && res.data.length > 0) {
-            // Kita inject title tender agar bisa ditampilkan di UI
+            // Inject title
             const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
             this.aanwijzings = [...this.aanwijzings, ...mapped];
           }
@@ -171,7 +190,7 @@ export class HomePage {
   private updateCountdowns(): void {
     const now = new Date().getTime();
     this.biddingTenders.forEach(t => {
-      // jika ada bidding_end, gunakan itu, jika tidak gunakan end_date
+      // Fallback ke end_date
       const endDateString = t.bidding_end || t.end_date;
       if (endDateString) {
         const end = new Date(endDateString).getTime();

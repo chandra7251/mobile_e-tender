@@ -43,6 +43,10 @@ const routes: Routes = [
         path: 'results',
         loadChildren: () => import('../tenders/result-history/result-history.module').then(m => m.ResultHistoryPageModule)
       },
+      {
+        path: 'notifications',
+        loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsPageModule)
+      },
       // Default tab
       {
         path: '',

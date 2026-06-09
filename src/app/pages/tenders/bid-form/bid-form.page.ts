@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastController } from '@ionic/angular';
 import { TenderService, SubmitBidPayload } from '../../../core/services/tender.service';
-import { Bid } from '../../../core/models/user.model';
+import { Bid, Tender } from '../../../core/models/user.model';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 type BidMode = 'loading' | 'submit' | 'update' | 'error';
 
@@ -16,6 +18,7 @@ type BidMode = 'loading' | 'submit' | 'update' | 'error';
 export class BidFormPage implements OnInit {
 
   tenderId!: number;
+  tender: Tender | null = null;
   existingBid: Bid | null = null;
   bidId: number | null = null;
 
@@ -47,28 +50,33 @@ export class BidFormPage implements OnInit {
     this.mode = 'loading';
     this.loadError = '';
 
-    // GET /api/tenders/{tender}/bids/me
-    this.tenderService.getMyBid(this.tenderId).subscribe({
-      next: (res) => {
-        if (res.status === 'success' && res.data) {
-          // Sudah ada bid — mode UPDATE
-          this.existingBid = res.data;
-          this.bidId       = res.data.id;
-          this.bidAmount   = res.data.bid_amount;
-          this.notes       = res.data.notes ?? '';
-          this.mode        = 'update';
-        } else {
-          this.mode = 'submit';
-        }
-      },
-      error: (err) => {
+    const bid$ = this.tenderService.getMyBid(this.tenderId).pipe(catchError((err) => of({ error: err })));
+    const tender$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError((err) => of({ error: err })));
+
+    forkJoin([bid$, tender$]).subscribe(([bidRes, tenderRes]) => {
+      const bidAny = bidRes as any;
+      const tenderAny = tenderRes as any;
+
+      if (tenderAny && !tenderAny.error && tenderAny.status === 'success' && tenderAny.data) {
+        this.tender = tenderAny.data;
+      }
+
+      if (bidAny.error) {
+        const err = bidAny.error;
         if (err?.status === 404) {
-          // 404 = belum ada bid → mode SUBMIT
           this.mode = 'submit';
         } else {
-          this.mode      = 'error';
+          this.mode = 'error';
           this.loadError = err?.error?.message || 'Gagal memuat data penawaran.';
         }
+      } else if (bidAny.status === 'success' && bidAny.data) {
+        this.existingBid = bidAny.data;
+        this.bidId       = bidAny.data.id;
+        this.bidAmount   = bidAny.data.bid_amount;
+        this.notes       = bidAny.data.notes ?? '';
+        this.mode        = 'update';
+      } else {
+        this.mode = 'submit';
       }
     });
   }
@@ -90,7 +98,6 @@ export class BidFormPage implements OnInit {
     };
 
     if (this.mode === 'update' && this.bidId) {
-      // PUT /api/tenders/{tender}/bids/{bid}
       this.tenderService.updateBid(this.tenderId, this.bidId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
@@ -109,7 +116,6 @@ export class BidFormPage implements OnInit {
         }
       });
     } else {
-      // POST /api/tenders/{tender}/bids
       this.tenderService.submitBid(this.tenderId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
@@ -194,10 +200,6 @@ export class BidFormPage implements OnInit {
     }).format(amount);
   }
 
-  /**
-   * Format waktu bid — gunakan new Date() agar toleran terhadap microsecond.
-   * submitted_at baru: "2026-05-26T10:00:00.123456+07:00"
-   */
   formatDate(dateStr: string): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {

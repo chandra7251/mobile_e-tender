@@ -183,7 +183,7 @@ ion-badge.status-badge {
 .tender-desc {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   line-height: 1.5;
 
   // Max 2 lines
@@ -191,6 +191,20 @@ ion-badge.status-badge {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.tender-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  color: #28BAD3; /* Warna teal/aksen terang di atas background biru gelap */
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 15px;
+  }
 }
 
 .budget-row {

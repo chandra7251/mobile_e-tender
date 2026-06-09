@@ -345,3 +345,40 @@ ion-card-subtitle {
     line-height: 1.5;
   }
 }
+
+// ── HPS Info Box ──────────────────────────────────────────────────────────
+
+.hps-info-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(251, 219, 11, 0.1); // Warna kuning/emas lembut
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-left: 4px solid #FBDB0B;
+
+  ion-icon {
+    font-size: 24px;
+    color: #FBDB0B;
+  }
+
+  .hps-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hps-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .hps-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+}

@@ -40,7 +40,7 @@ export class TenderListPage {
     private route: ActivatedRoute
   ) {}
 
-  // Dipanggil setiap kali halaman ditampilkan (navigasi kembali ke tab ini)
+  // Lifecycle hook
   ionViewWillEnter(): void {
     const statusParam = this.route.snapshot.queryParamMap.get('status') as FilterStatus;
     if (statusParam && this.filterOptions.some(opt => opt.value === statusParam)) {
@@ -59,7 +59,7 @@ export class TenderListPage {
       next: (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
-          // Filter out draft — hanya tampilkan status valid untuk vendor
+          // Filter valid status
           this.allTenders = res.data.filter(t =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );
