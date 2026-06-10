@@ -102,6 +102,8 @@ export class PengajuanTenderPage implements OnInit {
     fixedUrl = fixedUrl.replace('http://localhost/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://localhost:8000/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'https://vandrafcy.my.id/');
+    fixedUrl = fixedUrl.replace('http://127.0.0.1:8080/', 'https://vandrafcy.my.id/');
+    fixedUrl = fixedUrl.replace('http://e-tender.test/', 'https://vandrafcy.my.id/');
 
     if (fixedUrl.startsWith('http')) {
       return fixedUrl;
