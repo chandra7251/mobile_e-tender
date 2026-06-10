@@ -99,9 +99,9 @@ export class PengajuanTenderPage implements OnInit {
 
     let fixedUrl = url;
     // Fix typical backend URL issues when APP_URL is missing the port or using localhost
-    fixedUrl = fixedUrl.replace('http://localhost/', 'http://127.0.0.1:8080/');
-    fixedUrl = fixedUrl.replace('http://localhost:8000/', 'http://127.0.0.1:8080/');
-    fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'http://127.0.0.1:8080/');
+    fixedUrl = fixedUrl.replace('http://localhost/', 'https://vandrafcy.my.id/');
+    fixedUrl = fixedUrl.replace('http://localhost:8000/', 'https://vandrafcy.my.id/');
+    fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'https://vandrafcy.my.id/');
 
     if (fixedUrl.startsWith('http')) {
       return fixedUrl;
@@ -109,7 +109,7 @@ export class PengajuanTenderPage implements OnInit {
 
     // Jika path relatif (seperti 'storage/...'), arahkan langsung ke backend port 8080
     const cleanUrl = fixedUrl.startsWith('/') ? fixedUrl.substring(1) : fixedUrl;
-    return `http://127.0.0.1:8080/${cleanUrl}`;
+    return `https://vandrafcy.my.id/${cleanUrl}`;
   }
 
 
