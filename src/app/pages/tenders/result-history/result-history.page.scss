@@ -10,7 +10,7 @@ ion-content {
   margin-top: 0;
   padding: 0;
   position: relative; // for absolute header
-  border-top: var(--ion-safe-area-top, 0px) solid #3451B2;
+  background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
 
   svg {
     width: 100%;

@@ -5,6 +5,7 @@ ion-tab-bar {
   background: transparent !important;
   --background: transparent !important;
   z-index: 10;
+  padding: 0 20px; // Memberi jarak dari kanan & kiri layar
 }
 
 ion-tab-button {
@@ -15,25 +16,25 @@ ion-tab-button {
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    padding: 6px 16px;
+    padding: 5px 14px; // Sedikit lebih ramping
     margin-bottom: 4px;
     transition: all 0.3s ease;
   }
 
   ion-icon {
-    font-size: 24px;
+    font-size: 21px; // Diperkecil dari 24px
     transition: color 0.3s ease;
   }
 
   ion-label {
-    font-size: 12px;
+    font-size: 11px; // Diperkecil dari 12px
     font-weight: 600;
     transition: color 0.3s ease;
   }
 }
 
-// ── Theme Blue (Home & Hasil) ─────────────────────────────────────────────────────────────
-.theme-blue {
+// ── Theme Navy (Universal) ─────────────────────────────────────────────────────────────
+.theme-navy {
   background-color: transparent !important;
   --background: transparent !important;
 
@@ -56,46 +57,11 @@ ion-tab-button {
       .icon-wrapper {
         background: #FFFFFF;
         ion-icon {
-          color: #3F51B5;
+          color: #26366C;
         }
       }
       ion-label {
         color: #FFFFFF;
-      }
-    }
-  }
-}
-
-// ── Theme White (Tender & Profil) ─────────────────────────────────────────────────────────────
-.theme-white {
-  background-color: transparent !important;
-  --background: transparent !important;
-  box-shadow: none !important;
-
-  ion-tab-button {
-    --color: rgba(63, 81, 181, 0.7);
-    --color-selected: #3F51B5;
-
-    .icon-wrapper {
-      background: transparent;
-      ion-icon {
-        color: rgba(63, 81, 181, 0.7);
-      }
-    }
-
-    ion-label {
-      color: rgba(63, 81, 181, 0.7);
-    }
-
-    &.tab-selected {
-      .icon-wrapper {
-        background: #3F51B5;
-        ion-icon {
-          color: #FFFFFF;
-        }
-      }
-      ion-label {
-        color: #3F51B5;
       }
     }
   }
@@ -123,14 +89,15 @@ ion-tab-button {
 }
 
 // Logika warna gelombang (SVG inilah yang jadi background asli tab bar)
-.bottom-wave-container.theme-blue {
+.bottom-wave-container.theme-navy {
   svg path {
-    fill: #3F51B5;
+    fill: #26366C;
   }
 }
 
-.bottom-wave-container.theme-white {
-  svg path {
-    fill: #FFFFFF;
+// Sembunyikan gelombang bawah saat keyboard terbuka agar tidak overlap dengan konten
+::ng-deep body.keyboard-is-open {
+  .bottom-wave-container {
+    display: none !important;
   }
 }

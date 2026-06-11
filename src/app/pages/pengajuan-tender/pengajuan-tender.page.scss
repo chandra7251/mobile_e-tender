@@ -13,7 +13,7 @@ ion-content {
 .top-vector-container {
   position: relative;
   line-height: 0;
-  border-top: var(--ion-safe-area-top, 0px) solid #3451B2;
+  background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
   
   svg {
     width: 100%;
@@ -282,7 +282,7 @@ ion-content {
     .header-title {
       position: absolute;
       left: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       font-size: 22px;
       font-weight: 700;
       color: white;
@@ -293,7 +293,7 @@ ion-content {
     .btn-close {
       position: absolute;
       right: 24px;
-      top: calc(20px + var(--ion-safe-area-top, 0px));
+      top: 20px;
       margin: 0;
       --padding-start: 8px;
       --padding-end: 8px;
