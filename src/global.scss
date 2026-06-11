@@ -35,3 +35,37 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* =========================================
+   GLOBAL OVERRIDES FOR VECTORS & KEYBOARD
+   ========================================= */
+
+/* Sembunyikan gelombang bawah saat keyboard terbuka agar tidak menutupi konten/form */
+body.keyboard-is-open {
+  .bottom-vector-container,
+  .bottom-wave-container {
+    display: none !important;
+  }
+}
+
+/* Kurangi ketinggian berlebih pada vector atas dan bawah */
+.top-vector-container {
+  overflow: hidden;
+  svg {
+    margin-top: -12px !important; /* Tarik ke atas untuk memotong bagian kosong */
+  }
+}
+
+.bottom-vector-container {
+  overflow: hidden;
+  svg {
+    margin-bottom: -15px !important; /* Tarik ke bawah untuk memotong bagian solid */
+  }
+}
+
+.bottom-wave-container {
+  overflow: hidden;
+  svg {
+    margin-bottom: -15px !important;
+  }
+}

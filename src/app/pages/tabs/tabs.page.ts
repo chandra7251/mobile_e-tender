@@ -48,10 +48,11 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   get themeClass(): string {
-    if (this.activeTab === 'home' || this.activeTab === 'results' || this.activeTab === 'documents' || this.activeTab === 'pengajuan-tender') {
-      return 'theme-blue';
-    }
-    return 'theme-white';
+    // if (this.activeTab === 'home' || this.activeTab === 'results' || this.activeTab === 'documents' || this.activeTab === 'pengajuan-tender') {
+    //   return 'theme-blue';
+    // }
+    // return 'theme-white';
+    return 'theme-navy';
   }
 }
 

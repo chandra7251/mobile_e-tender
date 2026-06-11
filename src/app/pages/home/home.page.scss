@@ -16,7 +16,7 @@ ion-content.dashboard-bg {
 .top-vector-container {
   position: relative;
   line-height: 0;
-  border-top: var(--ion-safe-area-top, 0px) solid #3F51B5;
+  background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
   
   svg {
     width: 100%;

@@ -10,7 +10,7 @@ ion-content {
   margin-top: 0;
   padding: 0;
   position: relative; // for absolute header
-  border-top: var(--ion-safe-area-top, 0px) solid white;
+  background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
 
   svg {
     width: 100%;
@@ -35,7 +35,7 @@ ion-content {
     }
 
     .btn-header-back {
-      --color: #3451B2;
+      --color: #FFFFFF;
       --padding-start: 0;
       --padding-end: 8px;
       margin: 0;
@@ -45,7 +45,7 @@ ion-content {
     }
 
     .header-title {
-      color: #3451B2;
+      color: #FFFFFF;
       font-size: 22px;
       font-weight: 700;
       line-height: 38px;
