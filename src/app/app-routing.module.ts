@@ -9,7 +9,7 @@ const routes: Routes = [
   // Root redirect
   {
     path: '',
-    redirectTo: 'welcome',
+    redirectTo: 'splash',
     pathMatch: 'full'
   },
   {
@@ -61,10 +61,14 @@ const routes: Routes = [
     canActivate: [AuthGuard, VendorApprovedGuard]
   },
 
+  {
+    path: 'splash',
+    loadChildren: () => import('./pages/splash/splash.module').then( m => m.SplashPageModule)
+  },
   // Wildcard fallback
   {
     path: '**',
-    redirectTo: 'welcome'
+    redirectTo: 'splash'
   }
 ];
 

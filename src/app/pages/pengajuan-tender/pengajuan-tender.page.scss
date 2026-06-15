@@ -31,7 +31,7 @@ ion-content {
     .header-title {
       position: absolute;
       left: 24px;
-      top: 20px;
+      top: 12px;
       color: #FFFFFF;
       font-size: 22px;
       font-weight: 700;
@@ -41,7 +41,7 @@ ion-content {
     ion-button {
       position: absolute;
       right: 24px;
-      top: 20px;
+      top: 12px;
       margin: 0;
       height: 38px;
     }
@@ -282,18 +282,22 @@ ion-content {
     .header-title {
       position: absolute;
       left: 24px;
-      top: 20px;
-      font-size: 22px;
+      top: 12px;
+      font-size: 18px; // Diperkecil dari 22px agar tidak nabrak tombol close
       font-weight: 700;
       color: white;
       margin: 0;
       line-height: 38px;
+      max-width: calc(100% - 90px); // Batasi lebar maksimal area teks
+      white-space: nowrap; // Jangan turun ke baris baru
+      overflow: hidden; // Sembunyikan teks yang kepanjangan
+      text-overflow: ellipsis; // Tambahkan titik-titik jika terpotong
     }
 
     .btn-close {
       position: absolute;
       right: 24px;
-      top: 20px;
+      top: 12px;
       margin: 0;
       --padding-start: 8px;
       --padding-end: 8px;
