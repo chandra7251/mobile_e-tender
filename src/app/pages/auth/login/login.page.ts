@@ -16,6 +16,8 @@ export class LoginPage {
   isLoading = false;
   showPassword = false;
   errorMessage = '';
+  isUnverified = false;
+  isResending = false;
 
   constructor(
     private auth: AuthService,
@@ -49,11 +51,31 @@ export class LoginPage {
         const serverMsg = err?.error?.message;
         if (err?.status === 0) {
           this.errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet kamu.';
-        } else if (err?.status === 401 || serverMsg) {
+        } else if (err?.status === 403 && serverMsg?.includes('belum diverifikasi')) {
+          this.errorMessage = serverMsg;
+          this.isUnverified = true;
+        } else if (err?.status === 401 || err?.status === 403 || serverMsg) {
           this.errorMessage = serverMsg || 'Email atau password salah.';
         } else {
           this.errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
         }
+      }
+    });
+  }
+
+  resendEmail(): void {
+    if (!this.email) return;
+
+    this.isResending = true;
+    this.auth.resendVerificationEmail(this.email).subscribe({
+      next: async (res) => {
+        this.isResending = false;
+        await this.showToast('Link verifikasi berhasil dikirim ulang!', 'success');
+      },
+      error: async (err) => {
+        this.isResending = false;
+        const serverMsg = err?.error?.message || 'Gagal mengirim ulang email.';
+        await this.showToast(serverMsg, 'danger');
       }
     });
   }
