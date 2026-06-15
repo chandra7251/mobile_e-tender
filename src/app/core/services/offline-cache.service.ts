@@ -7,12 +7,13 @@ const CACHE_KEYS = {
 } as const;
 
 /**
- * Cache service for offline mode.
+ * Service buat nyimpen data ke cache lokal (storage HP).
+ * Biar kalo pas sinyal jelek atau offline, user tetep bisa liat data terakhir.
  */
 @Injectable({ providedIn: 'root' })
 export class OfflineCacheService {
 
-  // Tender List
+  // === Bagian Tender ===
 
   async cacheTenderList(data: any[]): Promise<void> {
     await Preferences.set({
@@ -31,7 +32,7 @@ export class OfflineCacheService {
     }
   }
 
-  // Vendor Profile
+  // === Bagian Profil Vendor ===
 
   async cacheVendorProfile(data: any): Promise<void> {
     await Preferences.set({
@@ -50,7 +51,7 @@ export class OfflineCacheService {
     }
   }
 
-  // Utility
+  // === Fungsi Bantuan ===
 
   async clearAllCache(): Promise<void> {
     await Preferences.remove({ key: CACHE_KEYS.TENDER_LIST });

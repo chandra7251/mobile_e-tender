@@ -31,7 +31,7 @@ export class VendorService {
     private http: HttpClient
   ) {}
 
-  // Fetch profile and cache
+  // Fungsi buat ngambil profil vendor yang lagi login, sekalian di-save ke cache HP
   getProfile(): Observable<ApiResponse<VendorProfile>> {
     return this.api.get<VendorProfile>('vendors/me').pipe(
       tap(res => {
@@ -57,11 +57,11 @@ export class VendorService {
     return this.api.get<VendorDocument[]>('vendors/documents');
   }
 
-  // Upload document
+  // Fungsi buat upload dokumen legalitas / izin usaha
   uploadDocument(type: DocumentType, file: File): Observable<ApiResponse<VendorDocument>> {
     return from(this.storage.getToken()).pipe(
       switchMap(token => {
-        // Check token
+        // Cek dulu tokennya masih ada apa ngga, sedia payung sebelum hujan
         if (!token) {
           return throwError(() => ({
             error: { message: 'Sesi tidak valid, silakan login ulang.' }
@@ -83,7 +83,7 @@ export class VendorService {
     );
   }
 
-  // Download document
+  // Fungsi buat download dokumen yang udah diupload (balikin format blob/file)
   downloadDocument(docId: number): Observable<Blob> {
     return from(this.storage.getToken()).pipe(
       switchMap(token => {
@@ -103,12 +103,12 @@ export class VendorService {
     );
   }
 
-  // Get my tenders
+  // Fungsi ngambil daftar tender yang diikutin sama vendor ini
   getMyTenders(): Observable<ApiResponse<VendorTender[]>> {
     return this.api.get<VendorTender[]>('vendors/tenders');
   }
 
-  // Get my results
+  // Fungsi ngambil daftar pengumuman pemenang tender yang vendor ini ikutin
   getMyResults(): Observable<ApiResponse<VendorResult[]>> {
     return this.api.get<VendorResult[]>('vendors/results');
   }

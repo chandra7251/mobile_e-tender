@@ -17,7 +17,7 @@ export interface SubmitBidPayload {
   notes?: string;
 }
 
-/** Participation check response */
+// Bentuk data balasan pas ngecek udah join tender apa belum
 export interface ParticipationCheck {
   is_participant: boolean;
   joined_at: string | null;
@@ -39,7 +39,7 @@ export class TenderService {
     return this.api.get<Tender[]>(endpoint);
   }
 
-  // Detail tender
+  // Fungsi buat ngambil detail spesifik satu tender doang
   getTenderDetail(id: number): Observable<ApiResponse<Tender>> {
     return this.api.get<Tender>(`tenders/${id}`);
   }
@@ -48,7 +48,7 @@ export class TenderService {
     return this.api.post<any>(`tenders/${tenderId}/participants`, {});
   }
 
-  // Cek partisipasi
+  // Fungsi cek apakah si vendor ini udah daftar/join di tender ini apa belum
   checkParticipation(tenderId: number): Observable<boolean> {
     return this.api.get<ParticipationCheck>(`tenders/${tenderId}/participants/check`).pipe(
       map(res => {
@@ -70,7 +70,7 @@ export class TenderService {
     return this.api.get<Announcement[]>(`tenders/${tenderId}/announcements`);
   }
 
-  // Get my bid
+  // Fungsi ngambil data penawaran harga yang udah dikirim si vendor
   getMyBid(tenderId: number): Observable<ApiResponse<Bid>> {
     return this.api.get<Bid>(`tenders/${tenderId}/bids/me`);
   }
@@ -91,11 +91,8 @@ export class TenderService {
     return this.api.get<Winner>(`tenders/${tenderId}/winner`);
   }
 
-  // Sort bid
-
-  /**
-   * Mengurutkan daftar penawaran (bid) untuk menentukan pemenang.
-   */
+  // Fungsi buat ngurutin bid/penawaran harga dari yang termurah sampai yang termahal
+  // Kalo harganya sama, diurutin berdasarkan siapa yang submit duluan
   sortBidsForWinner(bids: Bid[]): Bid[] {
     return [...bids].sort((a, b) => {
       if (a.bid_amount !== b.bid_amount) {
@@ -108,9 +105,7 @@ export class TenderService {
     });
   }
 
-  /**
-   * Format waktu bid untuk tampilan UI.
-   */
+  // Fungsi buat ngerapiin format jam biar enak dibaca di UI aplikasi
   formatBidTime(submittedAt: string): string {
     const date = new Date(submittedAt);
     return date.toLocaleString('id-ID', {

@@ -30,7 +30,7 @@ export interface NotificationResponse {
     data: NotificationItem[];
     last_page: number;
     total: number;
-    unread_count?: number; // Opsional, jika backend mengirimkan total unread
+    unread_count?: number; // Opsional sih, cuma kepake kalo dari backend ngirim datanya
   };
 }
 
@@ -41,24 +41,25 @@ export class NotificationService {
   // environment.apiUrl sudah '/api' (via proxy) — jangan tambah '/api' lagi
   private apiUrl = environment.apiUrl + '/notifications';
 
-  // State global untuk badge lonceng
+  // State global buat nyimpen angka di badge lonceng (icon notif)
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Ambil daftar notifikasi dari backend (dengan pagination)
+   * Ambil daftar notifikasi dari backend.
+   * Udah support pagination juga biar ga ngelag kalo datanya banyak.
    */
   getNotifications(page: number = 1): Observable<NotificationResponse> {
     return this.http.get<NotificationResponse>(`${this.apiUrl}?page=${page}`).pipe(
       tap(res => {
         if (res.status === 'success') {
-          // Gunakan unread_count dari backend jika tersedia, fallback ke hitung manual
+          // Pake angka unread_count dari backend kalo ada, kalo ngga ya kita itung manual aja
           if (res.data.unread_count !== undefined) {
             this.unreadCountSubject.next(res.data.unread_count);
           } else if (page === 1) {
-            // Hanya update dari halaman pertama agar tidak reset saat infinite scroll
+            // Diupdate dari page 1 aja, biar ga kereset aneh pas lagi scroll-scroll nyari data lama
             const unread = res.data.data.filter(n => n.read_at === null).length;
             this.unreadCountSubject.next(unread);
           }
@@ -68,7 +69,7 @@ export class NotificationService {
   }
 
   /**
-   * Tandai satu notifikasi sudah dibaca
+   * Fungsi buat nandain satu notif kalo udah dibaca sama user
    */
   markAsRead(id: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/read`, {}).pipe(
@@ -82,7 +83,7 @@ export class NotificationService {
   }
 
   /**
-   * Tandai semua notifikasi sudah dibaca
+   * Fungsi sapu jagat buat nandain semua notif udah dibaca sekaligus
    */
   markAllAsRead(): Observable<any> {
     return this.http.patch(`${this.apiUrl}/read-all`, {}).pipe(
@@ -91,7 +92,7 @@ export class NotificationService {
   }
 
   /**
-   * Update badge count secara manual (misal setelah login)
+   * Fungsi manual buat nembak angka ke badge (biasanya dipake pas abis login)
    */
   updateUnreadCount(count: number): void {
     this.unreadCountSubject.next(count);

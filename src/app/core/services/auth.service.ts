@@ -5,7 +5,7 @@ import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 import { ApiResponse, AuthData, RefreshData } from '../models/user.model';
 
-// Payload interfaces
+// Interface buat bentuk data yang mau dikirim ke backend (Payload)
 
 export interface LoginPayload {
   email: string;
@@ -39,7 +39,7 @@ export interface ResetPasswordPayload {
   password_confirmation: string;
 }
 
-// Service
+// Class service utama buat ngurusin semua login/register/auth
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -107,7 +107,7 @@ export class AuthService {
     return this.api.post<null>('email/resend', { email });
   }
 
-  // Helper
+  // Fungsi bantuan buat ngecek user udah login apa belom
   isLoggedIn(): Observable<boolean> {
     return from(this.storage.getToken().then(token => !!token));
   }

@@ -1,4 +1,5 @@
 // ─── User & Auth ───────────────────────────────────────────────────────────
+// Struktur data buat user sama autentikasi
 
 export interface User {
   id: number;
@@ -10,9 +11,7 @@ export interface User {
   updated_at?: string;
 }
 
-/**
- * Profile Vendor
- */
+// Bentuk profil si vendor, status verifikasinya ada di sini
 export interface VendorProfile {
   id: number;                    // vendor.id
   company_name: string;
@@ -28,9 +27,7 @@ export interface VendorProfile {
   };
 }
 
-/**
- * Auth Data
- */
+// Data yang disimpen pas user berhasil login
 export interface AuthData {
   token: string;
   token_type: string;   // 'bearer'
@@ -43,9 +40,7 @@ export interface AuthData {
   };
 }
 
-/**
- * Refresh Data
- */
+// Balasan dari API pas tokennya diperpanjang
 export interface RefreshData {
   token: string;
   token_type: string;   // 'bearer'
@@ -56,9 +51,7 @@ export interface RefreshData {
 
 export type DocumentType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
 
-/**
- * Vendor Document
- */
+// Struktur data buat nyimpen info file dokumen legal yang diupload vendor
 export interface VendorDocument {
   id: number;
   document_type: DocumentType;  // backend pakai 'document_type', bukan 'type'
@@ -70,9 +63,7 @@ export interface VendorDocument {
 
 // ─── Tenders ───────────────────────────────────────────────────────────────
 
-/**
- * Tender Status
- */
+// Status tender, dari awal dibikin sampe kelar
 export type TenderStatus = 'draft' | 'open' | 'aanwijzing' | 'bidding' | 'closed' | 'finished';
 
 export interface Tender {
@@ -96,14 +87,12 @@ export interface Tender {
 
 // ─── Vendor Tenders (GET /api/vendors/tenders) ─────────────────────────────
 
-/** Vendor Tender Alias */
+// Sama aja kayak Tender sih, cuma beda nama (alias) doang biar gampang dibaca
 export type VendorTender = Tender;
 
 // ─── Vendor Results (GET /api/vendors/results) ─────────────────────────────
 
-/**
- * Vendor Result
- */
+// Buat nampilin hasil pengumuman tender ke vendor
 export interface VendorResult {
   tender_id: number;
   tender_title: string;
@@ -126,9 +115,7 @@ export interface Announcement {
   created_at: string;
 }
 
-/**
- * Bid model
- */
+// Bentuk data penawaran harga (bid) yang dikirim vendor
 export interface Bid {
   id: number;
   ulid: string;              // baru — sortable tie-breaker level 3
@@ -141,9 +128,7 @@ export interface Bid {
 
 // ─── Winner & Result ───────────────────────────────────────────────────────
 
-/**
- * Winner model
- */
+// Info detail siapa yang menang tender
 export interface Winner {
   winner_company: string;         // nama perusahaan pemenang
   winning_bid_amount: number;     // nilai bid pemenang
@@ -153,9 +138,7 @@ export interface Winner {
   my_bid_amount?: number | null;  // nilai bid vendor yang login
 }
 
-/**
- * Tender Result model
- */
+// Info ringkasan hasil akhir tendernya
 export interface TenderResult {
   tender_id: number;
   winner_company?: string;       // nama pemenang (string langsung, bukan object)
@@ -167,9 +150,7 @@ export interface TenderResult {
 
 // ─── Generic wrapper ───────────────────────────────────────────────────────
 
-/**
- * ApiResponse
- */
+// Wrapper standar buat setiap balasan API (biar konsisten aja)
 export interface ApiResponse<T = any> {
   status: 'success' | 'error';
   message: string;
@@ -186,9 +167,7 @@ export interface VendorSubmissionPhoto {
   photo_url: string;
 }
 
-/**
- * Vendor Submission model
- */
+// Data detail pas vendor ngajuin tender barang/jasa
 export interface VendorSubmission {
   id: number;
   nama_barang: string;
@@ -204,9 +183,7 @@ export interface VendorSubmission {
   photos: VendorSubmissionPhoto[];
 }
 
-/**
- * Submission Form payload
- */
+// Data form pas vendor mau nge-submit pengajuan tender baru
 export interface SubmissionForm {
   nama_barang: string;
   deskripsi: string;

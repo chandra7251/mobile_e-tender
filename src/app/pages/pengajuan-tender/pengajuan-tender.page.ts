@@ -26,12 +26,12 @@ export class PengajuanTenderPage implements OnInit {
   photos: string[] = [];
   readonly MAX_PHOTOS = 3;
 
-  // ── Pagination State ──────────────────────────────────────────────────────────
+  // Variabel buat pagination (nampilin data per halaman biar ga berat)
   pengajuanList: any[] = [];
   currentPage = 1;
-  itemsPerPage = 4;
+  itemsPerPage = 4; // Ditampilin 4 biji doang per halaman
 
-  // ── Form State ──────────────────────────────────────────────────────────────
+  // Buka tutup modal form pengajuan
   isFormOpen = false;
 
   constructor(
@@ -59,11 +59,11 @@ export class PengajuanTenderPage implements OnInit {
 
   ionViewWillEnter() {
     this.loadData();
-    // Cek query param dari Quick Action dashboard
+    // Kalau user mencet dari dashboard Quick Action, langsung bukain formnya
     const openForm = this.route.snapshot.queryParamMap.get('openForm');
     if (openForm === 'true') {
       this.isFormOpen = true;
-      // Bersihkan query param agar tidak re-open saat refresh
+      // Hapus URL query param biar formnya ga kebuka mulu pas di-refresh
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {},
@@ -98,7 +98,7 @@ export class PengajuanTenderPage implements OnInit {
     if (url.startsWith('data:')) return url;
 
     let fixedUrl = url;
-    // Fix typical backend URL issues when APP_URL is missing the port or using localhost
+    // Benerin URL kalo backend balikin alamat localhost (biasa kejadian pas ngetes di lokal tapi frontend buka di device asli)
     fixedUrl = fixedUrl.replace('http://localhost/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://localhost:8000/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'https://vandrafcy.my.id/');
@@ -109,7 +109,7 @@ export class PengajuanTenderPage implements OnInit {
       return fixedUrl;
     }
 
-    // Jika path relatif (seperti 'storage/...'), arahkan langsung ke backend port 8080
+    // Kalo URLnya disimpen pake path relatif doang, tambahin domain backend kita depannya
     const cleanUrl = fixedUrl.startsWith('/') ? fixedUrl.substring(1) : fixedUrl;
     return `https://vandrafcy.my.id/${cleanUrl}`;
   }
@@ -126,8 +126,7 @@ export class PengajuanTenderPage implements OnInit {
 
 
 
-  // ── Photo Handling ───────────────────────────────────────────────────────────
-
+  // Fungsi buat upload / milih foto
   async openPhotoOptions(): Promise<void> {
     if (this.photos.length >= this.MAX_PHOTOS) {
       await this.showAlert('Batas Foto', `Maksimal ${this.MAX_PHOTOS} foto yang bisa ditambahkan.`);
@@ -175,8 +174,7 @@ export class PengajuanTenderPage implements OnInit {
     return `data:image/jpeg;base64,${base64}`;
   }
 
-  // ── Submit ────────────────────────────────────────────────────────────────────
-
+  // Eksekusi kirim form
   async onSubmit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -184,7 +182,7 @@ export class PengajuanTenderPage implements OnInit {
       return;
     }
 
-    // Cek koneksi
+    // Pastiin ada sinyal internet sblm nembak API, biar ga nyangkut
     const isOnline = await this.networkService.checkConnection();
     if (!isOnline) {
       await this.showAlert('Tidak Ada Koneksi', 'Pengajuan tender membutuhkan koneksi internet. Silakan coba lagi saat online.');
@@ -227,8 +225,7 @@ export class PengajuanTenderPage implements OnInit {
     }
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────────
-
+  // Helper atau fungsi bantuan doang
   private async showAlert(header: string, message: string): Promise<void> {
     const alert = await this.alertCtrl.create({
       header,
@@ -243,8 +240,7 @@ export class PengajuanTenderPage implements OnInit {
     return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
   }
 
-  // ── Modal & Pagination Helpers ──────────────────────────────────────────────────────────────
-
+  // Fungsi bantuan buat modal & ngatur halamannya
   openForm() {
     this.isFormOpen = true;
   }

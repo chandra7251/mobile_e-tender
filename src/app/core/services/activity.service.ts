@@ -24,7 +24,7 @@ export class ActivityService {
   log(action: string, icon: string = 'document-outline'): void {
     const logs = this.getActivities();
     
-    // Prevent duplicate consecutive logs
+    // Biar ga nyepam log yang sama berkali-kali kalo jaraknya belum semenit
     if (logs.length > 0 && logs[0].action === action && (new Date().getTime() - logs[0].timestamp < 60000)) {
       return; 
     }
@@ -36,7 +36,7 @@ export class ActivityService {
       timestamp: new Date().getTime()
     };
     logs.unshift(newLog);
-    // keep max 20
+    // Sisain maksimal 20 log aja biar storage hp ga penuh
     localStorage.setItem(this.storageKey, JSON.stringify(logs.slice(0, 20)));
   }
 

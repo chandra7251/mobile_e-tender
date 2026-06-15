@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 /**
- * PhotoService — wrapper @capacitor/camera untuk pick/take foto dan konversi base64.
+ * Service buat ngurusin jeprat-jepret foto sama ambil gambar dari galeri HP.
+ * Sekalian ada fungsi buat ubah foto jadi blob.
  */
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
 
-  /**
-   * Pilih foto dari galeri perangkat.
-   * @returns base64 string atau null jika dibatalkan
-   */
+  // Fungsi buat milih foto dari galeri HP
+  // Ntar balikin string base64 fotonya, atau null kalo user nge-cancel
   async pickFromGallery(): Promise<string | null> {
     try {
       const photo = await Camera.getPhoto({
@@ -20,15 +19,13 @@ export class PhotoService {
       });
       return photo.base64String ?? null;
     } catch {
-      // User membatalkan pemilihan foto
+      // User batal milih foto, balikin null aja
       return null;
     }
   }
 
-  /**
-   * Ambil foto langsung dari kamera.
-   * @returns base64 string atau null jika dibatalkan
-   */
+  // Fungsi buat jepret foto langsung pake kamera HP
+  // Sama kayak yang galeri, balikin base64 atau null kalo dicancel
   async takePhoto(): Promise<string | null> {
     try {
       const photo = await Camera.getPhoto({
@@ -38,16 +35,12 @@ export class PhotoService {
       });
       return photo.base64String ?? null;
     } catch {
-      // User membatalkan kamera
+      // User batal jepret foto
       return null;
     }
   }
 
-  /**
-   * Konversi base64 string ke Blob untuk keperluan FormData upload.
-   * @param base64 string base64 (tanpa prefix data:image/...)
-   * @param mimeType MIME type gambar, default 'image/jpeg'
-   */
+  // Fungsi ajaib buat ngubah base64 string jadi file asli (Blob) biar bisa dikirim pake FormData pas upload
   base64ToBlob(base64: string, mimeType: string = 'image/jpeg'): Blob {
     const byteCharacters = atob(base64);
     const byteArrays: BlobPart[] = [];
