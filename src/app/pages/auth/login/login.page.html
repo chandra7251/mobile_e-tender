@@ -72,6 +72,13 @@
           {{ errorMessage }}
         </div>
 
+        <div *ngIf="isUnverified" style="text-align: center; margin-top: 10px;">
+          <ion-button fill="outline" color="primary" size="small" (click)="resendEmail()" [disabled]="isResending">
+            <ion-spinner *ngIf="isResending" name="crescent" style="margin-right: 5px;"></ion-spinner>
+            <span *ngIf="!isResending">Kirim Ulang Email Verifikasi</span>
+          </ion-button>
+        </div>
+
         <div class="forgot-password">
           <ion-button fill="clear" routerLink="/forgot-password">Forget Password</ion-button>
         </div>

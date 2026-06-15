@@ -7,12 +7,12 @@ const USER_KEY  = 'auth_user';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
-
+  // Fungsi buat nyimpen token ke HP user
   async setToken(token: string): Promise<void> {
     if (!token) return;
     await Preferences.set({ key: TOKEN_KEY, value: token });
   }
-
+  // Fungsi buat ngambil token dari HP user
   async getToken(): Promise<string | null> {
     const { value } = await Preferences.get({ key: TOKEN_KEY });
     return (value && value !== 'undefined' && value !== 'null') ? value : null;
@@ -33,7 +33,7 @@ export class StorageService {
     try {
       return JSON.parse(value) as User;
     } catch {
-      // Data korup — hapus dan return null
+      // Kalo datanya error atau korup pas di parse, hapus aja sekalian biar ga bikin bug
       await Preferences.remove({ key: USER_KEY });
       return null;
     }

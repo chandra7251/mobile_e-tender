@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "http://e-tender.test",
-    "secure": false,
+    "target": "https://vandrafcy.my.id",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   }

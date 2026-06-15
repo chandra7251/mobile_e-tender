@@ -16,7 +16,7 @@ import { StorageService } from '../services/storage.service';
 import { ApiResponse, RefreshData } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
-// Public endpoints
+// Daftar API yang ga butuh token (bisa diakses siapa aja)
 const PUBLIC_ENDPOINTS = [
   'auth/login',
   'auth/register',
@@ -24,7 +24,7 @@ const PUBLIC_ENDPOINTS = [
   'auth/reset-password'
 ];
 
-// Refresh endpoint
+// Endpoint buat perpanjang token kalo expired
 const REFRESH_ENDPOINT = 'auth/refresh';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshSubject = new BehaviorSubject<string | null>(null);
 
-  // HttpClient bypass interceptor
+  // Pake HttpClient bawaan biar request refresh token ga kena intercept ulang (mencegah loop tak terhingga)
   private httpDirect: HttpClient;
 
   constructor(
@@ -46,12 +46,12 @@ export class AuthInterceptor implements HttpInterceptor {
     this.httpDirect = new HttpClient(handler);
   }
 
-  // ── intercept ──────────────────────────────────────────────────────────────
+  // Fungsi utama interceptor, nyegat setiap request API keluar
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return from(this.storage.getToken()).pipe(
       switchMap(token => {
-        // Lampirkan token jika ada
+        // Kalo ada token di storage, tempelin di header Authorization
         const outReq = token
           ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
           : req;
@@ -59,13 +59,13 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(outReq).pipe(
           catchError((err: HttpErrorResponse) => {
 
-            // ── 429 Rate Limiting ──────────────────────────────────────────
+            // Kalo kena error 429 (kebanyakan request), keluarin toast peringatan
             if (err.status === 429) {
               this.showRateLimitToast();
               return throwError(() => err);
             }
 
-            // ── 401 Unauthorized — coba refresh token ─────────────────────
+            // Kalo kena 401 (token expired/ga valid), coba kita perpanjang tokennya otomatis
             if (
               err.status === 401 &&
               !this.isPublicEndpoint(req.url) &&
@@ -81,7 +81,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // 401 handler
+  // Handler khusus kalo dapet error 401
   private handle401(
     req: HttpRequest<any>,
     next: HttpHandler,
@@ -121,7 +121,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // Refresh request
+  // Fungsi buat nembak API refresh token
 
   private doRefresh(): Observable<string> {
     return from(this.storage.getToken()).pipe(
@@ -150,7 +150,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  // Force logout
+  // Kalo udah ga bisa ditolong, paksa logout aja
 
   private forceLogout(): void {
     this.storage.clearAll().then(() => {
@@ -159,7 +159,7 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // Kumpulan fungsi bantuan
 
   private isPublicEndpoint(url: string): boolean {
     return PUBLIC_ENDPOINTS.some(ep => url.includes(ep));

@@ -5,11 +5,9 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 /**
- * GuestGuard — cegah vendor yang sudah login mengakses halaman auth
- * (login, register, forgot-password, reset-password).
- *
- * Jika sudah login → redirect ke /tabs/home
- * Jika belum login → lanjutkan ke halaman tujuan
+ * Guard ini fungsinya kebalikan dari auth guard.
+ * Kalo user UDAH login, dia dilarang buka halaman login/register dll.
+ * Langsung aja ditendang ke halaman home biar ga aneh flow-nya.
  */
 @Injectable({ providedIn: 'root' })
 export class GuestGuard implements CanActivate {
@@ -23,7 +21,7 @@ export class GuestGuard implements CanActivate {
     return this.auth.isLoggedIn().pipe(
       map(loggedIn => {
         if (loggedIn) {
-          // Sudah login — tendang kembali ke home
+          // Kalo ketauan udah login, suruh balik ke home aja
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
           return false;
         }

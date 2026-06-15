@@ -20,13 +20,13 @@ export class ResetPasswordPage {
   error = '';
   validationErrors: { [key: string]: string } = {};
 
-  // Focus state
+  // Variabel buat ngecek mana input yang lagi di-klik (fokus)
   emailFocused = false;
   tokenFocused = false;
   passFocused = false;
   passConfFocused = false;
 
-  // Show/hide password
+  // Buat nge-toggle tombol mata (lihat password)
   showPassword = false;
   showPasswordConf = false;
 
@@ -40,7 +40,7 @@ export class ResetPasswordPage {
     this.error = '';
     this.validationErrors = {};
 
-    // Validasi client-side
+    // Validasi di sisi frontend dlu (biar ga nyampah nembak API padahal form kosong)
     if (!this.email.trim())              { this.validationErrors['email'] = 'Email wajib diisi.'; }
     if (!this.token.trim())              { this.validationErrors['token'] = 'Token wajib diisi.'; }
     if (!this.password)                  { this.validationErrors['password'] = 'Password wajib diisi.'; }
@@ -79,7 +79,7 @@ export class ResetPasswordPage {
       },
       error: (err) => {
         this.isLoading = false;
-        // Cek validation errors dari backend
+        // Tangkep error dari backend kalo validasinya gagal di server
         const backendErrors = err?.error?.data;
         if (backendErrors && typeof backendErrors === 'object') {
           for (const key of Object.keys(backendErrors)) {

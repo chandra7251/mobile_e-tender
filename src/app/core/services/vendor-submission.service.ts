@@ -6,7 +6,8 @@ import { PhotoService } from './photo.service';
 import { VendorSubmission, SubmissionForm } from '../models/user.model';
 
 /**
- * VendorSubmissionService — komunikasi dengan API pengajuan tender vendor.
+ * Service buat ngurusin pengajuan tender dari sisi vendor.
+ * Nembak ke API backend pake service ini.
  */
 @Injectable({ providedIn: 'root' })
 export class VendorSubmissionService {
@@ -20,10 +21,10 @@ export class VendorSubmissionService {
   ) {}
 
   /**
-   * Buat pengajuan baru.
-   * Foto dikirim sebagai File (Blob) via FormData.
-   * @param data isian form pengajuan
-   * @param photos array base64 string foto
+   * Fungsi buat nge-submit pengajuan tender baru.
+   * Fotonya kita kirim pake format Blob lewat FormData biar gampang diterima backend.
+   * @param data form isian dari UI
+   * @param photos array string base64 fotonya
    */
   async createSubmission(data: SubmissionForm, photos: string[]): Promise<any> {
     const token = await this.storage.getToken();
@@ -46,9 +47,7 @@ export class VendorSubmissionService {
     }).toPromise();
   }
 
-  /**
-   * Ambil riwayat pengajuan vendor yang sedang login.
-   */
+  // Fungsi buat ngambil riwayat pengajuan tender si vendor yang lagi login
   async getMySubmissions(): Promise<VendorSubmission[]> {
     const token = await this.storage.getToken();
     const res: any = await this.http.get(this.baseUrl, {
@@ -57,9 +56,7 @@ export class VendorSubmissionService {
     return res?.data ?? [];
   }
 
-  /**
-   * Ambil detail satu pengajuan berdasarkan id.
-   */
+  // Fungsi buat liat detail lengkap dari satu pengajuan tender
   async getSubmissionDetail(id: number): Promise<VendorSubmission> {
     const token = await this.storage.getToken();
     const res: any = await this.http.get(`${this.baseUrl}/${id}`, {

@@ -6,7 +6,8 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../environments/environment';
 
 /**
- * Guard untuk halaman vendor yang sudah disetujui (approved).
+ * Guard ini fungsinya buat nge-block user yang statusnya masih belum di-approve admin.
+ * Kalo belum di-approve, bakal ditendang balik ke halaman profile.
  */
 @Injectable({ providedIn: 'root' })
 export class VendorApprovedGuard implements CanActivate {
@@ -19,20 +20,20 @@ export class VendorApprovedGuard implements CanActivate {
 
   async canActivate(): Promise<boolean> {
     try {
-      // Cek cache
+      // Cek dulu datanya ada di storage lokal apa ngga (biar irit kuota ga nembak API mulu)
       const { value } = await Preferences.get({ key: 'vendor_data' });
       if (value) {
         const vendor = JSON.parse(value);
         if (vendor?.verification_status === 'approved') {
           return true;
         }
-        // Belum disetujui
+        // Kalo statusnya bukan approved, tendang ke profil
         await this.showAlert();
         this.router.navigate(['/tabs/profile'], { replaceUrl: true });
         return false;
       }
 
-      // Hit API
+      // Kalo ga ada di lokal, terpaksa kita hit API ke backend
       const tokenRes = await Preferences.get({ key: 'auth_token' });
       if (!tokenRes.value) {
         await this.showAlert();
@@ -47,7 +48,7 @@ export class VendorApprovedGuard implements CanActivate {
 
       const status = res?.data?.verification_status;
 
-      // Cache hasil
+      // Simpen datanya ke cache lokal, lumayan buat loading selanjutnya biar cepet
       if (res?.data) {
         await Preferences.set({ key: 'vendor_data', value: JSON.stringify(res.data) });
       }
@@ -61,7 +62,7 @@ export class VendorApprovedGuard implements CanActivate {
       return true;
 
     } catch {
-      // Fallback block
+      // Kalo error misal backend mati atau ga ada sinyal, mending tendang aja sekalian cari aman
       await this.showAlert();
       this.router.navigate(['/tabs/profile'], { replaceUrl: true });
       return false;
