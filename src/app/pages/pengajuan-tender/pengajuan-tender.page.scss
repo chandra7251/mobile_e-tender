@@ -283,11 +283,15 @@ ion-content {
       position: absolute;
       left: 24px;
       top: 12px;
-      font-size: 22px;
+      font-size: 18px; // Diperkecil dari 22px agar tidak nabrak tombol close
       font-weight: 700;
       color: white;
       margin: 0;
       line-height: 38px;
+      max-width: calc(100% - 90px); // Batasi lebar maksimal area teks
+      white-space: nowrap; // Jangan turun ke baris baru
+      overflow: hidden; // Sembunyikan teks yang kepanjangan
+      text-overflow: ellipsis; // Tambahkan titik-titik jika terpotong
     }
 
     .btn-close {
