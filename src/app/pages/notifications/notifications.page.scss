@@ -1,10 +1,56 @@
+// Variables
+$primary-blue: #3451B2;
+$accent-cyan: #40C4FF;
+$text-light: #81A2DF;
+$bg-light: #F8F9FA;
+
 ion-content {
-  --background: #F4F6F9;
+  --background: #FFFFFF;
 }
 
-// ── Skeleton Loading ───────────────────────────────────────────────────────
+// ── Top Vector ──
+.top-vector-container {
+  position: relative;
+  line-height: 0;
+  
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .custom-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: calc(12px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
+    
+    .header-title {
+      color: #FFFFFF;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    ion-back-button {
+      --icon-font-size: 28px;
+      margin: 0;
+      --padding-start: 0;
+      --padding-end: 8px;
+    }
+  }
+}
+
+.page-content {
+  padding-top: 4px;
+  padding-bottom: 50px;
+}
+
+// ── Skeleton Loading ──
 .skeleton-container {
-  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -15,8 +61,10 @@ ion-content {
   align-items: flex-start;
   gap: 12px;
   background: #fff;
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
   .skel-icon {
     width: 44px;
@@ -30,27 +78,25 @@ ion-content {
   }
 }
 
-// ── Notifikasi List ────────────────────────────────────────────────────────
+// ── Notifikasi List ──
 .notif-list {
-  background: transparent;
-  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 }
 
 .notif-card {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: #fff;
-  border-radius: 14px;
-  padding: 14px 16px;
-  box-shadow: 0 2px 8px rgba(63, 81, 181, 0.06);
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   position: relative;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  border: 1.5px solid transparent;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 
   &:active {
     transform: scale(0.98);
@@ -58,12 +104,12 @@ ion-content {
   }
 
   &.notif-unread {
-    border-color: rgba(63, 81, 181, 0.2);
     background: linear-gradient(135deg, #fff 0%, #f0f3ff 100%);
+    border-color: rgba(52, 81, 178, 0.2); // $primary-blue with opacity
   }
 }
 
-// ── Icon wrapper ───────────────────────────────────────────────────────────
+// ── Icon wrapper ──
 .notif-icon-wrap {
   width: 44px;
   height: 44px;
@@ -76,24 +122,25 @@ ion-content {
 
   ion-icon {
     font-size: 22px;
+    color: $primary-blue;
   }
 
   &.unread-icon-bg {
-    background: #3F51B5;
+    background: $primary-blue;
 
     ion-icon {
-      color: #fff !important;
+      color: #FFFFFF !important;
     }
   }
 }
 
-// ── Konten notifikasi ──────────────────────────────────────────────────────
+// ── Konten notifikasi ──
 .notif-content {
   flex: 1;
   min-width: 0;
 
   .notif-title {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: #1E293B;
     line-height: 1.4;
@@ -121,9 +168,9 @@ ion-content {
   .status-change {
     font-size: 10px;
     font-weight: 700;
-    color: #3F51B5;
-    background: rgba(63, 81, 181, 0.1);
-    padding: 2px 8px;
+    color: $primary-blue;
+    background: rgba(52, 81, 178, 0.1);
+    padding: 4px 8px;
     border-radius: 20px;
   }
 
@@ -134,7 +181,7 @@ ion-content {
   }
 }
 
-// ── Titik merah (unread indicator) ────────────────────────────────────────
+// ── Titik merah (unread indicator) ──
 .unread-dot {
   width: 8px;
   height: 8px;
@@ -151,32 +198,35 @@ ion-content {
   50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.1); }
 }
 
-// ── Empty / Error State ────────────────────────────────────────────────────
+// ── Empty / Error State ──
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 32px;
   text-align: center;
+  min-height: 50vh;
+  padding: 0 20px;
 
-  .empty-icon {
-    font-size: 64px;
-    margin-bottom: 16px;
-    opacity: 0.4;
+  .empty-icon-container {
+    position: relative;
+    font-size: 80px;
+    color: $primary-blue;
+    margin-bottom: 20px;
   }
 
-  .empty-title {
-    font-size: 16px;
+  .title-blue {
+    font-size: 20px;
     font-weight: 700;
-    color: #374151;
-    margin: 0 0 8px;
+    color: $primary-blue;
+    margin: 0 0 10px;
   }
 
-  .empty-sub {
-    font-size: 13px;
-    color: #9CA3AF;
-    margin: 0 0 20px;
+  .desc-light {
+    font-size: 14px;
+    color: $primary-blue;
+    opacity: 0.8;
     line-height: 1.5;
+    margin: 0;
   }
 }

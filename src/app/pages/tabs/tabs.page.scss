@@ -71,8 +71,8 @@ ion-tab-button {
 .bottom-wave-container {
   position: absolute;
   bottom: 0; // Duduk pas di dasar layar
-  left: 0;
-  width: 100%;
+  left: -2%; // Geser sedikit ke kiri untuk menutup gap hitam
+  width: 104%; // Perlebar agar menutupi kedua ujung layar
   z-index: 0; // Di belakang ikon tab
   line-height: 0;
   pointer-events: none;

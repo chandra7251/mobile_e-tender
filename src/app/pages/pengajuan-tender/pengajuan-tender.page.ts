@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, ActionSheetController } from '@ionic/angular';
+import { AlertController, LoadingController, ActionSheetController, Platform } from '@ionic/angular';
 import { PhotoService } from '../../core/services/photo.service';
 import { VendorSubmissionService } from '../../core/services/vendor-submission.service';
 import { NetworkService } from '../../core/services/network.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pengajuan-tender',
@@ -33,6 +34,7 @@ export class PengajuanTenderPage implements OnInit {
 
   // Buka tutup modal form pengajuan
   isFormOpen = false;
+  private backButtonSub?: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -44,7 +46,24 @@ export class PengajuanTenderPage implements OnInit {
     private photoService: PhotoService,
     private submissionService: VendorSubmissionService,
     private networkService: NetworkService,
+    private platform: Platform,
   ) {}
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      if (this.isFormOpen) {
+        this.closeForm();
+      } else {
+        processNextHandler(); // Lanjut ke global handler di app.component.ts
+      }
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+  }
 
   ngOnInit(): void {
     this.form = this.fb.group({

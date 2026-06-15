@@ -44,6 +44,7 @@ export class StorageService {
   }
 
   async clearAll(): Promise<void> {
-    await Preferences.clear();
+    await this.removeToken();
+    await this.removeUser();
   }
 }
