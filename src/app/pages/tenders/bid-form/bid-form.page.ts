@@ -57,7 +57,13 @@ export class BidFormPage implements OnInit {
       const bidAny = bidRes as any;
       const tenderAny = tenderRes as any;
 
-      if (tenderAny && !tenderAny.error && tenderAny.status === 'success' && tenderAny.data) {
+      if (tenderAny.error) {
+        this.mode = 'error';
+        this.loadError = this.mapError(tenderAny.error);
+        return;
+      }
+
+      if (tenderAny && tenderAny.status === 'success' && tenderAny.data) {
         this.tender = tenderAny.data;
       }
 
@@ -67,7 +73,7 @@ export class BidFormPage implements OnInit {
           this.mode = 'submit';
         } else {
           this.mode = 'error';
-          this.loadError = err?.error?.message || 'Gagal memuat data penawaran.';
+          this.loadError = this.mapError(err);
         }
       } else if (bidAny.status === 'success' && bidAny.data) {
         this.existingBid = bidAny.data;

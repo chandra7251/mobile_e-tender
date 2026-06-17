@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
         if (url.includes('/tabs/home') || url.includes('/login') || url.includes('/welcome')) {
           const alert = await this.alertCtrl.create({
             header: 'Keluar Aplikasi',
-            message: 'Apakah Anda yakin ingin keluar dari aplikasi FivGo?',
+            message: 'Apakah Anda yakin ingin keluar dari aplikasi ZETA?',
             buttons: [
               {
                 text: 'Batal',
