@@ -40,10 +40,11 @@
    GLOBAL OVERRIDES FOR VECTORS & KEYBOARD
    ========================================= */
 
-/* Sembunyikan gelombang bawah saat keyboard terbuka agar tidak menutupi konten/form */
+/* Sembunyikan gelombang bawah dan tab bar saat keyboard terbuka agar tidak menutupi konten/form */
 body.keyboard-is-open {
   .bottom-vector-container,
-  .bottom-wave-container {
+  .bottom-wave-container,
+  ion-tab-bar {
     display: none !important;
   }
 }
@@ -51,6 +52,13 @@ body.keyboard-is-open {
 /* Kurangi ketinggian berlebih pada vector atas dan bawah */
 .top-vector-container {
   overflow: hidden;
+  background-color: #26366C; /* Cover safe area with blue */
+  padding-top: var(--ion-safe-area-top, 0px);
+
+  .custom-header {
+    top: var(--ion-safe-area-top, 0px) !important;
+  }
+
   svg {
     margin-top: -12px !important; /* Tarik ke atas untuk memotong bagian kosong */
   }
