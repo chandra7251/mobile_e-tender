@@ -48,21 +48,22 @@ export class RegisterPage {
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success') {
-          await this.showToast('Registrasi berhasil!', 'success');
-          this.router.navigate(['/tabs/home'], { replaceUrl: true });
+          // Registrasi berhasil, tapi user belum bisa login sebelum verifikasi email
+          await this.showToast('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.', 'success');
+          this.router.navigate(['/login'], { replaceUrl: true });
         } else {
-          // Backend return status 'error' with HTTP 200
           this.errorMessage = res.message || 'Registrasi gagal.';
         }
       },
       error: (err) => {
         this.isLoading = false;
-        const errors = err?.error?.data;
-        if (errors) {
+        // Baca detail error validasi dari key 'errors' (bukan 'data')
+        const errors = err?.error?.errors;
+        if (errors && Object.keys(errors).length > 0) {
           const firstKey = Object.keys(errors)[0];
           this.errorMessage = errors[firstKey]?.[0] || 'Terjadi kesalahan.';
         } else {
-          this.errorMessage = err?.error?.message || 'Terjadi kesalahan.';
+          this.errorMessage = err?.error?.message || 'Terjadi kesalahan server.';
         }
       }
     });
