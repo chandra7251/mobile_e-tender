@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import { VendorService } from '../../core/services/vendor.service';
 import { VendorDocument, DocumentType } from '../../core/models/user.model';
+import { Subscription } from 'rxjs';
 
 type AllowedType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
 
@@ -40,11 +41,29 @@ export class DocumentsPage implements OnInit {
   ];
 
   vendorStatus = '';
+  private backButtonSub?: Subscription;
 
   constructor(
     private vendorService: VendorService,
-    private toast: ToastController
+    private toast: ToastController,
+    private platform: Platform
   ) {}
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      if (this.showUploadForm) {
+        this.toggleUploadForm();
+      } else {
+        processNextHandler(); // Lanjut ke global handler di app.component.ts
+      }
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+  }
 
   ngOnInit(): void {
     this.loadProfileAndDocuments();
