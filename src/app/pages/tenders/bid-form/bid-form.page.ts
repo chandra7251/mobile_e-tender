@@ -39,7 +39,10 @@ export class BidFormPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
+    let idParam = this.route.snapshot.paramMap.get('id');
+    if (!idParam && this.route.parent) {
+      idParam = this.route.parent.snapshot.paramMap.get('id');
+    }
     this.tenderId = idParam ? +idParam : 0;
     this.loadMyBid();
   }
