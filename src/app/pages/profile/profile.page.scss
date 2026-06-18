@@ -14,10 +14,8 @@ ion-content.view-mode-bg {
 }
 
 .top-vector-container {
+  position: relative;
   line-height: 0;
-  margin-top: 0;
-  padding: 0;
-  position: relative; // for absolute header
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
 
   svg {
