@@ -39,11 +39,18 @@ export class BidFormPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let idParam = this.route.snapshot.paramMap.get('id');
-    if (!idParam && this.route.parent) {
-      idParam = this.route.parent.snapshot.paramMap.get('id');
+    let currentRoute: ActivatedRoute | null = this.route;
+    let idParam: string | null = null;
+    while (currentRoute) {
+      idParam = currentRoute.snapshot.paramMap.get('id');
+      if (idParam) break;
+      currentRoute = currentRoute.parent;
     }
     this.tenderId = idParam ? +idParam : 0;
+    
+    // Debug log to trace ID parsing
+    console.log('[BidForm] Extracted tenderId:', this.tenderId, 'from URL:', window.location.pathname);
+
     this.loadMyBid();
   }
 
