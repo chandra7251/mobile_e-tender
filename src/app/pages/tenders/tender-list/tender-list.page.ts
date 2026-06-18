@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TenderService } from '../../../core/services/tender.service';
+import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, TenderStatus } from '../../../core/models/user.model';
 
 type FilterStatus = 'all' | TenderStatus;
@@ -36,6 +37,7 @@ export class TenderListPage {
 
   constructor(
     private tenderService: TenderService,
+    private offlineCache: OfflineCacheService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -51,36 +53,50 @@ export class TenderListPage {
 
   // ── Load dari API ─────────────────────────────────────────────────────────
 
-  loadTenders(): void {
+  async loadTenders(): Promise<void> {
     this.isLoading = true;
     this.errorMessage = '';
 
+    const cached = await this.offlineCache.getCachedTenderList();
+    if (cached && cached.length > 0) {
+      this.allTenders = cached;
+      this.applyFilter();
+      this.isLoading = false; // Langsung tampil data
+    }
+
     this.tenderService.getTenders().subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
           // Filter valid status
-          this.allTenders = res.data.filter(t =>
+          const validTenders = res.data.filter((t: any) =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );
+          this.allTenders = validTenders;
           this.applyFilter();
+          
+          await this.offlineCache.cacheTenderList(validTenders);
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err?.error?.message || 'Gagal memuat daftar tender.';
+        if (this.allTenders.length === 0) {
+          this.errorMessage = err?.error?.message || 'Gagal memuat daftar tender. Periksa koneksi internet Anda.';
+        }
       }
     });
   }
 
   doRefresh(event: any): void {
     this.tenderService.getTenders().subscribe({
-      next: (res) => {
+      next: async (res) => {
         if (res.status === 'success' && res.data) {
-          this.allTenders = res.data.filter(t =>
+          const validTenders = res.data.filter((t: any) =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );
+          this.allTenders = validTenders;
           this.applyFilter();
+          await this.offlineCache.cacheTenderList(validTenders);
         }
         event.target.complete();
       },

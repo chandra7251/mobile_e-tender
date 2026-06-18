@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastController } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
+import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, Announcement } from '../../../core/models/user.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -33,6 +34,7 @@ export class TenderDetailPage {
     private router: Router,
     private location: Location,
     private tenderService: TenderService,
+    private offlineCache: OfflineCacheService,
     private toast: ToastController
   ) {}
 
@@ -56,27 +58,37 @@ export class TenderDetailPage {
     this.loadAnnouncements();
   }
 
-  loadDetail(): void {
+  async loadDetail(): Promise<void> {
     if (!this.tenderId) return;
     this.isLoading = true;
     this.detailError = '';
 
+    const cached = await this.offlineCache.getCachedTenderDetail(this.tenderId);
+    if (cached) {
+      this.tender = cached;
+      this.hasJoined = cached.is_participant ?? false;
+      this.isLoading = false;
+    }
+
     // GET /api/tenders/{tender} sudah menyertakan is_participant di response
     // Tidak perlu request tambahan ke /participants/check
     this.tenderService.getTenderDetail(this.tenderId).subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
           this.tender = res.data;
           // Baca is_participant langsung dari TenderResource (hemat 1 HTTP request)
           this.hasJoined = res.data.is_participant ?? false;
-        } else {
+          await this.offlineCache.cacheTenderDetail(this.tenderId, res.data);
+        } else if (!this.tender) {
           this.detailError = res.message || 'Data tender tidak ditemukan.';
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.detailError = err?.error?.message || 'Gagal memuat detail tender.';
+        if (!this.tender) {
+          this.detailError = err?.error?.message || 'Gagal memuat detail tender. Periksa koneksi internet Anda.';
+        }
       }
     });
   }
@@ -111,10 +123,11 @@ export class TenderDetailPage {
     const detail$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null)));
     const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
 
-    forkJoin([detail$, ann$]).subscribe(([detailRes, annRes]) => {
+    forkJoin([detail$, ann$]).subscribe(async ([detailRes, annRes]) => {
       if (detailRes?.status === 'success' && detailRes?.data) {
         this.tender    = detailRes.data;
         this.hasJoined = detailRes.data.is_participant ?? false;
+        await this.offlineCache.cacheTenderDetail(this.tenderId, detailRes.data);
       }
       if (annRes?.status === 'success' && annRes?.data) {
         this.announcements = annRes.data;
