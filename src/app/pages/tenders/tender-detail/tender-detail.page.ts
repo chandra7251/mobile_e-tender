@@ -195,7 +195,8 @@ export class TenderDetailPage {
 
   get showBidButton(): boolean {
     if (!this.tender) return false;
-    return this.tender.status === 'bidding';
+    // Hanya tampilkan tombol bid jika status bidding DAN vendor sudah join tender ini
+    return this.tender.status === 'bidding' && this.hasJoined;
   }
 
   get showResultButton(): boolean {

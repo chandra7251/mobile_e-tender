@@ -140,7 +140,7 @@
       </ion-card-content>
     </ion-card>
 
-    <!-- ── Bid Sekarang (hanya saat status bidding) ── -->
+    <!-- ── Bid Sekarang (hanya saat status bidding DAN sudah join) ── -->
     <ion-card class="bid-card" *ngIf="showBidButton">
       <ion-card-content>
         <div class="bid-info">
@@ -161,6 +161,22 @@
         </ion-button>
       </ion-card-content>
     </ion-card>
+
+    <!-- ── Info: Tidak bisa bid karena belum join (saat status bidding tapi belum join) ── -->
+    <ion-card class="detail-card" *ngIf="tender && tender.status === 'bidding' && !hasJoined">
+      <ion-card-content>
+        <div style="display:flex; align-items:center; gap:12px; padding: 4px 0;">
+          <ion-icon name="information-circle-outline" style="font-size:28px; color:var(--ion-color-warning); flex-shrink:0;"></ion-icon>
+          <div>
+            <p style="margin:0; font-weight:600; color:var(--ion-color-warning);">Tidak Terdaftar di Tender Ini</p>
+            <p style="margin:4px 0 0; font-size:13px; color:var(--ion-color-medium);">
+              Anda tidak terdaftar sebagai peserta tender ini. Pendaftaran hanya bisa dilakukan saat status tender masih <strong>Open</strong> atau <strong>Aanwijzing</strong>.
+            </p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
 
     <!-- ── Lihat Hasil (hanya saat status closed/finished) ── -->
     <ion-card class="result-card" *ngIf="showResultButton">

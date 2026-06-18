@@ -155,9 +155,14 @@ export class BidFormPage implements OnInit {
   // ── Error mapping ─────────────────────────────────────────────────────────
 
   private mapError(err: any): string {
+    const status: number = err?.status || err?.error?.status || 0;
     const msg: string = (err?.error?.message || '').toLowerCase();
     const verificationStatus = err?.error?.data?.verification_status;
 
+    // 403 karena vendor profile tidak ada
+    if (status === 403 && msg.includes('profil vendor')) {
+      return 'Profil vendor Anda tidak ditemukan. Silakan lengkapi profil terlebih dahulu.';
+    }
     if (verificationStatus === 'pending') {
       return 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
     }
@@ -167,13 +172,13 @@ export class BidFormPage implements OnInit {
     if (msg.includes('not approved') || msg.includes('pending') || msg.includes('belum diverifikasi')) {
       return 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
     }
-    if (msg.includes('not a participant') || msg.includes('join') || msg.includes('belum terdaftar')) {
+    if (msg.includes('not a participant') || msg.includes('join') || msg.includes('belum terdaftar') || msg.includes('belum bergabung')) {
       return 'Anda belum terdaftar sebagai peserta tender ini. Silakan Join Tender terlebih dahulu.';
     }
-    if (msg.includes('has not started') || msg.includes('not started')) {
+    if (msg.includes('has not started') || msg.includes('not started') || msg.includes('belum dimulai')) {
       return 'Fase bidding belum dimulai.';
     }
-    if (msg.includes('closed') || msg.includes('ended')) {
+    if (msg.includes('closed') || msg.includes('ended') || msg.includes('berakhir')) {
       return 'Fase bidding sudah ditutup.';
     }
     if (msg.includes('own bid') || msg.includes('your own')) {
