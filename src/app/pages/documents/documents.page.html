@@ -7,12 +7,10 @@
     </svg>
 
     <div class="custom-header">
-      <div class="header-left-group">
-        <ion-button fill="clear" class="btn-header-back" routerLink="/tabs/profile">
-          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-        </ion-button>
-        <span class="header-title">Dokumen Saya</span>
-      </div>
+      <ion-button fill="clear" class="btn-header-back" routerLink="/tabs/profile">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+      <span class="header-title">Dokumen Saya</span>
       <ion-button fill="clear" class="btn-header-action" (click)="toggleUploadForm()" id="btn-toggle-upload">
         <ion-icon slot="icon-only" [name]="showUploadForm ? 'close-outline' : 'cloud-upload-outline'"></ion-icon>
       </ion-button>
