@@ -41,7 +41,8 @@
    ========================================= */
 
 /* Sembunyikan gelombang bawah dan tab bar saat keyboard terbuka agar tidak menutupi konten/form */
-body.keyboard-is-open {
+body.keyboard-is-open,
+body.ion-keyboard-is-open {
   .bottom-vector-container,
   .bottom-wave-container,
   ion-tab-bar {

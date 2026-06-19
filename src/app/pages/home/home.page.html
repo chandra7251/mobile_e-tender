@@ -71,7 +71,7 @@
       </div>
       
       <div class="horizontal-scroll" *ngIf="!isLoadingTenders && openTenders.length > 0">
-        <div class="tender-mini-card" *ngFor="let tender of openTenders" [routerLink]="['/tabs/tenders/detail', tender.id]">
+        <div class="tender-mini-card" *ngFor="let tender of openTenders" [routerLink]="['/tabs/tenders', tender.id]">
           <div class="badge-live">Open</div>
           <div class="card-content">
             <div class="title-row">
@@ -143,7 +143,7 @@
       <!-- Countdown Bidding Closed -->
       <h3 class="section-title mt-24 mb-16">Countdown Bidding Closed</h3>
       <div class="horizontal-scroll" *ngIf="!isLoadingBidding && biddingTenders.length > 0">
-        <div class="countdown-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders/detail', tender.id]">
+        <div class="countdown-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders', tender.id]">
           <div class="countdown-header">
             <h4>{{ tender.title }}</h4>
             <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
