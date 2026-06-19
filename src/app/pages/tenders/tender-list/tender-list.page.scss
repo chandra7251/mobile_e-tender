@@ -347,7 +347,8 @@ ion-badge.status-badge {
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Diubah dari space-between biar ke tengah */
+  gap: 12px; /* Jarak antara prev - numbers - next */
   margin-top: 24px;
   margin-bottom: 12px;
   padding: 0 4px;
@@ -372,27 +373,27 @@ ion-badge.status-badge {
     border: 1px solid #FFFFFF;
     background: transparent;
     color: #FFFFFF;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Dikecilin dikit */
     font-weight: 600;
     border-radius: 20px;
-    padding: 6px 12px;
+    padding: 4px 8px; /* Padding dikecilin */
 
-    .double-chevron-left { margin-left: -8px; }
-    ion-icon { font-size: 1rem; }
+    .double-chevron-left { margin-left: -6px; }
+    ion-icon { font-size: 0.9rem; }
     .btn-text { margin-left: 2px; }
   }
 
   .btn-next {
     background: #FFFFFF;
     color: #3451B2;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Dikecilin dikit */
     font-weight: 600;
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: 4px 10px; /* Padding dikecilin */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-    .double-chevron-right { margin-left: -8px; }
-    ion-icon { font-size: 1rem; }
+    .double-chevron-right { margin-left: -6px; }
+    ion-icon { font-size: 0.9rem; }
     .btn-text { margin-right: 4px; }
   }
 
