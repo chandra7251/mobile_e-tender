@@ -97,8 +97,7 @@ ion-tab-button {
 }
 
 // Sembunyikan gelombang bawah saat keyboard terbuka agar tidak overlap dengan konten
-::ng-deep body.keyboard-is-open {
-  .bottom-wave-container {
-    display: none !important;
-  }
+:host-context(.keyboard-is-open) .bottom-wave-container,
+:host-context(.ion-keyboard-is-open) .bottom-wave-container {
+  display: none !important;
 }

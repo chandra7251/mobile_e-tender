@@ -11,7 +11,6 @@ export class IntroGuard implements CanActivate {
   async canActivate(): Promise<boolean> {
     const hasSeenIntro = await Preferences.get({ key: 'hasSeenIntro' });
     
-    // SEMENTARA DINONAKTIFKAN UNTUK DEVELOPMENT DESAIN WELCOME PAGE
     if (hasSeenIntro && hasSeenIntro.value === 'true') {
       this.router.navigateByUrl('/login', { replaceUrl: true });
       return false;

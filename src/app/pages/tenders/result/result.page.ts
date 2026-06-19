@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { Winner, TenderResult } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -23,15 +23,30 @@ export class ResultPage implements OnInit {
   winnerError = '';
   resultError = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
-    private tenderService: TenderService
+    private tenderService: TenderService,
+    private platform: Platform
   ) {}
 
   ngOnInit(): void {
     // Extract ID pertama kali saat komponen dibuat
     this.tenderId = this.extractTenderId();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // ionViewWillEnter dipanggil SETIAP KALI halaman ditampilkan, termasuk saat Ionic cache aktif.

@@ -33,10 +33,8 @@ ion-input, ion-textarea {
 // Vectors
 // Cari .top-vector-container — tambahkan/update properti ini
 .top-vector-container {
+  position: relative;
   line-height: 0;
-  margin-top: 0;
-  padding: 0;
-  position: relative; // for absolute header
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
 
   svg {
@@ -51,28 +49,11 @@ ion-input, ion-textarea {
     left: 0;
     width: 100%;
     height: 100%;
-    
-    .header-left-group {
+
+    .header-title {
       position: absolute;
       left: 24px;
       top: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      height: 38px;
-    }
-
-    .btn-header-back {
-      --color: #FFFFFF;
-      --padding-start: 0;
-      --padding-end: 8px;
-      margin: 0;
-      ion-icon {
-        font-size: 26px;
-      }
-    }
-
-    .header-title {
       color: #FFFFFF;
       font-size: 22px;
       font-weight: 700;

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController, ToastController, Platform } from '@ionic/angular';
 import { TenderService, SubmitBidPayload } from '../../../core/services/tender.service';
+import { ActivityService } from '../../../core/services/activity.service';
 import { Bid, Tender } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 type BidMode = 'loading' | 'submit' | 'update' | 'error';
@@ -30,16 +31,32 @@ export class BidFormPage implements OnInit {
   bidAmount: number | null = null;
   notes = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
-    private toast: ToastController
+    private toast: ToastController,
+    private platform: Platform,
+    private activityService: ActivityService
   ) {}
 
   ngOnInit(): void {
     // Hanya extract ID saat pertama kali, ionViewWillEnter akan load data
     this.tenderId = this.doExtractTenderId();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // Dipanggil setiap kali halaman aktif (termasuk saat navigate kembali dari halaman lain)
@@ -163,6 +180,7 @@ export class BidFormPage implements OnInit {
         next: async (res) => {
           this.isSaving = false;
           if (res?.status === 'success') {
+            this.activityService.log('Memperbarui penawaran tender', 'hammer-outline');
             this.existingBid = res.data ?? null;
             this.bidId       = res.data?.id ?? this.bidId;
             await this.showToast('Penawaran berhasil diperbarui!', 'success');
@@ -181,6 +199,7 @@ export class BidFormPage implements OnInit {
         next: async (res) => {
           this.isSaving = false;
           if (res?.status === 'success') {
+            this.activityService.log('Mengajukan penawaran tender', 'hammer-outline');
             this.existingBid = res.data ?? null;
             this.bidId       = res.data?.id ?? null;
             this.mode        = 'update';

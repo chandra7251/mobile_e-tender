@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, ToastController } from '@ionic/angular';
+import { NavController, ToastController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, Announcement } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -28,18 +28,33 @@ export class TenderDetailPage {
   announcementsLoading = false;
   announcementsError = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
     private offlineCache: OfflineCacheService,
-    private toast: ToastController
+    private toast: ToastController,
+    private platform: Platform
   ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   ionViewWillEnter(): void {

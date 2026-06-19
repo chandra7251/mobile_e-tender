@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { ActivityService } from '../../../core/services/activity.service';
 
 @Component({
   standalone: false,
@@ -22,7 +23,8 @@ export class LoginPage {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private toast: ToastController
+    private toast: ToastController,
+    private activityService: ActivityService
   ) {}
 
   togglePassword(): void {
@@ -39,6 +41,7 @@ export class LoginPage {
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success') {
+          this.activityService.log('Berhasil Login ke ZETA', 'log-in-outline');
           await this.showToast('Login berhasil!', 'success');
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
         } else {

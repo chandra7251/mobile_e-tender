@@ -12,6 +12,7 @@ ion-content {
 .top-vector-container {
   position: relative;
   line-height: 0;
+  background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
   
   svg {
     width: 100%;
@@ -24,22 +25,30 @@ ion-content {
     top: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: calc(12px + var(--ion-safe-area-top, 0px)) 24px 0 24px;
-    
-    .header-title {
-      color: #FFFFFF;
-      font-size: 20px;
-      font-weight: 700;
-    }
+    height: 100%;
 
-    ion-back-button {
-      --icon-font-size: 28px;
-      margin: 0;
+    .btn-header-back {
+      position: absolute;
+      left: 20px;
+      top: 12px;
+      --color: #FFFFFF;
       --padding-start: 0;
       --padding-end: 8px;
+      margin: 0;
+      height: 38px;
+      ion-icon {
+        font-size: 26px;
+      }
+    }
+    
+    .header-title {
+      position: absolute;
+      left: 60px;
+      top: 12px;
+      color: #FFFFFF;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 38px;
     }
   }
 }
