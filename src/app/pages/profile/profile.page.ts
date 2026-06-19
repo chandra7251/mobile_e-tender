@@ -5,6 +5,7 @@ import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.
 import { AuthService } from '../../core/services/auth.service';
 import { StorageService } from '../../core/services/storage.service';
 import { ActivityService } from '../../core/services/activity.service';
+import { OfflineCacheService } from '../../core/services/offline-cache.service';
 import { VendorProfile } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
 
@@ -38,6 +39,7 @@ export class ProfilePage {
     private vendorService: VendorService,
     private authService: AuthService,
     private storage: StorageService,
+    private offlineCache: OfflineCacheService,
     private router: Router,
     private toast: ToastController,
     private alert: AlertController,
@@ -69,21 +71,38 @@ export class ProfilePage {
 
   // ─── Load data ──────────────────────────────────────────────────────────────
 
-  loadProfile(): void {
+  async loadProfile(): Promise<void> {
     this.isLoading = true;
     this.errorMessage = '';
 
+    const cached = await this.offlineCache.getCachedVendorProfile();
+    if (cached) {
+      this.profile = cached;
+      this.isLoading = false;
+    }
+
     // Satu endpoint: GET /api/vendors/me — sudah mengandung verification_status
     this.vendorService.getProfile().subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
           this.profile = res.data;
+          await this.offlineCache.cacheVendorProfile(res.data);
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err?.error?.message || 'Gagal memuat profil.';
+        if (!this.profile) {
+          const status = err?.status;
+          if (status === 404) {
+            // Vendor record tidak ada — registrasi mungkin tidak selesai
+            this.errorMessage = 'Profil vendor tidak ditemukan. Registrasi Anda mungkin belum selesai. Silakan hubungi admin.';
+          } else if (!status || status === 0) {
+            this.errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+          } else {
+            this.errorMessage = err?.error?.message || 'Gagal memuat profil. Silakan coba lagi.';
+          }
+        }
       }
     });
   }

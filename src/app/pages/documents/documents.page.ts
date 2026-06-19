@@ -69,7 +69,11 @@ export class DocumentsPage implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {} // Angular lifecycle — tidak dipakai karena ionViewWillEnter lebih andal di Ionic
+
+  // Dipanggil setiap kali halaman tampil — termasuk saat user kembali dari halaman upload
+  // Penting: Ionic meng-cache halaman, ngOnInit hanya dipanggil sekali
+  ionViewWillEnter(): void {
     this.loadProfileAndDocuments();
   }
 

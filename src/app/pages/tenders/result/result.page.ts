@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { Winner, TenderResult } from '../../../core/models/user.model';
 import { forkJoin, of, Subscription } from 'rxjs';
@@ -28,15 +27,14 @@ export class ResultPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
+    private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
     private platform: Platform
   ) {}
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    this.tenderId = idParam ? +idParam : 0;
-    this.loadAll();
+    // Extract ID pertama kali saat komponen dibuat
+    this.tenderId = this.extractTenderId();
   }
 
   ionViewDidEnter() {
@@ -51,12 +49,47 @@ export class ResultPage implements OnInit {
     }
   }
 
+  // ionViewWillEnter dipanggil SETIAP KALI halaman ditampilkan, termasuk saat Ionic cache aktif.
+  // Wajib ada agar tender ID selalu fresh saat navigasi antar result halaman berbeda.
+  ionViewWillEnter(): void {
+    // Re-extract ID setiap kali halaman masuk — cegah ID stale dari cache Ionic
+    this.tenderId = this.extractTenderId();
+
+    if (!this.tenderId) {
+      this.winnerError = 'ID tender tidak valid.';
+      return;
+    }
+    this.loadAll();
+  }
+
+  // Helper: traverse semua parent ActivatedRoute hingga menemukan param 'id'
+  // Diperlukan karena halaman ini bisa di-nested di dalam route tender/:id/result
+  private extractTenderId(): number {
+    // Coba dari paramMap langsung
+    let currentRoute: ActivatedRoute | null = this.route;
+    while (currentRoute) {
+      const idParam = currentRoute.snapshot.paramMap.get('id');
+      if (idParam && +idParam > 0) return +idParam;
+      currentRoute = currentRoute.parent;
+    }
+
+    // Fallback: regex dari URL — /tenders/{id}/result
+    const match = window.location.pathname.match(/\/tenders\/(\d+)\/result/);
+    if (match?.[1] && +match[1] > 0) return +match[1];
+
+    return 0;
+  }
+
   // ── Load ──────────────────────────────────────────────────────────────────
 
   loadAll(): void {
     this.isLoading = true;
     this.winnerError = '';
     this.resultError = '';
+
+    // Reset data lama agar tidak menampilkan data tender sebelumnya saat loading
+    this.winner = null;
+    this.tenderResult = null;
 
     const winner$ = this.tenderService.getWinner(this.tenderId).pipe(
       catchError(err => {
@@ -72,6 +105,7 @@ export class ResultPage implements OnInit {
       })
     );
 
+    // Jalankan keduanya paralel — hemat waktu load dibanding sequential
     forkJoin([winner$, result$]).subscribe(([winnerRes, resultRes]) => {
       this.isLoading = false;
 
@@ -86,6 +120,10 @@ export class ResultPage implements OnInit {
   }
 
   doRefresh(event: any): void {
+    // Reset error sebelum refresh
+    this.winner = null;
+    this.tenderResult = null;
+
     const winner$ = this.tenderService.getWinner(this.tenderId).pipe(catchError(() => of(null)));
     const result$ = this.tenderService.getTenderResult(this.tenderId).pipe(catchError(() => of(null)));
 
@@ -98,7 +136,7 @@ export class ResultPage implements OnInit {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.location.back(); }
+  goBack(): void { this.navCtrl.back(); }
 
   get myResult(): 'won' | 'lost' | 'not_available' {
     if (!this.winner) return 'not_available';

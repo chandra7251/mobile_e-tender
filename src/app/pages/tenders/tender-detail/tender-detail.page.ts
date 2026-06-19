@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { ToastController, Platform } from '@ionic/angular';
+import { NavController, ToastController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
+import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, Announcement } from '../../../core/models/user.model';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -33,8 +33,9 @@ export class TenderDetailPage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
+    private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
+    private offlineCache: OfflineCacheService,
     private toast: ToastController,
     private platform: Platform
   ) {}
@@ -42,14 +43,6 @@ export class TenderDetailPage {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
-  }
-
-  ionViewWillEnter(): void {
-    if (!this.tenderId) {
-      const idParam = this.route.snapshot.paramMap.get('id');
-      this.tenderId = idParam ? +idParam : 0;
-    }
-    this.loadAll();
   }
 
   ionViewDidEnter() {
@@ -64,6 +57,14 @@ export class TenderDetailPage {
     }
   }
 
+  ionViewWillEnter(): void {
+    if (!this.tenderId) {
+      const idParam = this.route.snapshot.paramMap.get('id');
+      this.tenderId = idParam ? +idParam : 0;
+    }
+    this.loadAll();
+  }
+
   // ── Load ──────────────────────────────────────────────────────────────────
 
   loadAll(): void {
@@ -71,27 +72,37 @@ export class TenderDetailPage {
     this.loadAnnouncements();
   }
 
-  loadDetail(): void {
+  async loadDetail(): Promise<void> {
     if (!this.tenderId) return;
     this.isLoading = true;
     this.detailError = '';
 
+    const cached = await this.offlineCache.getCachedTenderDetail(this.tenderId);
+    if (cached) {
+      this.tender = cached;
+      this.hasJoined = cached.is_participant ?? false;
+      this.isLoading = false;
+    }
+
     // GET /api/tenders/{tender} sudah menyertakan is_participant di response
     // Tidak perlu request tambahan ke /participants/check
     this.tenderService.getTenderDetail(this.tenderId).subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
           this.tender = res.data;
           // Baca is_participant langsung dari TenderResource (hemat 1 HTTP request)
           this.hasJoined = res.data.is_participant ?? false;
-        } else {
+          await this.offlineCache.cacheTenderDetail(this.tenderId, res.data);
+        } else if (!this.tender) {
           this.detailError = res.message || 'Data tender tidak ditemukan.';
         }
       },
       error: (err) => {
         this.isLoading = false;
-        this.detailError = err?.error?.message || 'Gagal memuat detail tender.';
+        if (!this.tender) {
+          this.detailError = err?.error?.message || 'Gagal memuat detail tender. Periksa koneksi internet Anda.';
+        }
       }
     });
   }
@@ -126,10 +137,11 @@ export class TenderDetailPage {
     const detail$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null)));
     const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
 
-    forkJoin([detail$, ann$]).subscribe(([detailRes, annRes]) => {
+    forkJoin([detail$, ann$]).subscribe(async ([detailRes, annRes]) => {
       if (detailRes?.status === 'success' && detailRes?.data) {
         this.tender    = detailRes.data;
         this.hasJoined = detailRes.data.is_participant ?? false;
+        await this.offlineCache.cacheTenderDetail(this.tenderId, detailRes.data);
       }
       if (annRes?.status === 'success' && annRes?.data) {
         this.announcements = annRes.data;
@@ -165,8 +177,15 @@ export class TenderDetailPage {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (verificationStatus === 'rejected') {
           this.joinError = 'Akun vendor Anda ditolak. Silakan cek halaman profil untuk informasi lebih lanjut.';
-        } else if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('joined') || msg.toLowerCase().includes('sudah terdaftar')) {
-          this.joinError = 'Anda sudah terdaftar di tender ini.';
+        } else if (
+          msg.toLowerCase().includes('already') ||
+          msg.toLowerCase().includes('joined') ||
+          msg.toLowerCase().includes('sudah terdaftar') ||
+          msg.toLowerCase().includes('sudah pernah bergabung') ||
+          msg.toLowerCase().includes('bergabung')
+        ) {
+          // Backend: "Vendor sudah pernah bergabung pada tender ini."
+          this.joinError = '';
           this.hasJoined = true;
         } else {
           this.joinError = msg || 'Gagal bergabung ke tender.';
@@ -177,9 +196,10 @@ export class TenderDetailPage {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { 
-    this.router.navigate(['/tabs/tenders']); 
-  }
+  // Gunakan navCtrl.back() bukan location.back() —
+  // navCtrl menggunakan Ionic page stack, bukan browser history
+  // sehingga back selalu ke halaman Ionic sebelumnya, bukan entry history acak
+  goBack(): void { this.navCtrl.back(); }
 
   /** Sembunyikan gambar jika URL foto gagal dimuat */
   onPhotoError(event: Event): void {
@@ -193,13 +213,14 @@ export class TenderDetailPage {
 
   get showJoinButton(): boolean {
     if (!this.tender) return false;
-    if (this.hasJoined) return false;
+    // Tampilkan card join SELALU saat open/aanwijzing (biar bisa tampil state "sudah bergabung")
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
 
   get showBidButton(): boolean {
     if (!this.tender) return false;
-    return this.tender.status === 'bidding';
+    // Hanya tampilkan tombol bid jika status bidding DAN vendor sudah join tender ini
+    return this.tender.status === 'bidding' && this.hasJoined;
   }
 
   get showResultButton(): boolean {

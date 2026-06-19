@@ -124,30 +124,37 @@ export class HomePage {
   private loadMyAnnouncements(tenders: Tender[]): void {
     this.isLoadingAanwijzing = true;
     this.aanwijzings = [];
-    
-    // Cek semua tender
+
     if (tenders.length === 0) {
       this.isLoadingAanwijzing = false;
       return;
     }
 
+    // Batasi request pengumuman hanya untuk max 5 tender yang paling relevan.
+    // Prioritaskan tender berstatus 'aanwijzing' karena di sanalah pengumuman aktif.
+    // UI hanya menampilkan 5 item (slice(0,5)), jadi tidak perlu lebih dari itu.
+    const relevant = [
+      ...tenders.filter(t => t.status === 'aanwijzing'),
+      ...tenders.filter(t => t.status !== 'aanwijzing'),
+    ].slice(0, 5);
+
     let loadedCount = 0;
-    tenders.forEach(t => {
+    relevant.forEach(t => {
       this.tenderService.getAnnouncements(t.id).subscribe({
         next: (res) => {
           if (res.status === 'success' && res.data && res.data.length > 0) {
-            // Inject title
+            // Sertakan judul tender di setiap pengumuman agar mudah diidentifikasi di UI
             const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
             this.aanwijzings = [...this.aanwijzings, ...mapped];
           }
           loadedCount++;
-          if (loadedCount === tenders.length) {
+          if (loadedCount === relevant.length) {
             this.finalizeAnnouncements();
           }
         },
         error: () => {
           loadedCount++;
-          if (loadedCount === tenders.length) {
+          if (loadedCount === relevant.length) {
             this.finalizeAnnouncements();
           }
         }

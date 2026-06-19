@@ -55,18 +55,18 @@ export class RegisterPage {
           await this.showToast('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.', 'success');
           this.router.navigate(['/login'], { replaceUrl: true });
         } else {
-          // Backend return status 'error' with HTTP 200
           this.errorMessage = res.message || 'Registrasi gagal.';
         }
       },
       error: (err) => {
         this.isLoading = false;
-        const errors = err?.error?.data;
-        if (errors) {
+        // Baca detail error validasi dari key 'errors' (bukan 'data')
+        const errors = err?.error?.errors;
+        if (errors && Object.keys(errors).length > 0) {
           const firstKey = Object.keys(errors)[0];
           this.errorMessage = errors[firstKey]?.[0] || 'Terjadi kesalahan.';
         } else {
-          this.errorMessage = err?.error?.message || 'Terjadi kesalahan.';
+          this.errorMessage = err?.error?.message || 'Terjadi kesalahan server.';
         }
       }
     });
