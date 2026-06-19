@@ -87,8 +87,8 @@ export class BidFormPage implements OnInit {
       current = current.parent;
     }
 
-    // Metode 3: regex dari URL — /tabs/tenders/{id}/bid
-    const match = window.location.pathname.match(/\/tenders\/(\d+)\/bid/);
+    // Metode 3: regex dari URL — /tabs/tenders/{id}/penawaran
+    const match = window.location.pathname.match(/\/tenders\/(\d+)\/penawaran/);
     if (match?.[1] && +match[1] > 0) {
       return +match[1];
     }

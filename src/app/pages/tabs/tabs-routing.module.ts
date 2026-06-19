@@ -32,7 +32,7 @@ const routes: Routes = [
         loadChildren: () => import('../tenders/tender-detail/tender-detail.module').then(m => m.TenderDetailPageModule)
       },
       {
-        path: 'tenders/:id/bid',
+        path: 'tenders/:id/penawaran',
         loadChildren: () => import('../tenders/bid-form/bid-form.module').then(m => m.BidFormPageModule)
       },
       {
