@@ -71,7 +71,15 @@ export class ProfilePage {
       error: (err) => {
         this.isLoading = false;
         if (!this.profile) {
-          this.errorMessage = err?.error?.message || 'Gagal memuat profil. Periksa koneksi internet Anda.';
+          const status = err?.status;
+          if (status === 404) {
+            // Vendor record tidak ada — registrasi mungkin tidak selesai
+            this.errorMessage = 'Profil vendor tidak ditemukan. Registrasi Anda mungkin belum selesai. Silakan hubungi admin.';
+          } else if (!status || status === 0) {
+            this.errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+          } else {
+            this.errorMessage = err?.error?.message || 'Gagal memuat profil. Silakan coba lagi.';
+          }
         }
       }
     });

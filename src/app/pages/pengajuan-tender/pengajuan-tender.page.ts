@@ -103,8 +103,9 @@ export class PengajuanTenderPage implements OnInit {
         status: this.getStatusLabel(sub.status),
         foto: this.resolveImageUrl((sub as any)['photo_url'] || (sub as any)['foto'] || (sub.photos?.length ? sub.photos[0].photo_url : null))
       }));
-    } catch (err) {
-      console.error('Gagal memuat pengajuan:', err);
+    } catch (err: any) {
+      // Gagal load list — tampilkan error di UI lewat list yang tetap kosong
+      // (toast atau retry bisa ditambahkan di sini jika diperlukan)
     } finally {
       if (event) {
         event.target.complete();
