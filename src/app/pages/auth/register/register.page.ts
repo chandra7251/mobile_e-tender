@@ -51,8 +51,9 @@ export class RegisterPage {
         this.isLoading = false;
         if (res.status === 'success') {
           this.activityService.log('Mendaftar akun ZETA', 'person-add-outline');
-          await this.showToast('Registrasi berhasil!', 'success');
-          this.router.navigate(['/tabs/home'], { replaceUrl: true });
+          // Registrasi berhasil, tapi user belum bisa login sebelum verifikasi email
+          await this.showToast('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.', 'success');
+          this.router.navigate(['/login'], { replaceUrl: true });
         } else {
           // Backend return status 'error' with HTTP 200
           this.errorMessage = res.message || 'Registrasi gagal.';
