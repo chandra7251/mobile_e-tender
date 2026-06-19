@@ -12,6 +12,11 @@ const config: CapacitorConfig = {
       androidSplashResourceName: 'splash',
       showSpinner: false,
     },
+    Keyboard: {
+      resize: 'none',
+      style: 'dark',
+      resizeOnFullScreen: true,
+    },
   },
 };
 

@@ -49,7 +49,7 @@
             <ion-icon name="search-outline"></ion-icon>
             <span>Cari Tender</span>
           </div>
-          <div class="action-btn" routerLink="/tabs/documents">
+          <div class="action-btn" routerLink="/tabs/documents" [queryParams]="{ from: 'home', openForm: 'true' }">
             <ion-icon name="cloud-upload-outline"></ion-icon>
             <span>Upload Dokumen</span>
           </div>
@@ -57,7 +57,7 @@
             <ion-icon name="add-circle-outline"></ion-icon>
             <span>Ajukan Tender</span>
           </div>
-          <div class="action-btn" id="action-riwayat-pengajuan" routerLink="/tabs/pengajuan-tender">
+          <div class="action-btn" id="action-riwayat-pengajuan" routerLink="/tabs/pengajuan-tender" [queryParams]="{ from: 'home' }">
             <ion-icon name="time-outline"></ion-icon>
             <span>Riwayat Pengajuan</span>
           </div>

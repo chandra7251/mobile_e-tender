@@ -245,9 +245,13 @@ export class BidFormPage implements OnInit {
     return err?.error?.message || 'Terjadi kesalahan sistem.';
   }
 
-  // ── UI helpers ────────────────────────────────────────────────────────────
-
-  goBack(): void { this.navCtrl.back(); }
+  goBack(): void {
+    if (this.tenderId) {
+      this.navCtrl.navigateBack(['/tabs/tenders', this.tenderId]);
+    } else {
+      this.navCtrl.navigateBack(['/tabs/tenders']);
+    }
+  }
 
   get isSubmitMode(): boolean  { return this.mode === 'submit'; }
   get isUpdateMode(): boolean  { return this.mode === 'update'; }

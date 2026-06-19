@@ -199,7 +199,7 @@ export class TenderDetailPage {
   // Gunakan navCtrl.back() bukan location.back() —
   // navCtrl menggunakan Ionic page stack, bukan browser history
   // sehingga back selalu ke halaman Ionic sebelumnya, bukan entry history acak
-  goBack(): void { this.navCtrl.back(); }
+  goBack(): void { this.navCtrl.navigateBack(['/tabs/tenders']); }
 
   /** Sembunyikan gambar jika URL foto gagal dimuat */
   onPhotoError(event: Event): void {

@@ -242,7 +242,7 @@ export class HomePage {
   }
 
   goAjukanTender(): void {
-    this.router.navigate(['/tabs/pengajuan-tender'], { queryParams: { openForm: 'true' } });
+    this.router.navigate(['/tabs/pengajuan-tender'], { queryParams: { openForm: 'true', from: 'home' } });
   }
 
   private async showToast(message: string, color: string): Promise<void> {

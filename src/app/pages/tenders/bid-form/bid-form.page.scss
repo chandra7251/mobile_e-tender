@@ -24,12 +24,13 @@ ion-content {
 
     .btn-header-back {
       position: absolute;
-      left: 12px;
-      top: 2px;
+      left: 20px;
+      top: 12px;
       --color: #FFFFFF;
-      --padding-start: 8px;
+      --padding-start: 0;
       --padding-end: 8px;
       margin: 0;
+      height: 38px;
       ion-icon {
         font-size: 26px;
       }
@@ -37,7 +38,7 @@ ion-content {
 
     .header-title {
       position: absolute;
-      left: 56px;
+      left: 60px;
       top: 12px;
       color: #FFFFFF;
       font-size: 22px;

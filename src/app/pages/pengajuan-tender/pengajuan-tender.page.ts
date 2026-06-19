@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController, ActionSheetController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, ActionSheetController, Platform, NavController } from '@ionic/angular';
 import { PhotoService } from '../../core/services/photo.service';
 import { VendorSubmissionService } from '../../core/services/vendor-submission.service';
 import { NetworkService } from '../../core/services/network.service';
@@ -35,6 +35,8 @@ export class PengajuanTenderPage implements OnInit {
   // Buka tutup modal form pengajuan
   isFormOpen = false;
   private backButtonSub?: Subscription;
+  private previousPage: string | null = null;
+  private openedFromQuickAction = false;
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +49,7 @@ export class PengajuanTenderPage implements OnInit {
     private submissionService: VendorSubmissionService,
     private networkService: NetworkService,
     private platform: Platform,
+    private navCtrl: NavController,
   ) {}
 
   ionViewDidEnter() {
@@ -54,7 +57,11 @@ export class PengajuanTenderPage implements OnInit {
       if (this.isFormOpen) {
         this.closeForm();
       } else {
-        processNextHandler(); // Lanjut ke global handler di app.component.ts
+        if (this.previousPage === '/tabs/home') {
+          this.navCtrl.navigateBack('/tabs/home');
+        } else {
+          processNextHandler(); // Lanjut ke global handler di app.component.ts
+        }
       }
     });
   }
@@ -80,8 +87,20 @@ export class PengajuanTenderPage implements OnInit {
     this.loadData();
     // Kalau user mencet dari dashboard Quick Action, langsung bukain formnya
     const openForm = this.route.snapshot.queryParamMap.get('openForm');
+    const from = this.route.snapshot.queryParamMap.get('from');
+
+    if (from === 'home') {
+      this.previousPage = '/tabs/home';
+    } else {
+      this.previousPage = null; // Reset kalau bukan dari home, jaga-jaga
+    }
+
     if (openForm === 'true') {
       this.isFormOpen = true;
+      this.openedFromQuickAction = true;
+    }
+
+    if (openForm === 'true' || from === 'home') {
       // Hapus URL query param biar formnya ga kebuka mulu pas di-refresh
       this.router.navigate([], {
         relativeTo: this.route,
@@ -228,6 +247,7 @@ export class PengajuanTenderPage implements OnInit {
           {
             text: 'Lihat Riwayat',
             handler: () => {
+              this.previousPage = null; // Biar tetep di halaman riwayat (gak mental ke home)
               this.closeForm();
               this.form.reset();
               this.photos = [];
@@ -267,6 +287,12 @@ export class PengajuanTenderPage implements OnInit {
 
   closeForm() {
     this.isFormOpen = false;
+    // Kalo form dibuka langsung dari Dashboard Quick Action (Ajukan Tender),
+    // pas ditutup kita balikin ke Dashboard.
+    if (this.openedFromQuickAction && this.previousPage === '/tabs/home') {
+      this.openedFromQuickAction = false;
+      this.navCtrl.navigateBack('/tabs/home');
+    }
   }
 
   get paginatedList(): any[] {
