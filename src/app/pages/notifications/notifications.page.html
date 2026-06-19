@@ -64,7 +64,8 @@
           <div class="notif-icon-wrap" [class.unread-icon-bg]="!notif.read_at">
             <ion-icon
               [name]="notif.read_at ? 'document-text-outline' : 'document-text'"
-              color="primary">
+              [color]="notif.read_at ? 'primary' : null"
+              [style.color]="!notif.read_at ? '#FFFFFF' : null">
             </ion-icon>
           </div>
 
