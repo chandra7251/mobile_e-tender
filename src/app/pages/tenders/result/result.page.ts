@@ -136,7 +136,9 @@ export class ResultPage implements OnInit {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.navCtrl.back(); }
+  goBack(): void {
+    this.navCtrl.back();
+  }
 
   get myResult(): 'won' | 'lost' | 'not_available' {
     if (!this.winner) return 'not_available';

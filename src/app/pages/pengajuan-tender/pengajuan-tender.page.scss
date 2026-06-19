@@ -196,7 +196,8 @@ ion-content {
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Diubah dari space-between biar ke tengah */
+  gap: 12px; /* Jarak antara prev - numbers - next */
   margin-top: auto;
   margin-bottom: 12px;
   padding: 0 4px;
@@ -207,27 +208,29 @@ ion-content {
     color: $primary-blue;
     display: flex;
     align-items: center;
+    justify-content: center;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 0.7rem; /* Dikecilin dikit */
     cursor: pointer;
+    font-family: inherit;
 
     &.btn-prev {
       border: 1px solid rgba($primary-blue, 0.2);
       border-radius: 20px;
-      padding: 6px 16px;
+      padding: 4px 8px; /* Padding dikecilin */
       
-      ion-icon { margin-right: 4px; }
-      .double-chevron-left { margin-right: 4px; margin-left: -8px; }
+      ion-icon { margin-right: 2px; font-size: 0.9rem; }
+      .double-chevron-left { margin-right: 2px; margin-left: -6px; font-size: 0.9rem; }
     }
 
     &.btn-next {
       background: $primary-blue;
       color: white;
       border-radius: 20px;
-      padding: 6px 16px;
+      padding: 4px 10px; /* Padding dikecilin */
 
-      ion-icon { margin-left: 4px; }
-      .double-chevron-right { margin-left: -8px; margin-right: 4px; }
+      ion-icon { margin-left: 2px; font-size: 0.9rem; }
+      .double-chevron-right { margin-left: -6px; margin-right: 2px; font-size: 0.9rem; }
     }
   }
 

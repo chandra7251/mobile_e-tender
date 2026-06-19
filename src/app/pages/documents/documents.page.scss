@@ -451,7 +451,8 @@ ion-content {
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* Diubah dari space-between biar ke tengah */
+  gap: 12px; /* Jarak antara prev - numbers - next */
   margin-top: 24px;
   margin-bottom: 40px;
   padding: 0 4px;
@@ -476,18 +477,18 @@ ion-content {
     border: 1px solid #DCE3EE;
     background: #FFFFFF;
     color: #3F51B5;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Dikecilin dikit */
     font-weight: 600;
     border-radius: 20px;
-    padding: 6px 12px;
+    padding: 4px 8px; /* Padding dikecilin */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 
     .double-chevron-left {
-      margin-left: -8px;
+      margin-left: -6px;
     }
     
     ion-icon {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     .btn-text {
       margin-left: 2px;
@@ -497,18 +498,18 @@ ion-content {
   .btn-next {
     background: #3F51B5;
     color: #FFFFFF;
-    font-size: 0.75rem;
+    font-size: 0.7rem; /* Dikecilin dikit */
     font-weight: 600;
     border-radius: 20px;
-    padding: 6px 14px;
+    padding: 4px 10px; /* Padding dikecilin */
     box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
 
     .double-chevron-right {
-      margin-left: -8px;
+      margin-left: -6px;
     }
     
     ion-icon {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     .btn-text {
       margin-right: 4px;

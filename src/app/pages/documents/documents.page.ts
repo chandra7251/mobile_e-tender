@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController, Platform } from '@ionic/angular';
+import { NavController, ToastController, Platform } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { VendorService } from '../../core/services/vendor.service';
 import { ActivityService } from '../../core/services/activity.service';
 import { VendorDocument, DocumentType } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
-import { Location } from '@angular/common';
 
 type AllowedType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
 
@@ -44,22 +44,22 @@ export class DocumentsPage implements OnInit {
 
   vendorStatus = '';
   private backButtonSub?: Subscription;
+  private previousPage: string | null = null;
+  private openedFromQuickAction = false;
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private vendorService: VendorService,
     private toast: ToastController,
     private platform: Platform,
-    private location: Location,
+    private navCtrl: NavController,
     private activityService: ActivityService
   ) {}
 
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
-      if (this.showUploadForm) {
-        this.toggleUploadForm();
-      } else {
-        this.location.back();
-      }
+      this.goBack();
     });
   }
 
@@ -69,12 +69,36 @@ export class DocumentsPage implements OnInit {
     }
   }
 
-  ngOnInit(): void {} // Angular lifecycle — tidak dipakai karena ionViewWillEnter lebih andal di Ionic
+  ngOnInit(): void {}
 
   // Dipanggil setiap kali halaman tampil — termasuk saat user kembali dari halaman upload
   // Penting: Ionic meng-cache halaman, ngOnInit hanya dipanggil sekali
   ionViewWillEnter(): void {
     this.loadProfileAndDocuments();
+    
+    // Cek query params dari route snapshot
+    const from = this.route.snapshot.queryParamMap.get('from');
+    const openForm = this.route.snapshot.queryParamMap.get('openForm');
+
+    if (from === 'home') {
+      this.previousPage = '/tabs/home';
+    } else {
+      this.previousPage = '/tabs/profile'; // Default balik ke profile kalo ga dari home
+    }
+
+    if (openForm === 'true') {
+      this.showUploadForm = true;
+      this.openedFromQuickAction = true;
+    }
+
+    if (openForm === 'true' || from === 'home') {
+      // Bersihkan URL dari query param biar ga nyangkut
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {},
+        replaceUrl: true,
+      });
+    }
   }
 
   // ── Load list ─────────────────────────────────────────────────────────────
@@ -203,6 +227,21 @@ export class DocumentsPage implements OnInit {
   }
 
   // ── UI helpers ────────────────────────────────────────────────────────────
+
+  goBack(): void {
+    if (this.showUploadForm) {
+      if (this.openedFromQuickAction && this.previousPage === '/tabs/home') {
+        // Balik ke dashboard kalau buka form dari Quick Action Home
+        this.showUploadForm = false;
+        this.openedFromQuickAction = false;
+        this.navCtrl.navigateBack('/tabs/home');
+      } else {
+        this.toggleUploadForm();
+      }
+    } else {
+      this.navCtrl.navigateBack(this.previousPage || '/tabs/profile');
+    }
+  }
 
   toggleUploadForm(): void {
     this.showUploadForm = !this.showUploadForm;
