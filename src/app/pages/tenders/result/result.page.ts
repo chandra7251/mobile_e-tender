@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { Winner, TenderResult } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -23,16 +24,31 @@ export class ResultPage implements OnInit {
   winnerError = '';
   resultError = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
-    private tenderService: TenderService
+    private tenderService: TenderService,
+    private platform: Platform
   ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
     this.loadAll();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // ── Load ──────────────────────────────────────────────────────────────────

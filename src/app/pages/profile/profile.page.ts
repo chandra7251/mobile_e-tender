@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController, AlertController, Platform } from '@ionic/angular';
 import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StorageService } from '../../core/services/storage.service';
 import { VendorProfile } from '../../core/models/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: false,
@@ -30,19 +31,38 @@ export class ProfilePage {
     address: ''
   };
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private vendorService: VendorService,
     private authService: AuthService,
     private storage: StorageService,
     private router: Router,
     private toast: ToastController,
-    private alert: AlertController
+    private alert: AlertController,
+    private platform: Platform
   ) {}
 
   // Dipanggil setiap kali halaman ditampilkan
   ionViewWillEnter(): void {
     this.loadProfile();
     this.loadDocumentsCount();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      if (this.isEditMode) {
+        this.cancelEdit();
+      } else {
+        processNextHandler(); // Lanjut ke global handler di app.component.ts untuk balik ke Dashboard
+      }
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // ─── Load data ──────────────────────────────────────────────────────────────

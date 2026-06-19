@@ -3,6 +3,7 @@ import { ToastController, Platform } from '@ionic/angular';
 import { VendorService } from '../../core/services/vendor.service';
 import { VendorDocument, DocumentType } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
 
 type AllowedType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
 
@@ -46,7 +47,8 @@ export class DocumentsPage implements OnInit {
   constructor(
     private vendorService: VendorService,
     private toast: ToastController,
-    private platform: Platform
+    private platform: Platform,
+    private location: Location
   ) {}
 
   ionViewDidEnter() {
@@ -54,7 +56,7 @@ export class DocumentsPage implements OnInit {
       if (this.showUploadForm) {
         this.toggleUploadForm();
       } else {
-        processNextHandler(); // Lanjut ke global handler di app.component.ts
+        this.location.back();
       }
     });
   }
