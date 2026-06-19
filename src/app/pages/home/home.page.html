@@ -155,7 +155,10 @@
               <ion-icon name="calendar-outline"></ion-icon>
               <span>{{ tender.start_date | date:'dd MMM yyyy' }} - {{ tender.end_date | date:'dd MMM yyyy' }}</span>
             </div>
-            <!-- <div class="countdown-timer">{{ countdowns[tender.id] || '00:00:00' }}</div> -->
+            <div class="countdown-timer">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ countdowns[tender.id] || '00:00:00' }}</span>
+            </div>
           </div>
         </div>
       </div>
