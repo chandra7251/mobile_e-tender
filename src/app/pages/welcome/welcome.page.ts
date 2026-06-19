@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
+import { Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-welcome',
@@ -14,14 +16,41 @@ export class WelcomePage implements AfterViewInit {
   public currentSlide = 0;
   public totalSlides = 4;
 
-  constructor(private router: Router) {}
+  private backButtonSub?: Subscription;
+
+  constructor(
+    private router: Router, 
+    private cdr: ChangeDetectorRef,
+    private platform: Platform
+  ) {}
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      if (this.currentSlide > 0) {
+        this.prevSlide();
+      } else {
+        processNextHandler(); // Lanjut ke global handler untuk validasi keluar aplikasi
+      }
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+  }
 
   ngAfterViewInit() {
     // Listener for scroll to update pagination dots
     this.sliderContainer.nativeElement.addEventListener('scroll', () => {
       const scrollLeft = this.sliderContainer.nativeElement.scrollLeft;
       const width = this.sliderContainer.nativeElement.offsetWidth;
-      this.currentSlide = Math.round(scrollLeft / width);
+      const newSlide = Math.round(scrollLeft / width);
+      
+      if (this.currentSlide !== newSlide) {
+        this.currentSlide = newSlide;
+        this.cdr.detectChanges(); // Paksa Angular update tampilan class dot
+      }
     });
   }
 

@@ -4,6 +4,7 @@ import { ToastController, AlertController, Platform } from '@ionic/angular';
 import { VendorService, UpdateProfilePayload } from '../../core/services/vendor.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StorageService } from '../../core/services/storage.service';
+import { ActivityService } from '../../core/services/activity.service';
 import { VendorProfile } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
 
@@ -40,7 +41,8 @@ export class ProfilePage {
     private router: Router,
     private toast: ToastController,
     private alert: AlertController,
-    private platform: Platform
+    private platform: Platform,
+    private activityService: ActivityService
   ) {}
 
   // Dipanggil setiap kali halaman ditampilkan
@@ -148,6 +150,7 @@ export class ProfilePage {
       next: async (res) => {
         this.isSaving = false;
         if (res.status === 'success') {
+          this.activityService.log('Memperbarui profil perusahaan', 'create-outline');
           this.isEditMode = false;
           await this.showToast('Profil berhasil diperbarui!', 'success');
           this.loadProfile(); // refresh data

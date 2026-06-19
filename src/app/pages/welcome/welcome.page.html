@@ -76,10 +76,10 @@
         <div class="bottom-section">
           <!-- Pagination -->
           <div class="pagination">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dot" [class.active]="currentSlide === 0"></span>
+            <span class="dot" [class.active]="currentSlide === 1"></span>
+            <span class="dot" [class.active]="currentSlide === 2"></span>
+            <span class="dot" [class.active]="currentSlide === 3"></span>
           </div>
 
           <div class="text-center mt-20">
@@ -126,10 +126,10 @@
 
           <!-- Pagination -->
           <div class="pagination-slide-2">
-            <span class="dot"></span>
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dot" [class.active]="currentSlide === 0"></span>
+            <span class="dot" [class.active]="currentSlide === 1"></span>
+            <span class="dot" [class.active]="currentSlide === 2"></span>
+            <span class="dot" [class.active]="currentSlide === 3"></span>
           </div>
 
           <div class="grid-cards">
@@ -270,10 +270,10 @@
 
           <!-- Pagination -->
           <div class="pagination-center-white">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot active-cyan"></span>
-            <span class="dot"></span>
+            <span class="dot" [class.active-cyan]="currentSlide === 0"></span>
+            <span class="dot" [class.active-cyan]="currentSlide === 1"></span>
+            <span class="dot" [class.active-cyan]="currentSlide === 2"></span>
+            <span class="dot" [class.active-cyan]="currentSlide === 3"></span>
           </div>
 
           <div class="cards-list">
@@ -314,6 +314,14 @@
             <img src="assets/rules-book.png" alt="Rules Book" class="icon-large" />
             <h2 class="title-mixed"><span class="text-dark">Syarat &</span><br><span class="text-blue">Ketentuan</span></h2>
             <p class="desc-light-left">Harap baca sebelum menggunakan. Aturan main untuk pengalaman tender yang aman.</p>
+          </div>
+
+          <!-- Pagination Slide 4 -->
+          <div class="pagination-slide-4">
+            <span class="dot" [class.active]="currentSlide === 0"></span>
+            <span class="dot" [class.active]="currentSlide === 1"></span>
+            <span class="dot" [class.active]="currentSlide === 2"></span>
+            <span class="dot" [class.active]="currentSlide === 3"></span>
           </div>
 
           <div class="cards-list-border">

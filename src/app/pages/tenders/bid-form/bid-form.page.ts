@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ToastController, Platform } from '@ionic/angular';
 import { TenderService, SubmitBidPayload } from '../../../core/services/tender.service';
+import { ActivityService } from '../../../core/services/activity.service';
 import { Bid, Tender } from '../../../core/models/user.model';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -39,7 +40,8 @@ export class BidFormPage implements OnInit {
     private location: Location,
     private tenderService: TenderService,
     private toast: ToastController,
-    private platform: Platform
+    private platform: Platform,
+    private activityService: ActivityService
   ) {}
 
   ngOnInit(): void {
@@ -118,6 +120,7 @@ export class BidFormPage implements OnInit {
         next: async (res) => {
           this.isSaving = false;
           if (res.status === 'success') {
+            this.activityService.log(`Memperbarui penawaran tender`, 'hammer-outline');
             this.existingBid = res.data;
             this.bidId       = res.data?.id ?? this.bidId;
             await this.showToast('Penawaran berhasil diperbarui!', 'success');
@@ -136,6 +139,7 @@ export class BidFormPage implements OnInit {
         next: async (res) => {
           this.isSaving = false;
           if (res.status === 'success') {
+            this.activityService.log(`Mengajukan penawaran tender`, 'hammer-outline');
             this.existingBid = res.data;
             this.bidId       = res.data?.id ?? null;
             this.mode        = 'update';

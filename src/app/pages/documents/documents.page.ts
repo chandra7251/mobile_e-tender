@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController, Platform } from '@ionic/angular';
 import { VendorService } from '../../core/services/vendor.service';
+import { ActivityService } from '../../core/services/activity.service';
 import { VendorDocument, DocumentType } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
@@ -48,7 +49,8 @@ export class DocumentsPage implements OnInit {
     private vendorService: VendorService,
     private toast: ToastController,
     private platform: Platform,
-    private location: Location
+    private location: Location,
+    private activityService: ActivityService
   ) {}
 
   ionViewDidEnter() {
@@ -148,6 +150,7 @@ export class DocumentsPage implements OnInit {
       next: async (res) => {
         this.isUploading = false;
         if (res.status === 'success') {
+          this.activityService.log(`Berhasil mengunggah dokumen ${this.selectedType}`, 'cloud-upload-outline');
           await this.showToast('Dokumen berhasil diupload!', 'success');
           this.resetForm();
           this.showUploadForm = false;
