@@ -108,19 +108,24 @@
     <ion-card class="join-card" *ngIf="showJoinButton">
       <ion-card-content>
 
-        <!-- Error join -->
+        <!-- Error join (hanya tampil saat gagal dan bukan kasus "sudah bergabung") -->
         <div class="error-box" *ngIf="joinError">
           <ion-icon name="alert-circle-outline"></ion-icon>
           <span>{{ joinError }}</span>
         </div>
 
-        <!-- Sudah join -->
-        <div class="joined-box" *ngIf="hasJoined">
-          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-          <span>Anda sudah terdaftar di tender ini</span>
-        </div>
+        <!-- Sudah join: tampilkan tombol disabled dengan teks beda -->
+        <ion-button
+          *ngIf="hasJoined"
+          expand="block"
+          [disabled]="true"
+          class="join-btn joined-btn"
+          id="btn-already-joined">
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+          Anda Sudah Mengikuti Tender Ini
+        </ion-button>
 
-        <!-- Tombol join -->
+        <!-- Belum join: tombol aktif -->
         <ion-button
           *ngIf="!hasJoined"
           expand="block"

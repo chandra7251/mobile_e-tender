@@ -163,8 +163,15 @@ export class TenderDetailPage {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (verificationStatus === 'rejected') {
           this.joinError = 'Akun vendor Anda ditolak. Silakan cek halaman profil untuk informasi lebih lanjut.';
-        } else if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('joined') || msg.toLowerCase().includes('sudah terdaftar')) {
-          this.joinError = 'Anda sudah terdaftar di tender ini.';
+        } else if (
+          msg.toLowerCase().includes('already') ||
+          msg.toLowerCase().includes('joined') ||
+          msg.toLowerCase().includes('sudah terdaftar') ||
+          msg.toLowerCase().includes('sudah pernah bergabung') ||
+          msg.toLowerCase().includes('bergabung')
+        ) {
+          // Backend: "Vendor sudah pernah bergabung pada tender ini."
+          this.joinError = '';
           this.hasJoined = true;
         } else {
           this.joinError = msg || 'Gagal bergabung ke tender.';
@@ -189,7 +196,7 @@ export class TenderDetailPage {
 
   get showJoinButton(): boolean {
     if (!this.tender) return false;
-    if (this.hasJoined) return false;
+    // Tampilkan card join SELALU saat open/aanwijzing (biar bisa tampil state "sudah bergabung")
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
 

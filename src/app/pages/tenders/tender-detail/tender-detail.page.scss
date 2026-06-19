@@ -257,6 +257,23 @@ ion-badge.status-badge {
   color: #FFFFFF;
 }
 
+// Tombol "Sudah Mengikuti" — disabled, warna hijau success
+.joined-btn {
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: none;
+  --background: rgba(40, 186, 100, 0.25);
+  --color: #4ADE80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  opacity: 1 !important;
+
+  ion-icon {
+    color: #4ADE80;
+  }
+}
+
 .join-hint {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
