@@ -33,6 +33,7 @@ export class HomePage {
   isLoadingBidding = false;
   countdowns: { [id: number]: string } = {};
   private timer: any;
+  private pollingTimer: any;
 
   aanwijzings: (Announcement & { tenderTitle?: string })[] = [];
   isLoadingAanwijzing = false;
@@ -59,8 +60,21 @@ export class HomePage {
     this.subscribeUnreadCount();
   }
 
+
+  ionViewDidEnter(): void {
+    // Polling background setiap 15 detik untuk menangkap perubahan admin laravel secara real-time
+    this.pollingTimer = setInterval(() => {
+      this.silentLoadBiddingTenders();
+    }, 15000);
+  }
+
+  ionViewWillLeave(): void {
+    if (this.pollingTimer) clearInterval(this.pollingTimer);
+  }
+
   ngOnDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    if (this.pollingTimer) clearInterval(this.pollingTimer);
     this.unreadSub?.unsubscribe();
   }
 
@@ -183,6 +197,17 @@ export class HomePage {
         }
       },
       error: () => this.isLoadingBidding = false
+    });
+  }
+
+  private silentLoadBiddingTenders(): void {
+    // Load diam-diam tanpa loading indicator untuk real-time update
+    this.tenderService.getTenders({ status: 'bidding' }).subscribe({
+      next: (res) => {
+        if (res.status === 'success' && res.data) {
+          this.biddingTenders = res.data;
+        }
+      }
     });
   }
 

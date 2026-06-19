@@ -351,6 +351,8 @@ ion-content.dashboard-bg {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
   
   .countdown-header {
     display: flex;
@@ -391,8 +393,10 @@ ion-content.dashboard-bg {
   
   .countdown-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: auto;
     
     .date-range {
       display: flex;
@@ -406,9 +410,14 @@ ion-content.dashboard-bg {
     }
     
     .countdown-timer {
-      color: #F59E0B;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #E63946; /* Merah untuk urgensi (realtime) */
       font-size: 12px;
       font-weight: 800;
+      
+      ion-icon { font-size: 14px; }
     }
   }
 }
