@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, Announcement } from '../../../core/models/user.model';
@@ -32,7 +31,7 @@ export class TenderDetailPage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
+    private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
     private offlineCache: OfflineCacheService,
     private toast: ToastController
@@ -182,7 +181,10 @@ export class TenderDetailPage {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.location.back(); }
+  // Gunakan navCtrl.back() bukan location.back() —
+  // navCtrl menggunakan Ionic page stack, bukan browser history
+  // sehingga back selalu ke halaman Ionic sebelumnya, bukan entry history acak
+  goBack(): void { this.navCtrl.back(); }
 
   /** Sembunyikan gambar jika URL foto gagal dimuat */
   onPhotoError(event: Event): void {

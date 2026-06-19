@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { TenderService, SubmitBidPayload } from '../../../core/services/tender.service';
 import { Bid, Tender } from '../../../core/models/user.model';
 import { forkJoin, of } from 'rxjs';
@@ -33,7 +32,7 @@ export class BidFormPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
+    private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
     private tenderService: TenderService,
     private toast: ToastController
   ) {}
@@ -41,7 +40,6 @@ export class BidFormPage implements OnInit {
   ngOnInit(): void {
     // Hanya extract ID saat pertama kali, ionViewWillEnter akan load data
     this.tenderId = this.doExtractTenderId();
-    console.log('[BidForm] ngOnInit — tenderId:', this.tenderId);
   }
 
   // Dipanggil setiap kali halaman aktif (termasuk saat navigate kembali dari halaman lain)
@@ -49,7 +47,6 @@ export class BidFormPage implements OnInit {
   ionViewWillEnter(): void {
     // Re-extract setiap kali masuk untuk handle kasus Ionic page cache dengan tender berbeda
     this.tenderId = this.doExtractTenderId();
-    console.log('[BidForm] ionViewWillEnter — tenderId:', this.tenderId);
 
     if (!this.tenderId || this.tenderId <= 0) {
       this.mode = 'error';
@@ -76,11 +73,9 @@ export class BidFormPage implements OnInit {
     // Metode 3: regex dari URL — /tabs/tenders/{id}/bid
     const match = window.location.pathname.match(/\/tenders\/(\d+)\/bid/);
     if (match?.[1] && +match[1] > 0) {
-      console.log('[BidForm] tenderId from URL regex:', match[1]);
       return +match[1];
     }
 
-    console.error('[BidForm] GAGAL extract tenderId dari:', window.location.pathname);
     return 0;
   }
 
@@ -233,7 +228,7 @@ export class BidFormPage implements OnInit {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.location.back(); }
+  goBack(): void { this.navCtrl.back(); }
 
   get isSubmitMode(): boolean  { return this.mode === 'submit'; }
   get isUpdateMode(): boolean  { return this.mode === 'update'; }
