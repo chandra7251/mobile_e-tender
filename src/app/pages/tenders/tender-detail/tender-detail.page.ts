@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
 import { Tender, Announcement } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -28,12 +28,15 @@ export class TenderDetailPage {
   announcementsLoading = false;
   announcementsError = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private tenderService: TenderService,
-    private toast: ToastController
+    private toast: ToastController,
+    private platform: Platform
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +50,18 @@ export class TenderDetailPage {
       this.tenderId = idParam ? +idParam : 0;
     }
     this.loadAll();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // ── Load ──────────────────────────────────────────────────────────────────
@@ -162,7 +177,9 @@ export class TenderDetailPage {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.location.back(); }
+  goBack(): void { 
+    this.router.navigate(['/tabs/tenders']); 
+  }
 
   /** Sembunyikan gambar jika URL foto gagal dimuat */
   onPhotoError(event: Event): void {

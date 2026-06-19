@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import { TenderService, SubmitBidPayload } from '../../../core/services/tender.service';
 import { Bid, Tender } from '../../../core/models/user.model';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 type BidMode = 'loading' | 'submit' | 'update' | 'error';
@@ -31,17 +31,33 @@ export class BidFormPage implements OnInit {
   bidAmount: number | null = null;
   notes = '';
 
+  private backButtonSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private tenderService: TenderService,
-    private toast: ToastController
+    private toast: ToastController,
+    private platform: Platform
   ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
     this.loadMyBid();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
+      this.goBack();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   // ── Load existing bid ─────────────────────────────────────────────────────
@@ -177,7 +193,9 @@ export class BidFormPage implements OnInit {
 
   // ── UI helpers ────────────────────────────────────────────────────────────
 
-  goBack(): void { this.location.back(); }
+  goBack(): void { 
+    this.router.navigate(['/tabs/tenders', this.tenderId]); 
+  }
 
   get isSubmitMode(): boolean  { return this.mode === 'submit'; }
   get isUpdateMode(): boolean  { return this.mode === 'update'; }
