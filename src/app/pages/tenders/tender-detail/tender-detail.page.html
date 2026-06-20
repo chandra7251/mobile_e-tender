@@ -75,14 +75,44 @@
         </ion-card-title>
       </ion-card-header>
       <ion-card-content style="padding: 0 16px 16px 16px;">
-        <img
-          *ngIf="tender.photo_url"
-          [src]="tender.photo_url"
-          [alt]="tender.title"
-          class="tender-photo"
-          loading="lazy"
-          (error)="onPhotoError($event)">
-        <div *ngIf="!tender.photo_url" class="no-photo-placeholder" style="padding: 16px;">
+        <div *ngIf="photoList.length > 0" class="photo-slider-container" style="position: relative; display: flex; align-items: center; justify-content: center;">
+          <!-- Tombol Kiri -->
+          <ion-button 
+            *ngIf="photoList.length > 1"
+            [disabled]="currentPhotoIndex === 0" 
+            fill="solid" 
+            (click)="prevPhoto()" 
+            class="slider-btn slider-btn-left"
+            style="position: absolute; left: 8px; z-index: 10; --background: rgba(0,0,0,0.5); --color: white; border-radius: 50%; width: 40px; height: 40px; --padding-start: 0; --padding-end: 0;">
+            <ion-icon name="chevron-back-outline" style="font-size: 24px;"></ion-icon>
+          </ion-button>
+
+          <img
+            [src]="photoList[currentPhotoIndex]"
+            [alt]="tender.title"
+            class="tender-photo"
+            loading="lazy"
+            (error)="onPhotoError($event)"
+            style="width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 16/9;">
+
+          <!-- Counter Badge -->
+          <ion-badge *ngIf="photoList.length > 1" style="position: absolute; bottom: 8px; right: 8px; z-index: 10; --background: rgba(0,0,0,0.6); --color: white;">
+            {{ currentPhotoIndex + 1 }} / {{ photoList.length }}
+          </ion-badge>
+
+          <!-- Tombol Kanan -->
+          <ion-button 
+            *ngIf="photoList.length > 1"
+            [disabled]="currentPhotoIndex === photoList.length - 1" 
+            fill="solid" 
+            (click)="nextPhoto()" 
+            class="slider-btn slider-btn-right"
+            style="position: absolute; right: 8px; z-index: 10; --background: rgba(0,0,0,0.5); --color: white; border-radius: 50%; width: 40px; height: 40px; --padding-start: 0; --padding-end: 0;">
+            <ion-icon name="chevron-forward-outline" style="font-size: 24px;"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div *ngIf="photoList.length === 0" class="no-photo-placeholder" style="padding: 16px;">
           <p>Tender ini tidak memiliki foto Barang atau Jasa</p>
         </div>
       </ion-card-content>

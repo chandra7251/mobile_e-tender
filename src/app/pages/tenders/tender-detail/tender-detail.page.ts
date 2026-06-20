@@ -17,6 +17,8 @@ export class TenderDetailPage {
 
   tender: Tender | null = null;
   announcements: Announcement[] = [];
+  
+  currentPhotoIndex: number = 0;
 
   tenderId!: number;
   isLoading = false;
@@ -237,6 +239,29 @@ export class TenderDetailPage {
   onPhotoError(event: Event): void {
     const img = event.target as HTMLImageElement;
     if (img) img.style.display = 'none';
+  }
+
+  get photoList(): string[] {
+    if (!this.tender) return [];
+    // Cek jika backend mengembalikan array photos (misal setelah backend diupdate user)
+    const t = this.tender as any;
+    if (t.photos && Array.isArray(t.photos) && t.photos.length > 0) {
+      return t.photos.map((p: any) => typeof p === 'string' ? p : p.photo_url);
+    }
+    // Fallback ke single photo_url jika ada
+    return this.tender.photo_url ? [this.tender.photo_url] : [];
+  }
+
+  nextPhoto(): void {
+    if (this.currentPhotoIndex < this.photoList.length - 1) {
+      this.currentPhotoIndex++;
+    }
+  }
+
+  prevPhoto(): void {
+    if (this.currentPhotoIndex > 0) {
+      this.currentPhotoIndex--;
+    }
   }
 
   goBid(): void {
