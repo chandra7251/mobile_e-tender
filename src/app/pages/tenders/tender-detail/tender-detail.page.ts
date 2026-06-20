@@ -33,6 +33,8 @@ export class TenderDetailPage {
   hasSubmittedBid: boolean = false;
   myBidPrice: number | null = null;
   isLoadingBid: boolean = false;
+  biddingCountdown: string = '';
+  private timer: any;
 
   private backButtonSub?: Subscription;
 
@@ -60,6 +62,9 @@ export class TenderDetailPage {
   ionViewWillLeave() {
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
+    }
+    if (this.timer) {
+      clearInterval(this.timer);
     }
   }
 
@@ -108,6 +113,7 @@ export class TenderDetailPage {
       this.tender = cached;
       this.hasJoined = cached.is_participant ?? false;
       this.isLoading = false;
+      this.startCountdown();
     }
 
     // GET /api/tenders/{tender} sudah menyertakan is_participant di response
@@ -120,6 +126,7 @@ export class TenderDetailPage {
           // Baca is_participant langsung dari TenderResource (hemat 1 HTTP request)
           this.hasJoined = res.data.is_participant ?? false;
           await this.offlineCache.cacheTenderDetail(this.tenderId, res.data);
+          this.startCountdown();
         } else if (!this.tender) {
           this.detailError = res.message || 'Data tender tidak ditemukan.';
         }
@@ -131,6 +138,37 @@ export class TenderDetailPage {
         }
       }
     });
+  }
+
+  private startCountdown(): void {
+    if (this.timer) clearInterval(this.timer);
+    this.updateCountdown();
+    this.timer = setInterval(() => {
+      this.updateCountdown();
+    }, 1000);
+  }
+
+  private updateCountdown(): void {
+    if (!this.tender || this.tender.status !== 'bidding') return;
+    const endDateString = (this.tender as any).bidding_end || this.tender.end_date;
+    if (!endDateString) return;
+    
+    const now = new Date().getTime();
+    const end = new Date(endDateString).getTime();
+    const diff = end - now;
+    
+    if (diff <= 0) {
+      this.biddingCountdown = '00:00:00';
+    } else {
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      this.biddingCountdown = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+    }
+  }
+
+  private pad(n: number): string {
+    return n < 10 ? '0' + n : n.toString();
   }
 
   retryLoad(): void {

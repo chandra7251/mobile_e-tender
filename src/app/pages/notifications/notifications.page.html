@@ -11,6 +11,10 @@
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
       <span class="header-title">Notifikasi</span>
+      
+      <ion-button fill="clear" class="btn-header-delete-all" (click)="deleteAllNotifications()" *ngIf="notifications.length > 0">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
     </div>
   </div>
 
@@ -53,42 +57,54 @@
     <!-- Daftar notifikasi -->
     <div *ngIf="!isLoading && !hasError">
 
-      <div class="notif-list" *ngIf="notifications.length > 0">
-        <div
-          *ngFor="let notif of notifications"
-          class="notif-card"
-          [class.notif-unread]="!notif.read_at"
-          (click)="onNotificationClick(notif)">
+      <ion-list class="notif-list" *ngIf="notifications.length > 0" lines="none" style="background: transparent; padding: 0;">
+        <ion-item-sliding *ngFor="let notif of notifications" 
+          [class.deleting-animation]="notif.isDeleting"
+          style="margin-bottom: 16px; overflow: visible; background: transparent;">
+          <ion-item style="--padding-start: 0; --inner-padding-end: 0; --background: transparent; --min-height: 0;">
+            <div
+              class="notif-card"
+              [class.notif-unread]="!notif.read_at"
+              (click)="onNotificationClick(notif)"
+              style="width: 100%; margin: 0;">
 
-          <!-- Icon status -->
-          <div class="notif-icon-wrap" [class.unread-icon-bg]="!notif.read_at">
-            <ion-icon
-              [name]="notif.read_at ? 'document-text-outline' : 'document-text'"
-              [color]="notif.read_at ? 'primary' : null"
-              [style.color]="!notif.read_at ? '#FFFFFF' : null">
-            </ion-icon>
-          </div>
+              <!-- Icon status -->
+              <div class="notif-icon-wrap" [class.unread-icon-bg]="!notif.read_at">
+                <ion-icon
+                  [name]="notif.read_at ? 'document-text-outline' : 'document-text'"
+                  [color]="notif.read_at ? 'primary' : null"
+                  [style.color]="!notif.read_at ? '#FFFFFF' : null">
+                </ion-icon>
+              </div>
 
-          <!-- Konten -->
-          <div class="notif-content">
-            <div class="notif-title">{{ notif.data.tender_title }}</div>
-            <div class="notif-message">{{ notif.data.message }}</div>
+              <!-- Konten -->
+              <div class="notif-content">
+                <div class="notif-title">{{ notif.data.tender_title }}</div>
+                <div class="notif-message">{{ notif.data.message }}</div>
 
-            <!-- Status badge -->
-            <div class="notif-meta">
-              <span class="status-change" *ngIf="notif.data.new_status">
-                <ion-icon name="arrow-forward-outline" style="vertical-align: middle; font-size: 10px;"></ion-icon>
-                {{ notif.data.new_status | uppercase }}
-              </span>
-              <span class="notif-time">{{ notif.created_at | date:'dd MMM yyyy, HH:mm' }}</span>
+                <!-- Status badge -->
+                <div class="notif-meta">
+                  <span class="status-change" *ngIf="notif.data.new_status">
+                    <ion-icon name="arrow-forward-outline" style="vertical-align: middle; font-size: 10px;"></ion-icon>
+                    {{ notif.data.new_status | uppercase }}
+                  </span>
+                  <span class="notif-time">{{ notif.created_at | date:'dd MMM yyyy, HH:mm' }}</span>
+                </div>
+              </div>
+
+              <!-- Titik merah: belum dibaca -->
+              <div class="unread-dot" *ngIf="!notif.read_at"></div>
+
             </div>
-          </div>
-
-          <!-- Titik merah: belum dibaca -->
-          <div class="unread-dot" *ngIf="!notif.read_at"></div>
-
-        </div>
-      </div>
+          </ion-item>
+          
+          <ion-item-options side="end" (ionSwipe)="deleteNotification(notif)">
+            <ion-item-option color="danger" expandable="true" (click)="deleteNotification(notif)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
 
       <!-- Empty state -->
       <div *ngIf="notifications.length === 0" class="empty-state">

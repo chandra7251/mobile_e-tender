@@ -50,6 +50,20 @@ ion-content {
       font-weight: 700;
       line-height: 38px;
     }
+
+    .btn-header-delete-all {
+      position: absolute;
+      right: 20px;
+      top: 12px;
+      --color: #FFFFFF;
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin: 0;
+      height: 38px;
+      ion-icon {
+        font-size: 22px;
+      }
+    }
   }
 }
 
@@ -237,5 +251,28 @@ ion-content {
     opacity: 0.8;
     line-height: 1.5;
     margin: 0;
+  }
+}
+
+// ── Animations ──
+.deleting-animation {
+  animation: fadeOutLeft 0.3s ease forwards;
+}
+
+@keyframes fadeOutLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 200px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+    max-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+    overflow: hidden;
   }
 }

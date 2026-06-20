@@ -42,7 +42,15 @@ export class TenderListPage {
     private route: ActivatedRoute
   ) {}
 
+  biddingCountdowns: { [id: number]: string } = {};
+  private timer: any;
+
   // Lifecycle hook
+  ionViewWillLeave() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
   ionViewWillEnter(): void {
     const statusParam = this.route.snapshot.queryParamMap.get('status') as FilterStatus;
     if (statusParam && this.filterOptions.some(opt => opt.value === statusParam)) {
@@ -53,20 +61,21 @@ export class TenderListPage {
 
   // ── Load dari API ─────────────────────────────────────────────────────────
 
-  async loadTenders(): Promise<void> {
-    this.isLoading = true;
+  async loadTenders(event?: any): Promise<void> {
+    if (!event) this.isLoading = true;
     this.errorMessage = '';
 
     const cached = await this.offlineCache.getCachedTenderList();
     if (cached && cached.length > 0) {
       this.allTenders = cached;
       this.applyFilter();
-      this.isLoading = false; // Langsung tampil data
+      this.startCountdowns();
+      if (!event) this.isLoading = false; // Langsung tampil data
     }
 
     this.tenderService.getTenders().subscribe({
       next: async (res) => {
-        this.isLoading = false;
+        if (!event) this.isLoading = false;
         if (res.status === 'success' && res.data) {
           // Filter valid status
           const validTenders = res.data.filter((t: any) =>
@@ -74,34 +83,57 @@ export class TenderListPage {
           );
           this.allTenders = validTenders;
           this.applyFilter();
+          this.startCountdowns();
           
           await this.offlineCache.cacheTenderList(validTenders);
         }
+        if (event) event.target.complete();
       },
       error: (err) => {
-        this.isLoading = false;
+        if (!event) this.isLoading = false;
         if (this.allTenders.length === 0) {
           this.errorMessage = err?.error?.message || 'Gagal memuat daftar tender. Periksa koneksi internet Anda.';
         }
+        if (event) event.target.complete();
       }
     });
   }
 
   doRefresh(event: any): void {
-    this.tenderService.getTenders().subscribe({
-      next: async (res) => {
-        if (res.status === 'success' && res.data) {
-          const validTenders = res.data.filter((t: any) =>
-            ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
-          );
-          this.allTenders = validTenders;
-          this.applyFilter();
-          await this.offlineCache.cacheTenderList(validTenders);
+    this.loadTenders(event);
+  }
+
+  private startCountdowns(): void {
+    if (this.timer) clearInterval(this.timer);
+    this.updateCountdowns();
+    this.timer = setInterval(() => {
+      this.updateCountdowns();
+    }, 1000);
+  }
+
+  private updateCountdowns(): void {
+    const now = new Date().getTime();
+    this.allTenders.forEach(t => {
+      if (t.status === 'bidding') {
+        const endDateString = (t as any).bidding_end || t.end_date;
+        if (endDateString) {
+          const end = new Date(endDateString).getTime();
+          const diff = end - now;
+          if (diff <= 0) {
+            this.biddingCountdowns[t.id] = '00:00:00';
+          } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            this.biddingCountdowns[t.id] = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+          }
         }
-        event.target.complete();
-      },
-      error: () => event.target.complete()
+      }
     });
+  }
+
+  private pad(n: number): string {
+    return n < 10 ? '0' + n : n.toString();
   }
 
   // ── Filter & Search ───────────────────────────────────────────────────────

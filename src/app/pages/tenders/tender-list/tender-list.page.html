@@ -97,10 +97,14 @@
       <ion-card-content>
 
         <!-- Status badge -->
-        <div class="card-top">
+        <div class="card-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
           <ion-badge [color]="getStatusColor(tender.status)" class="status-badge">
             {{ getStatusLabel(tender.status) }}
           </ion-badge>
+          <div *ngIf="tender.status === 'bidding' && biddingCountdowns[tender.id]" class="bidding-countdown" style="font-size: 11px; font-weight: 700; color: #FF8C00; background: transparent; padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; border: 1px solid #FF8C00;">
+            <ion-icon name="time-outline"></ion-icon>
+            {{ biddingCountdowns[tender.id] }}
+          </div>
         </div>
 
         <!-- Title -->

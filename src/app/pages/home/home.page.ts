@@ -196,22 +196,23 @@ export class HomePage {
 
   private updateCountdowns(): void {
     const now = new Date().getTime();
-    this.biddingTenders.forEach(t => {
-      // Fallback ke end_date
+    
+    // Filter out tenders that have already expired
+    this.biddingTenders = this.biddingTenders.filter(t => {
       const endDateString = t.bidding_end || t.end_date;
-      if (endDateString) {
-        const end = new Date(endDateString).getTime();
-        const diff = end - now;
-        if (diff <= 0) {
-          this.countdowns[t.id] = '00:00:00';
-        } else {
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-          this.countdowns[t.id] = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
-        }
+      if (!endDateString) return false;
+      
+      const end = new Date(endDateString).getTime();
+      const diff = end - now;
+      
+      if (diff <= 0) {
+        return false; // Tender expired, remove from list
       } else {
-        this.countdowns[t.id] = '00:00:00';
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        this.countdowns[t.id] = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
+        return true;
       }
     });
   }
