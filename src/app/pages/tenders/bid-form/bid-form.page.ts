@@ -142,7 +142,8 @@ export class BidFormPage implements OnInit {
           this.loadError = 'Anda belum terdaftar sebagai peserta tender ini.\nKembali ke detail tender dan klik "Ikuti Tender" terlebih dahulu.';
         } else if (!status || status === 0) {
           this.mode = 'error';
-          this.loadError = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+          const errorUrl = err?.url || 'Unknown URL';
+          this.loadError = `Tidak dapat terhubung ke server (Status 0).\nURL Target: ${errorUrl}`;
         } else {
           this.mode = 'error';
           this.loadError = this.mapError(err);
