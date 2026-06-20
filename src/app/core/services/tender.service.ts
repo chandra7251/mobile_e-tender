@@ -72,15 +72,15 @@ export class TenderService {
 
   // Fungsi ngambil data penawaran harga yang udah dikirim si vendor
   getMyBid(tenderId: number): Observable<ApiResponse<Bid>> {
-    return this.api.get<Bid>(`tenders/${tenderId}/bids/me`);
+    return this.api.get<Bid>(`tenders/${tenderId}/penawaran/me`);
   }
 
   submitBid(tenderId: number, payload: SubmitBidPayload): Observable<ApiResponse<Bid>> {
-    return this.api.post<Bid>(`tenders/${tenderId}/bids`, payload);
+    return this.api.post<Bid>(`tenders/${tenderId}/penawaran`, payload);
   }
 
   updateBid(tenderId: number, bidId: number, payload: SubmitBidPayload): Observable<ApiResponse<Bid>> {
-    return this.api.put<Bid>(`tenders/${tenderId}/bids/${bidId}`, payload);
+    return this.api.put<Bid>(`tenders/${tenderId}/penawaran/${bidId}`, payload);
   }
 
   getTenderResult(tenderId: number): Observable<ApiResponse<TenderResult>> {

@@ -208,7 +208,7 @@ export class TenderDetailPage {
   }
 
   goBid(): void {
-    this.router.navigate(['/tabs/tenders', this.tenderId, 'bid']);
+    this.router.navigate(['/tabs/tenders', this.tenderId, 'penawaran']);
   }
 
   get showJoinButton(): boolean {
