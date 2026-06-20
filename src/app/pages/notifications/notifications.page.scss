@@ -50,6 +50,20 @@ ion-content {
       font-weight: 700;
       line-height: 38px;
     }
+
+    .btn-header-delete-all {
+      position: absolute;
+      right: 20px;
+      top: 12px;
+      --color: #FFFFFF;
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin: 0;
+      height: 38px;
+      ion-icon {
+        font-size: 22px;
+      }
+    }
   }
 }
 

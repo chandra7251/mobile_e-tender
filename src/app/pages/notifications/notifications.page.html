@@ -11,6 +11,10 @@
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
       <span class="header-title">Notifikasi</span>
+      
+      <ion-button fill="clear" class="btn-header-delete-all" (click)="deleteAllNotifications()" *ngIf="notifications.length > 0">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
     </div>
   </div>
 

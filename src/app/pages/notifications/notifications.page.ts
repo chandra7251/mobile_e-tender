@@ -121,28 +121,59 @@ export class NotificationsPage implements OnInit {
   /**
    * Hapus notifikasi dengan cara swipe-to-delete
    */
-  deleteNotification(notif: NotificationItem) {
+  deleteNotification(notif: any) { // using any so we can inject isDeleting
     // Tandai sedang dihapus untuk trigger animasi CSS
     notif.isDeleting = true;
 
     // Tunggu animasi CSS selesai (300ms) baru hapus dari array
     setTimeout(() => {
+      // Cek apakah notif yang mau dihapus statusnya belum dibaca
+      const isUnread = !notif.read_at;
+
       this.notifications = this.notifications.filter(n => n.id !== notif.id);
+      
+      // Update badge count secara lokal (optimistic update)
+      if (isUnread) {
+        const currentCount = this.notifications.filter(n => !n.read_at).length;
+        this.notificationService.updateUnreadCount(currentCount);
+      }
       
       // Tembak backend untuk hapus secara permanen
       this.notificationService.deleteNotification(notif.id).subscribe({
         next: () => {
-          // Biarkan kosong, atau update badge unread kalo notif yang dihapus belum dibaca
-          if (!notif.read_at) {
-            const currentCount = this.notifications.filter(n => !n.read_at).length;
-            this.notificationService.updateUnreadCount(currentCount);
-          }
+          // Sukses
         },
         error: (err) => {
           console.error('Gagal hapus notifikasi di backend', err);
           // Gagal hapus di backend biarkan saja (silent error), karena ini optimistic UI
         }
       });
+    }, 300);
+  }
+
+  /**
+   * Hapus semua notifikasi sekaligus
+   */
+  deleteAllNotifications() {
+    // Jalankan animasi hapus buat semua item
+    this.notifications.forEach(n => (n as any).isDeleting = true);
+
+    // Langsung update badge count jadi 0 (optimistic update)
+    this.notificationService.updateUnreadCount(0);
+
+    setTimeout(() => {
+      // Loop untuk panggil API hapus satu per satu (karena backend cuma support by ID)
+      // Kalau backend punya API delete-all, ini bisa diganti biar lebih efisien
+      this.notifications.forEach(notif => {
+        this.notificationService.deleteNotification(notif.id).subscribe({
+          error: () => {} // silent error
+        });
+      });
+
+      // Kosongkan lokal
+      this.notifications = [];
+      
+      this.showToast('Semua notifikasi berhasil dihapus.', 'success');
     }, 300);
   }
 
