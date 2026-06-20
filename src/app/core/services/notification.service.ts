@@ -21,6 +21,7 @@ export interface NotificationItem {
   read_at: string | null;
   created_at: string;
   updated_at: string;
+  isDeleting?: boolean;
 }
 
 export interface NotificationResponse {
@@ -96,5 +97,12 @@ export class NotificationService {
    */
   updateUnreadCount(count: number): void {
     this.unreadCountSubject.next(count);
+  }
+
+  /**
+   * Hapus notifikasi
+   */
+  deleteNotification(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

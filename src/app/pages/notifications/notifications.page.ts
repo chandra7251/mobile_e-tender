@@ -118,6 +118,34 @@ export class NotificationsPage implements OnInit {
     });
   }
 
+  /**
+   * Hapus notifikasi dengan cara swipe-to-delete
+   */
+  deleteNotification(notif: NotificationItem) {
+    // Tandai sedang dihapus untuk trigger animasi CSS
+    notif.isDeleting = true;
+
+    // Tunggu animasi CSS selesai (300ms) baru hapus dari array
+    setTimeout(() => {
+      this.notifications = this.notifications.filter(n => n.id !== notif.id);
+      
+      // Tembak backend untuk hapus secara permanen
+      this.notificationService.deleteNotification(notif.id).subscribe({
+        next: () => {
+          // Biarkan kosong, atau update badge unread kalo notif yang dihapus belum dibaca
+          if (!notif.read_at) {
+            const currentCount = this.notifications.filter(n => !n.read_at).length;
+            this.notificationService.updateUnreadCount(currentCount);
+          }
+        },
+        error: (err) => {
+          console.error('Gagal hapus notifikasi di backend', err);
+          // Gagal hapus di backend biarkan saja (silent error), karena ini optimistic UI
+        }
+      });
+    }, 300);
+  }
+
   /** Helper menyelesaikan event (refresher / infinite scroll) */
   private completeEvent(event: any, page: number) {
     if (!event) return;
