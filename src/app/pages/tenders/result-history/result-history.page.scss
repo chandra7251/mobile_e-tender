@@ -130,7 +130,7 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: center; /* Diubah dari space-between biar ke tengah */
-  gap: 12px; /* Jarak antara prev - numbers - next */
+  gap: 6px; /* Jarak dirapatkan agar tidak nabrak di device kecil */
   margin-top: 24px;
   margin-bottom: 40px;
   padding: 0 4px;
@@ -155,10 +155,10 @@ ion-content {
     border: 1px solid #DCE3EE;
     background: #FFFFFF;
     color: #3F51B5;
-    font-size: 0.7rem; /* Dikecilin dikit */
+    font-size: 0.7rem;
     font-weight: 600;
     border-radius: 20px;
-    padding: 4px 8px; /* Padding dikecilin */
+    padding: 2px 6px; /* Padding dikecilin lagi */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 
     .double-chevron-left {
@@ -166,7 +166,7 @@ ion-content {
     }
     
     ion-icon {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .btn-text {
       margin-left: 2px;
@@ -176,10 +176,10 @@ ion-content {
   .btn-next {
     background: #3F51B5;
     color: #FFFFFF;
-    font-size: 0.7rem; /* Dikecilin dikit */
+    font-size: 0.7rem;
     font-weight: 600;
     border-radius: 20px;
-    padding: 4px 10px; /* Padding dikecilin */
+    padding: 2px 8px; /* Padding dikecilin lagi */
     box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
 
     .double-chevron-right {
@@ -187,7 +187,7 @@ ion-content {
     }
     
     ion-icon {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .btn-text {
       margin-right: 4px;
@@ -197,14 +197,14 @@ ion-content {
   .page-numbers {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px; /* Gap page numbers dikurangi */
 
     .page-number {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #3F51B5;
-      width: 28px;
-      height: 28px;
+      width: 24px; /* Ukuran dikecilin */
+      height: 24px; /* Ukuran dikecilin */
       border-radius: 50%;
       transition: all 0.2s ease;
 
@@ -215,7 +215,7 @@ ion-content {
     }
 
     .page-dot {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #3F51B5;
       margin: 0 2px;

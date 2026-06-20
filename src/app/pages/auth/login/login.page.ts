@@ -41,7 +41,7 @@ export class LoginPage {
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success') {
-          this.activityService.log('Berhasil Login ke ZETA', 'log-in-outline');
+
           await this.showToast('Login berhasil!', 'success');
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
         } else {

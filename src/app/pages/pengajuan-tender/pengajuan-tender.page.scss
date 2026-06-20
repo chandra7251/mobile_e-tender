@@ -197,7 +197,7 @@ ion-content {
   display: flex;
   align-items: center;
   justify-content: center; /* Diubah dari space-between biar ke tengah */
-  gap: 12px; /* Jarak antara prev - numbers - next */
+  gap: 6px; /* Jarak dirapatkan agar tidak nabrak di device kecil */
   margin-top: auto;
   margin-bottom: 12px;
   padding: 0 4px;
@@ -210,44 +210,44 @@ ion-content {
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 0.7rem; /* Dikecilin dikit */
+    font-size: 0.7rem;
     cursor: pointer;
     font-family: inherit;
 
     &.btn-prev {
       border: 1px solid rgba($primary-blue, 0.2);
       border-radius: 20px;
-      padding: 4px 8px; /* Padding dikecilin */
+      padding: 2px 6px; /* Padding dikecilin lagi */
       
-      ion-icon { margin-right: 2px; font-size: 0.9rem; }
-      .double-chevron-left { margin-right: 2px; margin-left: -6px; font-size: 0.9rem; }
+      ion-icon { margin-right: 2px; font-size: 0.85rem; }
+      .double-chevron-left { margin-right: 2px; margin-left: -6px; font-size: 0.85rem; }
     }
 
     &.btn-next {
       background: $primary-blue;
       color: white;
       border-radius: 20px;
-      padding: 4px 10px; /* Padding dikecilin */
+      padding: 2px 8px; /* Padding dikecilin lagi */
 
-      ion-icon { margin-left: 2px; font-size: 0.9rem; }
-      .double-chevron-right { margin-left: -6px; margin-right: 2px; font-size: 0.9rem; }
+      ion-icon { margin-left: 2px; font-size: 0.85rem; }
+      .double-chevron-right { margin-left: -6px; margin-right: 2px; font-size: 0.85rem; }
     }
   }
 
   .page-numbers {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px; /* Gap page numbers dikurangi */
 
     .page-number {
-      width: 30px;
-      height: 30px;
+      width: 24px; /* Ukuran dikecilin */
+      height: 24px; /* Ukuran dikecilin */
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 0.85rem;
       color: $primary-blue;
 
       &.active-page {
@@ -259,6 +259,7 @@ ion-content {
     .page-dot {
       color: $primary-blue;
       font-weight: bold;
+      font-size: 0.85rem;
     }
   }
 }
