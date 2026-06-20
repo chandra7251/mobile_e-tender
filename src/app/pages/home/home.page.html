@@ -79,13 +79,19 @@
               <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
             </div>
             <div class="schedule-box">
-              <div class="schedule-item">
-                <span class="lbl">Open:</span>
-                <span class="val">{{ tender.start_date | date:'dd MMM yyyy HH:mm' }} - {{ tender.end_date | date:'dd MMM yyyy HH:mm' }} WIB</span>
+              <div class="schedule-item open-item">
+                <div class="sched-header">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span class="lbl">Fase Open</span>
+                </div>
+                <span class="val">{{ tender.start_date | date:'dd MMM yyyy, HH:mm' }} -<br>{{ tender.end_date | date:'dd MMM yyyy, HH:mm' }} WIB</span>
               </div>
-              <div class="schedule-item" *ngIf="tender.bidding_start && tender.bidding_end">
-                <span class="lbl">Bidding:</span>
-                <span class="val">{{ tender.bidding_start | date:'dd MMM yyyy HH:mm' }} - {{ tender.bidding_end | date:'dd MMM yyyy HH:mm' }} WIB</span>
+              <div class="schedule-item bidding-item" *ngIf="tender.bidding_start && tender.bidding_end">
+                <div class="sched-header">
+                  <ion-icon name="hammer-outline"></ion-icon>
+                  <span class="lbl">Fase Bidding</span>
+                </div>
+                <span class="val">{{ tender.bidding_start | date:'dd MMM yyyy, HH:mm' }} -<br>{{ tender.bidding_end | date:'dd MMM yyyy, HH:mm' }} WIB</span>
               </div>
             </div>
           </div>
