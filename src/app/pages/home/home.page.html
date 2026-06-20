@@ -78,7 +78,16 @@
               <h4>{{ tender.title }}</h4>
               <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
             </div>
-            <p class="date">{{ tender.start_date | date:'dd MMM yyyy' }}<br>{{ tender.start_date | date:'HH:mm' }} WIB</p>
+            <div class="schedule-box">
+              <div class="schedule-item">
+                <span class="lbl">Open:</span>
+                <span class="val">{{ tender.start_date | date:'dd MMM yyyy HH:mm' }} - {{ tender.end_date | date:'dd MMM yyyy HH:mm' }} WIB</span>
+              </div>
+              <div class="schedule-item" *ngIf="tender.bidding_start && tender.bidding_end">
+                <span class="lbl">Bidding:</span>
+                <span class="val">{{ tender.bidding_start | date:'dd MMM yyyy HH:mm' }} - {{ tender.bidding_end | date:'dd MMM yyyy HH:mm' }} WIB</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +150,7 @@
       </div>
 
       <!-- Countdown Bidding Closed -->
-      <h3 class="section-title mt-24 mb-16">Countdown Bidding Closed</h3>
+      <h3 class="section-title mt-24 mb-16" *ngIf="isLoadingBidding || biddingTenders.length > 0">Countdown Bidding Closed</h3>
       <div class="horizontal-scroll" *ngIf="!isLoadingBidding && biddingTenders.length > 0">
         <div class="countdown-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders', tender.id]">
           <div class="countdown-header">

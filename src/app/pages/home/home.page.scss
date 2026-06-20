@@ -237,7 +237,7 @@ ion-content.dashboard-bg {
 }
 
 .tender-mini-card {
-  min-width: 150px;
+  min-width: 240px;
   background: #FFF;
   border: 1px solid rgba(52, 81, 178, 0.3);
   border-radius: 12px;
@@ -269,14 +269,14 @@ ion-content.dashboard-bg {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     
     h4 {
       margin: 0;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #3F51B5;
-      width: 70%;
+      width: 80%;
       line-height: 1.4;
     }
     
@@ -286,12 +286,29 @@ ion-content.dashboard-bg {
     }
   }
   
-  .date {
-    font-size: 10px;
-    color: #6B7280;
-    margin: 0;
-    line-height: 1.4;
+  .schedule-box {
     margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    .schedule-item {
+      display: flex;
+      flex-direction: column;
+      
+      .lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: #3F51B5;
+        margin-bottom: 2px;
+      }
+      .val {
+        font-size: 10px;
+        color: #6B7280;
+        line-height: 1.3;
+        font-weight: 500;
+      }
+    }
   }
 }
 
