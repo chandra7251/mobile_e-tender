@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { Keyboard } from '@capacitor/keyboard';
+import { Platform } from '@ionic/angular';
 
 @Component({
   standalone: false,
@@ -11,9 +13,10 @@ import { Subscription } from 'rxjs';
 })
 export class TabsPage implements OnInit, OnDestroy {
   activeTab: string = 'home';
+  isKeyboardOpen: boolean = false;
   private routerSub!: Subscription;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private platform: Platform) { }
 
   ngOnInit() {
     this.updateActiveTab(this.router.url);
@@ -23,11 +26,23 @@ export class TabsPage implements OnInit, OnDestroy {
     ).subscribe((event: any) => {
       this.updateActiveTab(event.urlAfterRedirects || event.url);
     });
+
+    if (this.platform.is('capacitor')) {
+      Keyboard.addListener('keyboardWillShow', () => {
+        this.isKeyboardOpen = true;
+      });
+      Keyboard.addListener('keyboardWillHide', () => {
+        this.isKeyboardOpen = false;
+      });
+    }
   }
 
   ngOnDestroy() {
     if (this.routerSub) {
       this.routerSub.unsubscribe();
+    }
+    if (this.platform.is('capacitor')) {
+      Keyboard.removeAllListeners();
     }
   }
 

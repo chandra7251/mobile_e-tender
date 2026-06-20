@@ -90,7 +90,7 @@
 
 
     <!-- ── Harga Pembukaan Bidding (HPS) ── -->
-    <ion-card class="detail-card price-card" *ngIf="tender.open_bidding_price">
+    <ion-card class="detail-card price-card" *ngIf="tender.open_bidding_price !== undefined && tender.open_bidding_price !== null">
       <ion-card-content>
         <div class="price-row">
           <div class="price-label">
@@ -151,16 +151,23 @@
           <ion-icon name="pricetag-outline"></ion-icon>
           <div>
             <span class="bid-title">Fase Bidding Sedang Berlangsung</span>
-            <span class="bid-subtitle">Ajukan atau perbarui penawaran harga anda sekarang</span>
+            <span class="bid-subtitle" *ngIf="!hasSubmittedBid">
+              Berikan penawaran terbaik Anda sekarang untuk memenangkan tender ini!
+            </span>
+            <span class="bid-subtitle" *ngIf="hasSubmittedBid">
+              Anda sudah bid dengan harga <strong>{{ formatCurrency(myBidPrice || 0) }}</strong>
+            </span>
           </div>
         </div>
         <ion-button
           expand="block"
           (click)="goBid()"
           id="btn-go-bid"
-          class="bid-btn">
-          <ion-icon slot="start" name="pricetag-outline"></ion-icon>
-          AJUKAN PENAWARAN
+          class="bid-btn"
+          [disabled]="isLoadingBid">
+          <ion-spinner *ngIf="isLoadingBid" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!isLoadingBid" [name]="hasSubmittedBid ? 'pencil-outline' : 'hammer-outline'" slot="start"></ion-icon>
+          {{ hasSubmittedBid ? 'Perbarui Penawaran' : 'Ajukan Penawaran Anda' }}
         </ion-button>
       </ion-card-content>
     </ion-card>

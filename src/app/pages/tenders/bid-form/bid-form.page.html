@@ -90,7 +90,7 @@
           </div>
 
           <!-- Field: Estimasi Harga (HPS) -->
-          <div class="hps-info-box" *ngIf="tender?.open_bidding_price">
+          <div class="hps-info-box" *ngIf="tender?.open_bidding_price !== undefined && tender?.open_bidding_price !== null">
             <ion-icon name="information-circle-outline"></ion-icon>
             <div class="hps-text">
               <span class="hps-label">Estimasi Harga (HPS)</span>
@@ -144,7 +144,7 @@
             <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
             <ion-icon
               *ngIf="!isSaving"
-              [name]="isUpdateMode ? 'save-outline' : 'send-outline'"
+              [name]="isUpdateMode ? 'pencil-outline' : 'send-outline'"
               slot="start">
             </ion-icon>
             {{ submitLabel }}

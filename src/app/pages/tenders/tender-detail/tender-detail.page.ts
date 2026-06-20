@@ -26,7 +26,11 @@ export class TenderDetailPage {
   joinError = '';
 
   announcementsLoading = false;
-  announcementsError = '';
+  announcementsError: string = '';
+
+  hasSubmittedBid: boolean = false;
+  myBidPrice: number | null = null;
+  isLoadingBid: boolean = false;
 
   private backButtonSub?: Subscription;
 
@@ -70,6 +74,26 @@ export class TenderDetailPage {
   loadAll(): void {
     this.loadDetail();
     this.loadAnnouncements();
+    this.loadMyBid();
+  }
+
+  loadMyBid(): void {
+    if (!this.tenderId) return;
+    this.isLoadingBid = true;
+    this.tenderService.getMyBid(this.tenderId).subscribe({
+      next: (res) => {
+        this.isLoadingBid = false;
+        if (res.status === 'success' && res.data) {
+          this.hasSubmittedBid = true;
+          this.myBidPrice = res.data.bid_amount;
+        }
+      },
+      error: (err) => {
+        this.isLoadingBid = false;
+        this.hasSubmittedBid = false;
+        this.myBidPrice = null;
+      }
+    });
   }
 
   async loadDetail(): Promise<void> {
@@ -136,8 +160,9 @@ export class TenderDetailPage {
   doRefresh(event: any): void {
     const detail$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null)));
     const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
+    const bid$    = this.tenderService.getMyBid(this.tenderId).pipe(catchError(() => of(null)));
 
-    forkJoin([detail$, ann$]).subscribe(async ([detailRes, annRes]) => {
+    forkJoin([detail$, ann$, bid$]).subscribe(async ([detailRes, annRes, bidRes]) => {
       if (detailRes?.status === 'success' && detailRes?.data) {
         this.tender    = detailRes.data;
         this.hasJoined = detailRes.data.is_participant ?? false;
@@ -145,6 +170,13 @@ export class TenderDetailPage {
       }
       if (annRes?.status === 'success' && annRes?.data) {
         this.announcements = annRes.data;
+      }
+      if (bidRes?.status === 'success' && bidRes?.data) {
+        this.hasSubmittedBid = true;
+        this.myBidPrice = bidRes.data.bid_amount;
+      } else {
+        this.hasSubmittedBid = false;
+        this.myBidPrice = null;
       }
       event.target.complete();
     });
