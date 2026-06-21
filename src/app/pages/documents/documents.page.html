@@ -168,18 +168,7 @@
               <span class="badge-status" [ngClass]="vendorStatus === 'approved' ? 'badge-approved' : 'badge-pending'">
                 {{ getStatusLabel(vendorStatus) }}
               </span>
-              <ion-button
-                fill="clear"
-                class="btn-download"
-                [disabled]="isDownloading(doc.id)"
-                (click)="onDownload(doc)"
-                [id]="'btn-download-' + doc.id"
-                *ngIf="vendorStatus === 'approved'">
-                <ion-spinner *ngIf="isDownloading(doc.id)" name="crescent" slot="icon-only"></ion-spinner>
-                <ion-icon *ngIf="!isDownloading(doc.id)" name="download" slot="icon-only"></ion-icon>
-              </ion-button>
             </div>
-
           </div>
         </ion-card-content>
       </ion-card>
