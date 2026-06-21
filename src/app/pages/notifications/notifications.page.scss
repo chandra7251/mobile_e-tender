@@ -1,32 +1,26 @@
-// Variables
+
 $primary-blue: #3451B2;
 $accent-cyan: #40C4FF;
 $text-light: #81A2DF;
 $bg-light: #F8F9FA;
-
 ion-content {
   --background: #FFFFFF;
 }
-
-// ── Top Vector ──
 .top-vector-container {
   position: relative;
   line-height: 0;
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
-  
   svg {
     width: 100%;
     height: auto;
     display: block;
   }
-  
   .custom-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
     .btn-header-back {
       position: absolute;
       left: 20px;
@@ -40,7 +34,6 @@ ion-content {
         font-size: 26px;
       }
     }
-    
     .header-title {
       position: absolute;
       left: 60px;
@@ -50,7 +43,6 @@ ion-content {
       font-weight: 700;
       line-height: 38px;
     }
-
     .btn-header-delete-all {
       position: absolute;
       right: 20px;
@@ -66,19 +58,15 @@ ion-content {
     }
   }
 }
-
 .page-content {
   padding-top: 4px;
   padding-bottom: 50px;
 }
-
-// ── Skeleton Loading ──
 .skeleton-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .notif-skeleton {
   display: flex;
   align-items: flex-start;
@@ -88,26 +76,21 @@ ion-content {
   padding: 16px;
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
   .skel-icon {
     width: 44px;
     height: 44px;
     border-radius: 12px;
     flex-shrink: 0;
   }
-
   .skel-content {
     flex: 1;
   }
 }
-
-// ── Notifikasi List ──
 .notif-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-
 .notif-card {
   display: flex;
   align-items: flex-start;
@@ -120,19 +103,15 @@ ion-content {
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
-
   &:active {
     transform: scale(0.98);
     box-shadow: 0 1px 4px rgba(63, 81, 181, 0.08);
   }
-
   &.notif-unread {
     background: linear-gradient(135deg, #fff 0%, #f0f3ff 100%);
-    border-color: rgba(52, 81, 178, 0.2); // $primary-blue with opacity
+    border-color: rgba(52, 81, 178, 0.2); 
   }
 }
-
-// ── Icon wrapper ──
 .notif-icon-wrap {
   width: 44px;
   height: 44px;
@@ -142,26 +121,20 @@ ion-content {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-
   ion-icon {
     font-size: 22px;
     color: $primary-blue;
   }
-
   &.unread-icon-bg {
     background: $primary-blue;
-
     ion-icon {
       color: #FFFFFF !important;
     }
   }
 }
-
-// ── Konten notifikasi ──
 .notif-content {
   flex: 1;
   min-width: 0;
-
   .notif-title {
     font-size: 14px;
     font-weight: 700;
@@ -172,14 +145,12 @@ ion-content {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   .notif-message {
     font-size: 12px;
     color: #475569;
     line-height: 1.5;
     margin-bottom: 8px;
   }
-
   .notif-meta {
     display: flex;
     align-items: center;
@@ -187,7 +158,6 @@ ion-content {
     gap: 8px;
     flex-wrap: wrap;
   }
-
   .status-change {
     font-size: 10px;
     font-weight: 700;
@@ -196,15 +166,12 @@ ion-content {
     padding: 4px 8px;
     border-radius: 20px;
   }
-
   .notif-time {
     font-size: 10px;
     color: #94A3B8;
     white-space: nowrap;
   }
 }
-
-// ── Titik merah (unread indicator) ──
 .unread-dot {
   width: 8px;
   height: 8px;
@@ -215,13 +182,10 @@ ion-content {
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   animation: pulse-dot 2s infinite;
 }
-
 @keyframes pulse-dot {
   0%, 100% { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2); }
   50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.1); }
 }
-
-// ── Empty / Error State ──
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -230,21 +194,18 @@ ion-content {
   text-align: center;
   min-height: 50vh;
   padding: 0 20px;
-
   .empty-icon-container {
     position: relative;
     font-size: 80px;
     color: $primary-blue;
     margin-bottom: 20px;
   }
-
   .title-blue {
     font-size: 20px;
     font-weight: 700;
     color: $primary-blue;
     margin: 0 0 10px;
   }
-
   .desc-light {
     font-size: 14px;
     color: $primary-blue;
@@ -253,12 +214,9 @@ ion-content {
     margin: 0;
   }
 }
-
-// ── Animations ──
 .deleting-animation {
   animation: fadeOutLeft 0.3s ease forwards;
 }
-
 @keyframes fadeOutLeft {
   0% {
     opacity: 1;

@@ -4,11 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 import { PengajuanTenderPage } from './pengajuan-tender.page';
-
 const routes: Routes = [
   { path: '', component: PengajuanTenderPage }
 ];
-
 @NgModule({
   imports: [
     CommonModule,

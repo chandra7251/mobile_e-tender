@@ -1,11 +1,8 @@
 <ion-content>
-
-  <!-- Vector Gelombang Atas -->
   <div class="top-vector-container">
     <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
     </svg>
-
     <div class="custom-header">
       <ion-button fill="clear" class="btn-header-back" (click)="goBack()">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
@@ -13,10 +10,7 @@
       <span class="header-title">{{ pageTitle }}</span>
     </div>
   </div>
-
   <div class="page-content">
-
-    <!-- ════════ SKELETON LOADING ════════ -->
     <ng-container *ngIf="isLoadingMode">
       <ion-card class="form-card">
         <ion-card-content>
@@ -27,8 +21,6 @@
         </ion-card-content>
       </ion-card>
     </ng-container>
-
-    <!-- ════════ ERROR LOAD STATE ════════ -->
     <div class="error-center" *ngIf="isErrorMode">
       <ion-icon name="cloud-offline-outline"></ion-icon>
       <h3>Tidak dapat memuat</h3>
@@ -38,11 +30,7 @@
         Coba Lagi
       </ion-button>
     </div>
-
-    <!-- ════════ FORM (submit + update mode) ════════ -->
     <ng-container *ngIf="isSubmitMode || isUpdateMode">
-
-      <!-- ── Info bid saat ini (mode update) ── -->
       <ion-card class="current-bid-card" *ngIf="isUpdateMode && existingBid">
         <ion-card-content>
           <div class="current-bid-header">
@@ -65,8 +53,6 @@
           </div>
         </ion-card-content>
       </ion-card>
-
-      <!-- ── Form card ── -->
       <ion-card class="form-card">
         <ion-card-header>
           <ion-card-title class="form-title">
@@ -80,16 +66,11 @@
             Tender ID: #{{ tenderId }}
           </ion-card-subtitle>
         </ion-card-header>
-
         <ion-card-content>
-
-          <!-- Error save -->
           <div class="error-box" *ngIf="saveError">
             <ion-icon name="alert-circle-outline"></ion-icon>
             <span>{{ saveError }}</span>
           </div>
-
-          <!-- Field: Estimasi Harga (HPS) -->
           <div class="hps-info-box" *ngIf="tender?.open_bidding_price !== undefined && tender?.open_bidding_price !== null">
             <ion-icon name="information-circle-outline"></ion-icon>
             <div class="hps-text">
@@ -97,8 +78,6 @@
               <span class="hps-value">{{ formatCurrency(tender?.open_bidding_price!) }}</span>
             </div>
           </div>
-
-          <!-- Field: Harga Penawaran -->
           <div class="field-group">
             <label class="field-label" for="inp-bid-amount">
               Harga Penawaran <span class="required">*</span>
@@ -119,8 +98,6 @@
               {{ formatCurrency(bidAmount) }}
             </p>
           </div>
-
-          <!-- Field: Catatan -->
           <div class="field-group">
             <label class="field-label" for="inp-notes">
               Catatan <span class="optional">(opsional)</span>
@@ -133,8 +110,6 @@
               rows="4">
             </textarea>
           </div>
-
-          <!-- Tombol submit -->
           <ion-button
             expand="block"
             (click)="onSubmit()"
@@ -149,17 +124,12 @@
             </ion-icon>
             {{ submitLabel }}
           </ion-button>
-
           <p class="submit-note">
             <ion-icon name="lock-closed-outline"></ion-icon>
             Penawaran Anda bersifat rahasia dan hanya dapat dilihat oleh sistem.
           </p>
-
         </ion-card-content>
       </ion-card>
-
     </ng-container>
-
   </div>
-
 </ion-content>

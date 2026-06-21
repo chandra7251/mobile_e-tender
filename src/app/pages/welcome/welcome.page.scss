@@ -1,4 +1,4 @@
-// Design Tokens
+
 $primary-blue: #3F51B5;
 $blue-light: #5C6BC0;
 $accent-cyan: #00BCD4;
@@ -9,20 +9,16 @@ $text-primary: #1A1A2E;
 $text-secondary: #6B7280;
 $text-muted: #9CA3AF;
 $text-white: #FFFFFF;
-
 ion-content {
   --background: #F4F6F9 !important;
   background: #F4F6F9 !important;
 }
-
-// Slider Base
 .slider-wrapper {
   height: 100%;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
-
 .slider-container {
   display: flex;
   height: 100%;
@@ -31,16 +27,12 @@ ion-content {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-
-  // Hide scrollbar
   &::-webkit-scrollbar {
     display: none;
   }
-
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .slide {
   flex: 0 0 100%;
   width: 100%;
@@ -50,60 +42,48 @@ ion-content {
   flex-direction: column;
   position: relative;
 }
-
-// Common Utils
 .text-center {
   text-align: center;
 }
-
 .text-left {
   text-align: left;
 }
-
 .mt-20 {
   margin-top: 12px;
 }
-
 .mt-30 {
   margin-top: 30px;
 }
-
 .mt-40 {
   margin-top: 40px;
 }
-
 .pb-20 {
   padding-bottom: 20px;
 }
-
 .title-blue {
   color: #3451B2;
   font-weight: 800;
   font-size: 36px;
   margin: 0;
 }
-
 .subtitle-blue {
   color: #304B81;
   font-weight: 600;
   font-size: 14px;
   margin-top: 2px;
 }
-
 .title-dark {
   color: $text-primary;
   font-weight: 700;
   font-size: 24px;
   margin-bottom: 8px;
 }
-
 .title-white {
   color: $text-white;
   font-weight: 700;
   font-size: 24px;
   margin-bottom: 8px;
 }
-
 .desc-dark {
   color: #6B7280;
   font-size: 13px;
@@ -111,41 +91,33 @@ ion-content {
   margin: 0 16px 12px;
   line-height: 1.5;
 }
-
 .desc-light {
   color: #9CA3AF;
   font-size: 12px;
   line-height: 1.6;
   margin: 0 24px;
 }
-
 .desc-white {
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   line-height: 1.5;
   margin: 0 30px;
 }
-
 .desc-light-left {
   color: #9CA3AF;
   font-size: 13px;
   line-height: 1.5;
   margin: 8px 0 0;
 }
-
 .text-blue {
   color: $primary-blue !important;
 }
-
 .text-dark {
   color: $text-primary !important;
 }
-
 .text-cyan {
   color: $accent-cyan !important;
 }
-
-// Buttons
 .btn-skip {
   background: transparent;
   color: $text-white;
@@ -157,12 +129,10 @@ ion-content {
   right: 20px;
   z-index: 10;
 }
-
 .btn-skip-white {
   @extend .btn-skip;
   color: $text-muted;
 }
-
 .btn-cta {
   background: #28BAD3;
   color: $text-white;
@@ -177,17 +147,14 @@ ion-content {
   justify-content: center;
   gap: 8px;
   box-shadow: 0 4px 10px rgba(40, 186, 211, 0.3);
-
   &:active {
     background: $cyan-dark;
   }
-
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
   }
 }
-
 .btn-outline-white {
   background: transparent;
   color: $text-white;
@@ -198,13 +165,11 @@ ion-content {
   font-size: 15px;
   font-weight: 700;
   margin-top: 12px;
-
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
   }
 }
-
 .btn-text-muted {
   background: transparent;
   color: $text-muted;
@@ -214,27 +179,22 @@ ion-content {
   padding: 10px;
   width: 100%;
 }
-
 .btn-text-white {
   @extend .btn-text-muted;
   color: rgba(255, 255, 255, 0.7);
 }
-
-// Pagination
 .pagination {
   display: flex;
   justify-content: center;
   gap: 8px;
   margin-bottom: 32px;
   transform: translateY(16px);
-
   .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: #C8C8C8;
     transition: all 0.6s ease-in-out;
-
     &.active {
       width: 32px;
       border-radius: 4px;
@@ -242,20 +202,16 @@ ion-content {
     }
   }
 }
-
 .pagination-center {
   @extend .pagination;
   margin-top: 12px;
 }
-
 .pagination-center-white {
   @extend .pagination;
   margin-top: 12px;
-
   .dot {
     background: rgba(255, 255, 255, 0.3);
     transition: all 0.6s ease-in-out;
-
     &.active-cyan {
       width: 32px;
       border-radius: 4px;
@@ -263,21 +219,18 @@ ion-content {
     }
   }
 }
-
 .pagination-slide-4 {
   display: flex;
   justify-content: flex-start;
   gap: 8px;
   margin-top: 24px;
   margin-bottom: 24px;
-
   .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: #C8C8C8;
     transition: all 0.6s ease-in-out;
-
     &.active {
       width: 32px;
       border-radius: 4px;
@@ -285,10 +238,6 @@ ion-content {
     }
   }
 }
-
-// Layout Specifics
-
-// SLIDE 1
 .slide-1 {
   .top-section-curved {
     background: transparent;
@@ -297,7 +246,6 @@ ion-content {
     display: flex;
     align-items: center;
     justify-content: center;
-
     .bg-navy-curve {
       position: absolute;
       top: 0;
@@ -306,7 +254,6 @@ ion-content {
       height: 100%;
       z-index: 0;
     }
-
     .illustration-container {
       width: 100%;
       display: flex;
@@ -314,14 +261,12 @@ ion-content {
       padding: 40px 20px 20px;
       position: relative;
       z-index: 20;
-
       .welcome-illustration {
         max-width: 70%;
         max-height: 70%;
         object-fit: contain;
       }
     }
-
     .floating-elements {
       position: absolute;
       top: 0;
@@ -331,7 +276,6 @@ ion-content {
       pointer-events: none;
       z-index: 10;
       overflow: hidden;
-
       .vector-line {
         position: absolute;
         width: 100%;
@@ -340,20 +284,17 @@ ion-content {
         left: 0;
         z-index: 1;
       }
-
       .floating-badge {
         position: absolute;
         display: flex;
         align-items: center;
         justify-content: center;
-
         .badge-bg {
           position: absolute;
           width: 100%;
           height: 100%;
           z-index: 1;
         }
-
         .badge-icon {
           position: relative;
           z-index: 2;
@@ -362,51 +303,43 @@ ion-content {
           object-fit: contain;
         }
       }
-
       .badge-palu {
         top: 5%;
         left: 2%;
         width: 95px;
         height: 95px;
         animation: float 4s ease-in-out infinite;
-
         .badge-icon {
           width: 48%;
           height: 48%;
         }
       }
-
       .badge-handshake {
         bottom: 15%;
         left: 10%;
         width: 60px;
         height: 60px;
         animation: float 5s ease-in-out infinite reverse;
-
         .badge-icon {
           width: 45%;
           height: 45%;
         }
       }
-
       .badge-chart {
         top: 26%;
         right: 3%;
         width: 75px;
         height: 75px;
         animation: float 4.5s ease-in-out infinite;
-
         .badge-icon {
           width: 55%;
           height: 55%;
         }
       }
-
       .sunburst-composite {
         position: absolute;
         z-index: 5;
         animation: float 6s ease-in-out infinite;
-
         .star-back {
           position: absolute;
           width: 100%;
@@ -415,7 +348,6 @@ ion-content {
           left: -15%;
           z-index: 1;
         }
-
         .star-middle {
           position: absolute;
           width: 100%;
@@ -424,7 +356,6 @@ ion-content {
           left: 0;
           z-index: 2;
         }
-
         .star-cover {
           position: absolute;
           width: 70%;
@@ -436,14 +367,12 @@ ion-content {
           z-index: 3;
         }
       }
-
       .sunburst-top {
         top: 8%;
         left: 45%;
         width: 45px;
         height: 45px;
       }
-
       .sunburst-bottom {
         bottom: 6%;
         left: 48%;
@@ -451,7 +380,6 @@ ion-content {
         height: 45px;
         animation-delay: 1s;
       }
-
       .sunburst-right {
         bottom: 25%;
         right: -10%;
@@ -461,21 +389,17 @@ ion-content {
       }
     }
   }
-
   @keyframes float {
     0% {
       transform: translateY(0);
     }
-
     50% {
       transform: translateY(-10px);
     }
-
     100% {
       transform: translateY(0);
     }
   }
-
   .bottom-section {
     flex: 1;
     display: flex;
@@ -483,63 +407,53 @@ ion-content {
     justify-content: center;
     padding: 0 32px 40px;
   }
-
   .action-bottom {
     margin-top: auto;
   }
 }
-
-// SLIDE 2
 .slide-2 {
   .top-vector-absolute {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 145px; // Kurangi tinggi vektor
-    z-index: 10; // SUPAYA MENUTUPI TEKS SAAT SCROLL NAIK
+    height: 145px; 
+    z-index: 10; 
     pointer-events: none;
-
     svg {
       width: 100%;
       height: 100%;
       display: block;
     }
   }
-
   .header-row-absolute {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 20px 24px 0; // Kurangi padding atas
+    padding: 20px 24px 0; 
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 20;
-
     .logo-small {
       display: flex;
       align-items: center;
       gap: 10px;
-
       img {
-        width: 65px; // Kecilkan logo
+        width: 65px; 
         height: auto;
       }
-
       .logo-text {
         color: $text-white;
         display: flex;
         flex-direction: column;
-
         strong {
           font-size: 18px;
           font-weight: 800;
           line-height: 1.1;
           margin-bottom: 2px;
         }
-
         span {
           font-size: 10px;
           font-weight: 500;
@@ -547,34 +461,29 @@ ion-content {
         }
       }
     }
-
     .btn-skip {
       position: static;
       font-size: 13px;
     }
   }
-
   .slide-content {
     flex: 1;
-    overflow-y: auto; // DIKEMBALIKAN MENJADI SCROLLABLE
-    padding: 98px 24px 20px; // Adjusted padding to fit larger elements
+    overflow-y: auto; 
+    padding: 98px 24px 20px; 
     z-index: 1;
     position: relative;
     display: flex;
     flex-direction: column;
   }
-
   .slide-2-header-text {
     margin-bottom: 16px;
     text-align: left;
-
     .title-dark {
       font-size: 22px;
       margin-bottom: 6px;
       color: $text-primary;
       font-weight: 800;
     }
-
     .desc-light {
       font-size: 13px;
       color: #9CA3AF;
@@ -582,20 +491,17 @@ ion-content {
       line-height: 1.4;
     }
   }
-
   .pagination-slide-2 {
     display: flex;
     justify-content: center;
     gap: 6px;
-    margin-bottom: 16px; // Kurangi margin
-
+    margin-bottom: 16px; 
     .dot {
       width: 6px;
       height: 6px;
       background: #C8C8C8;
       border-radius: 50%;
       transition: all 0.6s ease-in-out;
-
       &.active {
         background: #3F51B5;
         width: 20px;
@@ -603,19 +509,16 @@ ion-content {
       }
     }
   }
-
   .grid-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 16px;
-
     .feature-card {
       background: $card-white;
       border-radius: 16px;
       padding: 16px 14px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-
       ion-icon {
         background: #E8EAF6;
         color: $primary-blue;
@@ -624,14 +527,12 @@ ion-content {
         font-size: 24px;
         margin-bottom: 12px;
       }
-
       h4 {
         font-size: 14px;
         font-weight: 800;
         margin: 0 0 4px;
         color: $text-primary;
       }
-
       p {
         font-size: 11px;
         color: $text-secondary;
@@ -640,7 +541,6 @@ ion-content {
       }
     }
   }
-
   .security-card {
     background: $primary-blue;
     border-radius: 12px;
@@ -650,18 +550,15 @@ ion-content {
     align-items: center;
     color: $text-white;
     margin-bottom: auto;
-
     ion-icon {
       font-size: 32px;
       flex-shrink: 0;
     }
-
     h4 {
       font-size: 15px;
       font-weight: 700;
       margin: 0 0 4px;
     }
-
     p {
       font-size: 11px;
       margin: 0;
@@ -669,13 +566,11 @@ ion-content {
       opacity: 0.9;
     }
   }
-
   .actions-col {
     margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-
     .btn-cta {
       height: 52px;
       font-size: 16px;
@@ -683,7 +578,6 @@ ion-content {
       font-weight: 700;
       box-shadow: none !important;
     }
-
     .btn-text-muted {
       height: 48px;
       font-size: 14px;
@@ -692,8 +586,6 @@ ion-content {
     }
   }
 }
-
-// Global button fixes for Welcome
 .btn-cta {
   background: $accent-cyan;
   color: $text-white;
@@ -703,12 +595,10 @@ ion-content {
   height: 52px;
   font-size: 15px;
   font-weight: 700;
-
   &:active {
     background: $cyan-dark;
   }
 }
-
 .btn-text-muted {
   background: transparent;
   color: $text-secondary;
@@ -717,8 +607,6 @@ ion-content {
   font-size: 14px;
   font-weight: 600;
 }
-
-// SLIDE 3
 .slide-3 {
   .full-blue-bg {
     background: $primary-blue;
@@ -726,14 +614,12 @@ ion-content {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-
     &::-webkit-scrollbar {
       display: none;
     }
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
   .scroll-content-wrapper {
     position: relative;
     min-height: 100%;
@@ -741,44 +627,32 @@ ion-content {
     display: flex;
     flex-direction: column;
   }
-
   .pattern-corner {
     position: absolute;
     z-index: 0;
-
     svg {
       display: block;
     }
-
-    // 1. Kiri atas (Kiri mentok, di atas hero-icons)
     &.top-left {
       top: -10px;
       left: -5px;
       transform: scale(1.5);
       transform-origin: top left;
     }
-
-    // 2. Medium di Kanan
     &.top-right {
       top: 75px;
       right: 0;
     }
-
-    // 3. Kiri atas card
     &.middle-left-1 {
       top: 31%;
       left: -2px;
     }
-
-    // 4. Kiri bawah card
     &.middle-left-2 {
       bottom: 25%;
       left: 0;
       transform: scale(1.3);
       transform-origin: left center;
     }
-
-    // 5. Pojok kanan bawah
     &.bottom-right {
       bottom: -20px;
       right: -20px;
@@ -786,20 +660,17 @@ ion-content {
       transform-origin: bottom right;
     }
   }
-
   .header-right {
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
     z-index: 10;
     position: relative;
-
     .btn-skip {
       position: static;
       font-size: 13px;
     }
   }
-
   .hero-icons {
     position: relative;
     display: flex;
@@ -808,21 +679,18 @@ ion-content {
     height: 180px;
     margin-bottom: 20px;
     z-index: 10;
-
     .main-shield {
       font-size: 110px;
       color: white;
       z-index: 2;
       transform: translateY(+29px);
     }
-
     .floating-icon {
       position: absolute;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1;
-
       .bg-circle {
         position: absolute;
         top: 0;
@@ -831,44 +699,37 @@ ion-content {
         height: 100%;
         z-index: 0;
       }
-
       img {
         z-index: 1;
         object-fit: contain;
       }
-
       &.icon-gembok {
         width: 60px;
         height: 60px;
         left: 15%;
         top: 78%;
         transform: translateY(-50%);
-
         img {
           width: 24px;
           height: 24px;
         }
       }
-
       &.icon-document {
         width: 36px;
         height: 36px;
         right: 28%;
         top: -15px;
-
         img {
           width: 14px;
           height: 14px;
         }
       }
-
       &.icon-police {
         width: 60px;
         height: 60px;
         right: 12%;
         top: 70%;
         transform: translateY(-50%);
-
         img {
           width: 24px;
           height: 24px;
@@ -876,19 +737,16 @@ ion-content {
       }
     }
   }
-
   .text-center {
     text-align: center;
     position: relative;
     z-index: 10;
-
     .title-white {
       font-size: 22px;
       margin-bottom: 6px;
       color: $text-white;
       font-weight: 800;
     }
-
     .desc-white {
       font-size: 13px;
       color: rgba(255, 255, 255, 0.9);
@@ -896,7 +754,6 @@ ion-content {
       line-height: 1.4;
     }
   }
-
   .pagination-center-white {
     display: flex;
     justify-content: center;
@@ -905,14 +762,12 @@ ion-content {
     margin-bottom: 20px;
     z-index: 10;
     position: relative;
-
     .dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: $text-white;
       transition: all 0.6s ease-in-out;
-
       &.active-cyan {
         width: 30px;
         border-radius: 5px;
@@ -920,7 +775,6 @@ ion-content {
       }
     }
   }
-
   .cards-list {
     display: flex;
     flex-direction: column;
@@ -928,19 +782,16 @@ ion-content {
     margin-top: 12px;
     z-index: 10;
     flex: 1;
-
     .info-card {
       background: $text-white;
-      border-radius: 16px; // Match slide 2 border-radius
+      border-radius: 16px; 
       padding: 16px 20px;
-
       h4 {
         font-size: 15px;
         font-weight: 800;
         margin: 0 0 6px;
         color: $primary-blue;
       }
-
       p {
         font-size: 11px;
         color: $text-secondary;
@@ -949,14 +800,12 @@ ion-content {
       }
     }
   }
-
   .actions-col {
     margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     z-index: 10;
-    
     .btn-cta {
       height: 52px;
       font-size: 16px;
@@ -964,41 +813,33 @@ ion-content {
       font-weight: 700;
       box-shadow: none !important;
     }
-    
     .btn-text-white {
       height: 48px;
       font-size: 14px;
       font-weight: 600;
-      color: #FFFFFF; // Ditambahkan agar putih solid
+      color: #FFFFFF; 
     }
   }
 }
-
-// SLIDE 4
 .slide-4 {
   background: $bg-surface;
-
   .top-section-gray {
     padding: 20px 20px 0;
     flex: 1;
     overflow-y: auto;
-
     .header-right {
       display: flex;
       justify-content: flex-end;
       margin-top: 10px;
     }
-
     .icon-left {
       margin-bottom: 24px;
-
       .icon-large {
         font-size: 40px;
         width: 48px;
         height: auto;
         margin-bottom: 8px;
       }
-
       .title-mixed {
         font-size: 28px;
         font-weight: 800;
@@ -1006,26 +847,22 @@ ion-content {
         margin: 0;
       }
     }
-
     .cards-list-border {
       display: flex;
       flex-direction: column;
       gap: 12px;
       padding-bottom: 20px;
-
       .border-card {
         background: $text-white;
         border-radius: 12px;
         padding: 16px;
         border-left: 4px solid $primary-blue;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-
         h4 {
           font-size: 14px;
           font-weight: 700;
           margin: 0 0 6px;
         }
-
         p {
           font-size: 11px;
           color: $text-secondary;
@@ -1035,16 +872,13 @@ ion-content {
       }
     }
   }
-
   .bottom-blue-section {
     background: $primary-blue;
     padding: 24px 20px;
-
     .checkbox-area {
       display: flex;
       gap: 12px;
       align-items: flex-start;
-
       ion-checkbox {
         --size: 20px;
         --border-color: rgba(255, 255, 255, 0.5);
@@ -1052,7 +886,6 @@ ion-content {
         --background-checked: $accent-cyan;
         margin-top: 2px;
       }
-
       p {
         color: $text-white;
         font-size: 12px;
@@ -1062,12 +895,10 @@ ion-content {
         opacity: 0.9;
       }
     }
-
     .actions-col {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      
       .btn-text-white {
         background: transparent;
         border: none;

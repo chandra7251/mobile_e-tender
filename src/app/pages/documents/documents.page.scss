@@ -1,15 +1,12 @@
-// Base page background
+
 ion-content {
   --background: #FFFFFF;
   --padding-top: 0px !important;
 }
-
-// ── Top Vector & Header ──
 .top-vector-container {
   position: relative;
   line-height: 0;
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
-
   svg {
     width: 100%;
     display: block;
@@ -21,7 +18,6 @@ ion-content {
     left: 0;
     width: 100%;
     height: 100%;
-
     .btn-header-back {
       position: absolute;
       left: 20px;
@@ -35,17 +31,15 @@ ion-content {
         font-size: 26px;
       }
     }
-
     .header-title {
       position: absolute;
       left: 60px;
       top: 12px;
-      color: #FFFFFF; // Use white color on blue wave
+      color: #FFFFFF; 
       font-size: 22px;
       font-weight: 700;
       line-height: 38px;
     }
-
     .btn-header-action {
       position: absolute;
       right: 24px;
@@ -61,16 +55,10 @@ ion-content {
     }
   }
 }
-
-// ── Layout ────────────────────────────────────────────────────────────────
-
 .page-content {
-  padding-bottom: 39px; // Ruang untuk bottom tabs yang lebih balance
-  margin-top: -24px; // Adjust for the wave
+  padding-bottom: 39px; 
+  margin-top: -24px; 
 }
-
-// ── Upload card ───────────────────────────────────────────────────────────
-
 .upload-card {
   border-radius: 16px;
   margin-bottom: 24px;
@@ -78,17 +66,14 @@ ion-content {
   color: #FFFFFF;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(52, 81, 178, 0.2);
-
   .upload-header {
     margin-bottom: 24px;
-
     .upload-title {
       font-size: 16px;
       font-weight: 700;
       margin: 0 0 4px 0;
       color: #FFFFFF;
     }
-
     .upload-subtitle {
       font-size: 11px;
       margin: 0;
@@ -96,19 +81,14 @@ ion-content {
     }
   }
 }
-
-// ── Form item ─────────────────────────────────────────────────────────────
-
 .custom-select-wrapper {
   margin-bottom: 20px;
-
   label {
     display: block;
     font-size: 11px;
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 4px;
   }
-
   .custom-select {
     width: 100%;
     color: #FFFFFF;
@@ -119,33 +99,26 @@ ion-content {
     --padding-top: 4px;
     --padding-bottom: 4px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-
     &::part(icon) {
       color: #FFFFFF;
       opacity: 0.8;
     }
-    
     &::part(text) {
       color: #FFFFFF;
     }
   }
 }
-
-// ── File picker ───────────────────────────────────────────────────────────
-
 .file-picker {
   border: 1.5px dashed rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   margin-bottom: 20px;
   cursor: pointer;
   transition: all 0.2s;
-
   &.has-file {
     border-color: #FFFFFF;
     background: rgba(255, 255, 255, 0.1);
   }
 }
-
 .file-label {
   display: flex;
   align-items: center;
@@ -153,7 +126,6 @@ ion-content {
   padding: 20px 16px;
   cursor: pointer;
 }
-
 .file-icon {
   width: 40px;
   height: 40px;
@@ -161,20 +133,17 @@ ion-content {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-
   ion-icon {
     font-size: 36px;
     color: #FFFFFF;
   }
 }
-
 .file-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
   overflow: hidden;
 }
-
 .file-name, .file-placeholder {
   font-size: 15px;
   color: #FFFFFF;
@@ -182,14 +151,10 @@ ion-content {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .file-hint {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
 }
-
-// ── Upload Button ─────────────────────────────────────────────────────────
-
 .upload-btn {
   width: 100%;
   background: #1EC9C4;
@@ -204,19 +169,14 @@ ion-content {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  
   ion-icon {
     font-size: 20px;
   }
-
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }
 }
-
-// ── Error box ─────────────────────────────────────────────────────────────
-
 .error-box {
   display: flex;
   align-items: flex-start;
@@ -228,55 +188,45 @@ ion-content {
   font-size: 13px;
   margin-bottom: 14px;
   line-height: 1.4;
-
   ion-icon {
     font-size: 18px;
     flex-shrink: 0;
     margin-top: 1px;
   }
-
   &.full-error {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 20px;
-
     ion-icon {
       font-size: 32px;
       margin-bottom: 6px;
     }
   }
 }
-
-// ── Empty state ───────────────────────────────────────────────────────────
-
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 60px 24px;
-
   .folder-icon {
     font-size: 100px;
     color: #3451B2;
     margin-bottom: 16px;
   }
-
   .empty-title {
     font-size: 20px;
     font-weight: 700;
     color: #3451B2;
     margin: 0 0 12px;
   }
-
   .empty-desc {
     font-size: 13px;
     color: #3451B2;
     margin: 0 0 40px;
     line-height: 1.5;
   }
-
   .btn-upload-outline {
     background: transparent;
     border: 2px solid #3451B2;
@@ -291,35 +241,27 @@ ion-content {
     gap: 12px;
     width: 85%;
     cursor: pointer;
-
     ion-icon {
       font-size: 32px;
       font-weight: bold;
     }
   }
 }
-
-// ── List ──────────────────────────────────────────────────────────────────
-
-// ── List ──────────────────────────────────────────────────────────────────
-
 .list-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
   margin-left: 4px;
-
   .list-header {
     font-size: 12px;
     font-weight: 700;
-    color: #3F51B5; // Blue text
+    color: #3F51B5; 
     text-transform: uppercase;
     margin: 0;
   }
-
   .btn-lihat-semua {
-    background: rgba(63, 81, 181, 0.08); // Light blue background
+    background: rgba(63, 81, 181, 0.08); 
     color: #3F51B5;
     border: none;
     border-radius: 12px;
@@ -330,37 +272,30 @@ ion-content {
     align-items: center;
     gap: 2px;
     cursor: pointer;
-
     ion-icon {
       font-size: 12px;
     }
   }
 }
-
 .doc-card {
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   background: #FFFFFF;
-
   ion-card-content {
     padding: 16px;
   }
 }
-
 .doc-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
-// ── Left Section (Icon, Title, Date) ──
 .doc-left-section {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .doc-icon-wrap {
   width: 44px;
   height: 44px;
@@ -372,27 +307,22 @@ ion-content {
   justify-content: center;
   flex-shrink: 0;
 }
-
 .doc-icon {
   font-size: 24px;
   color: #3F51B5;
 }
-
 .status-icon {
   font-size: 22px;
-  color: #3F51B5; // Solid blue circle with white time
+  color: #3F51B5; 
   margin-right: 4px;
-  
   &.approved {
-    color: #3F51B5; // Solid blue circle with white checkmark
+    color: #3F51B5; 
   }
 }
-
 .doc-body {
   display: flex;
   flex-direction: column;
 }
-
 .doc-title {
   font-size: 14px;
   font-weight: 700;
@@ -403,60 +333,49 @@ ion-content {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .doc-date {
   font-size: 11px;
   color: #8CA0B8;
   font-weight: 500;
 }
-
-// ── Right Section (Badge & Download) ──
 .doc-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
 }
-
 .badge-status {
   font-size: 10px;
   font-weight: 600;
   padding: 4px 12px;
   border-radius: 20px;
 }
-
 .badge-pending {
-  background: #E49360; // Soft orange/brown
+  background: #E49360; 
   color: #2F1C12;
 }
-
 .badge-approved {
-  background: #1EC9C4; // Cyan/Teal
+  background: #1EC9C4; 
   color: #FFFFFF;
 }
-
 .btn-download {
   --color: #3F51B5;
   --padding-start: 0;
   --padding-end: 0;
   margin-top: 8px;
   height: 30px;
-  
   ion-icon {
     font-size: 22px;
   }
 }
-
-// ── Pagination ──
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* Diubah dari space-between biar ke tengah */
-  gap: 6px; /* Jarak dirapatkan agar tidak nabrak di device kecil */
+  justify-content: center; 
+  gap: 6px; 
   margin-top: 24px;
   margin-bottom: 40px;
   padding: 0 4px;
-
   button {
     background: none;
     border: none;
@@ -466,13 +385,11 @@ ion-content {
     align-items: center;
     justify-content: center;
     font-family: inherit;
-
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
   }
-
   .btn-prev {
     border: 1px solid #DCE3EE;
     background: #FFFFFF;
@@ -480,13 +397,11 @@ ion-content {
     font-size: 0.7rem;
     font-weight: 600;
     border-radius: 20px;
-    padding: 2px 6px; /* Padding dikecilin lagi */
+    padding: 2px 6px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-
     .double-chevron-left {
       margin-left: -6px;
     }
-    
     ion-icon {
       font-size: 0.85rem;
     }
@@ -494,20 +409,17 @@ ion-content {
       margin-left: 2px;
     }
   }
-
   .btn-next {
     background: #3F51B5;
     color: #FFFFFF;
     font-size: 0.7rem;
     font-weight: 600;
     border-radius: 20px;
-    padding: 2px 8px; /* Padding dikecilin lagi */
+    padding: 2px 8px; 
     box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
-
     .double-chevron-right {
       margin-left: -6px;
     }
-    
     ion-icon {
       font-size: 0.85rem;
     }
@@ -515,27 +427,23 @@ ion-content {
       margin-right: 4px;
     }
   }
-
   .page-numbers {
     display: flex;
     align-items: center;
-    gap: 4px; /* Gap page numbers dikurangi */
-
+    gap: 4px; 
     .page-number {
       font-size: 0.85rem;
       font-weight: 700;
       color: #3F51B5;
-      width: 24px; /* Ukuran dikecilin */
-      height: 24px; /* Ukuran dikecilin */
+      width: 24px; 
+      height: 24px; 
       border-radius: 50%;
       transition: all 0.2s ease;
-
       &.active-page {
         background: #3F51B5;
         color: #FFFFFF;
       }
     }
-
     .page-dot {
       font-size: 0.85rem;
       font-weight: 700;
@@ -544,24 +452,18 @@ ion-content {
     }
   }
 }
-
-// ── Skeleton ──────────────────────────────────────────────────────────────
-
 .skeleton-doc {
   border-radius: 14px;
   margin-bottom: 12px;
-
   .doc-row {
     align-items: center;
   }
-
   .icon-skeleton {
     width: 48px;
     height: 48px;
     border-radius: 12px;
     flex-shrink: 0;
   }
-
   .doc-body {
     flex: 1;
   }

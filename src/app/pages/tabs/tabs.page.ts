@@ -4,7 +4,6 @@ import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { Keyboard } from '@capacitor/keyboard';
 import { Platform } from '@ionic/angular';
-
 @Component({
   standalone: false,
   selector: 'app-tabs',
@@ -15,18 +14,14 @@ export class TabsPage implements OnInit, OnDestroy {
   activeTab: string = 'home';
   isKeyboardOpen: boolean = false;
   private routerSub!: Subscription;
-
   constructor(private router: Router, private platform: Platform) { }
-
   ngOnInit() {
     this.updateActiveTab(this.router.url);
-
     this.routerSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.updateActiveTab(event.urlAfterRedirects || event.url);
     });
-
     if (this.platform.is('capacitor')) {
       Keyboard.addListener('keyboardWillShow', () => {
         this.isKeyboardOpen = true;
@@ -36,7 +31,6 @@ export class TabsPage implements OnInit, OnDestroy {
       });
     }
   }
-
   ngOnDestroy() {
     if (this.routerSub) {
       this.routerSub.unsubscribe();
@@ -45,7 +39,6 @@ export class TabsPage implements OnInit, OnDestroy {
       Keyboard.removeAllListeners();
     }
   }
-
   private updateActiveTab(url: string) {
     if (url.includes('/tabs/home')) {
       this.activeTab = 'home';
@@ -61,13 +54,7 @@ export class TabsPage implements OnInit, OnDestroy {
       this.activeTab = 'documents';
     }
   }
-
   get themeClass(): string {
-    // if (this.activeTab === 'home' || this.activeTab === 'results' || this.activeTab === 'documents' || this.activeTab === 'pengajuan-tender') {
-    //   return 'theme-blue';
-    // }
-    // return 'theme-white';
     return 'theme-navy';
   }
 }
-

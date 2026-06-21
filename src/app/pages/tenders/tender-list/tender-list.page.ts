@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TenderService } from '../../../core/services/tender.service';
 import { OfflineCacheService } from '../../../core/services/offline-cache.service';
 import { Tender, TenderStatus } from '../../../core/models/user.model';
-
 type FilterStatus = 'all' | TenderStatus;
-
 @Component({
   standalone: false,
   selector: 'app-tender-list',
@@ -13,19 +11,14 @@ type FilterStatus = 'all' | TenderStatus;
   styleUrls: ['./tender-list.page.scss'],
 })
 export class TenderListPage {
-
   allTenders: Tender[] = [];
   filteredTenders: Tender[] = [];
   isLoading = false;
   errorMessage = '';
-
   searchQuery = '';
   activeFilter: FilterStatus = 'all';
-
-  // ── Paginasi ──────────────────────────────────────────────────────────────
   currentPage = 1;
   itemsPerPage = 3;
-
   readonly filterOptions: { value: FilterStatus; label: string }[] = [
     { value: 'all',        label: 'Semua' },
     { value: 'open',       label: 'Open' },
@@ -34,18 +27,14 @@ export class TenderListPage {
     { value: 'closed',     label: 'Closed' },
     { value: 'finished',   label: 'Selesai' },
   ];
-
   constructor(
     private tenderService: TenderService,
     private offlineCache: OfflineCacheService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
-
   biddingCountdowns: { [id: number]: string } = {};
   private timer: any;
-
-  // Lifecycle hook
   ionViewWillLeave() {
     if (this.timer) {
       clearInterval(this.timer);
@@ -58,33 +47,26 @@ export class TenderListPage {
     }
     this.loadTenders();
   }
-
-  // ── Load dari API ─────────────────────────────────────────────────────────
-
   async loadTenders(event?: any): Promise<void> {
     if (!event) this.isLoading = true;
     this.errorMessage = '';
-
     const cached = await this.offlineCache.getCachedTenderList();
     if (cached && cached.length > 0) {
       this.allTenders = cached;
       this.applyFilter();
       this.startCountdowns();
-      if (!event) this.isLoading = false; // Langsung tampil data
+      if (!event) this.isLoading = false; 
     }
-
     this.tenderService.getTenders().subscribe({
       next: async (res) => {
         if (!event) this.isLoading = false;
         if (res.status === 'success' && res.data) {
-          // Filter valid status
           const validTenders = res.data.filter((t: any) =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );
           this.allTenders = validTenders;
           this.applyFilter();
           this.startCountdowns();
-          
           await this.offlineCache.cacheTenderList(validTenders);
         }
         if (event) event.target.complete();
@@ -98,11 +80,9 @@ export class TenderListPage {
       }
     });
   }
-
   doRefresh(event: any): void {
     this.loadTenders(event);
   }
-
   private startCountdowns(): void {
     if (this.timer) clearInterval(this.timer);
     this.updateCountdowns();
@@ -110,7 +90,6 @@ export class TenderListPage {
       this.updateCountdowns();
     }, 1000);
   }
-
   private updateCountdowns(): void {
     const now = new Date().getTime();
     this.allTenders.forEach(t => {
@@ -131,31 +110,21 @@ export class TenderListPage {
       }
     });
   }
-
   private pad(n: number): string {
     return n < 10 ? '0' + n : n.toString();
   }
-
-  // ── Filter & Search ───────────────────────────────────────────────────────
-
   setFilter(status: FilterStatus): void {
     this.activeFilter = status;
     this.applyFilter();
   }
-
   onSearchChange(): void {
     this.applyFilter();
   }
-
   applyFilter(): void {
     let result = [...this.allTenders];
-
-    // Filter by status
     if (this.activeFilter !== 'all') {
       result = result.filter(t => t.status === this.activeFilter);
     }
-
-    // Filter by search query
     const q = this.searchQuery.trim().toLowerCase();
     if (q) {
       result = result.filter(t =>
@@ -163,19 +132,12 @@ export class TenderListPage {
         (t.description && t.description.toLowerCase().includes(q))
       );
     }
-
     this.filteredTenders = result;
     this.currentPage = 1;
   }
-
-  // ── Navigation ────────────────────────────────────────────────────────────
-
   goToDetail(tender: Tender): void {
     this.router.navigate(['/tabs/tenders', tender.id]);
   }
-
-  // ── UI helpers ────────────────────────────────────────────────────────────
-
   getStatusColor(status: string): string {
     switch (status) {
       case 'open':       return 'success';
@@ -186,7 +148,6 @@ export class TenderListPage {
       default:           return 'light';
     }
   }
-
   getStatusLabel(status: string): string {
     switch (status) {
       case 'open':       return 'Open';
@@ -197,7 +158,6 @@ export class TenderListPage {
       default:           return status;
     }
   }
-
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -205,29 +165,22 @@ export class TenderListPage {
       minimumFractionDigits: 0
     }).format(amount);
   }
-
   formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
       day: 'numeric', month: 'short', year: 'numeric'
     });
   }
-
   get skeletonItems(): number[] {
     return [1, 2, 3, 4];
   }
-
-  // ── Paginasi Helpers ──────────────────────────────────────────────────────
-
   get paginatedTenders(): Tender[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredTenders.slice(startIndex, startIndex + this.itemsPerPage);
   }
-
   get totalPages(): number {
     return Math.ceil(this.filteredTenders.length / this.itemsPerPage);
   }
-
   get pagesArray(): (number | string)[] {
     const pages: (number | string)[] = [];
     for (let i = 1; i <= this.totalPages; i++) {
@@ -235,19 +188,16 @@ export class TenderListPage {
     }
     return pages;
   }
-
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
     }
   }
-
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-
   goToPage(page: number | string): void {
     if (typeof page === 'number') {
       this.currentPage = page;

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TenderDetailPageRoutingModule } from './tender-detail-routing.module';
 import { TenderDetailPage } from './tender-detail.page';
-
 @NgModule({
   imports: [
     CommonModule,

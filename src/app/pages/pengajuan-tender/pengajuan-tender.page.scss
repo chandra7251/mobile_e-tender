@@ -1,33 +1,27 @@
-// Variables
+
 $primary-blue: #3451B2;
 $accent-cyan: #40C4FF;
 $text-light: #81A2DF;
 $bg-light: #F8F9FA;
-
 ion-content {
   --background: #FFFFFF;
   --padding-top: 0px !important;
 }
-
-// ── Top Vector ──
 .top-vector-container {
   position: relative;
   line-height: 0;
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
-  
   svg {
     width: 100%;
     height: auto;
     display: block;
   }
-  
   .custom-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
     .header-title {
       position: absolute;
       left: 24px;
@@ -37,7 +31,6 @@ ion-content {
       font-weight: 700;
       line-height: 38px;
     }
-
     ion-button {
       position: absolute;
       right: 24px;
@@ -47,13 +40,10 @@ ion-content {
     }
   }
 }
-
 .page-content {
   padding-top: 4px;
-  padding-bottom: 50px; // space for bottom tabs & fab
+  padding-bottom: 50px; 
 }
-
-// ── Empty State ──
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -62,17 +52,14 @@ ion-content {
   text-align: center;
   min-height: 50vh;
   padding: 0 20px;
-
   .empty-icon-container {
     position: relative;
     font-size: 80px;
     color: $primary-blue;
     margin-bottom: 20px;
-
     ion-icon {
       stroke-width: 32px;
     }
-
     .cross-mark {
       position: absolute;
       top: 50%;
@@ -83,14 +70,12 @@ ion-content {
       color: $primary-blue;
     }
   }
-
   .title-blue {
     font-size: 20px;
     font-weight: 700;
     color: $primary-blue;
     margin: 0 0 10px;
   }
-
   .desc-light {
     font-size: 14px;
     color: $primary-blue;
@@ -99,13 +84,10 @@ ion-content {
     margin: 0;
   }
 }
-
-// ── Filled State ──
 .filled-state {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 160px); // Fill available space below header
-
+  min-height: calc(100vh - 160px); 
   .result-info {
     font-size: 14px;
     font-weight: 700;
@@ -114,36 +96,30 @@ ion-content {
     padding-left: 5px;
   }
 }
-
 .tender-card {
   margin: 0 0 16px 0;
   border-radius: 12px;
-  background-color: #3F51B5; // Slightly lighter/vibrant blue for cards
+  background-color: #3F51B5; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-
   .card-image-container {
     width: 100%;
     height: 160px;
     overflow: hidden;
-
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
-
   ion-card-content {
     padding: 16px;
   }
-
   .card-top-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
-
     .tender-title {
       font-size: 16px;
       font-weight: 700;
@@ -152,7 +128,6 @@ ion-content {
       flex: 1;
       line-height: 1.4;
     }
-
     .status-badge {
       margin-left: 12px;
       padding: 6px 12px;
@@ -160,48 +135,40 @@ ion-content {
       font-weight: 600;
       font-size: 12px;
       text-transform: capitalize;
-
       &.badge-disetujui {
-        --background: #00BCD4; // Cyan
+        --background: #00BCD4; 
         color: #FFFFFF;
       }
-
       &.badge-menunggu {
-        --background: #FFC107; // Yellow
+        --background: #FFC107; 
         color: #FFFFFF;
       }
     }
   }
-
   .info-row {
     display: flex;
     align-items: center;
     margin-bottom: 6px;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.8);
-
     ion-icon {
       margin-right: 8px;
       font-size: 14px;
       opacity: 0.8;
     }
-
     span {
       font-weight: 500;
     }
   }
 }
-
-// ── Pagination ──
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: center; /* Diubah dari space-between biar ke tengah */
-  gap: 6px; /* Jarak dirapatkan agar tidak nabrak di device kecil */
+  justify-content: center; 
+  gap: 6px; 
   margin-top: auto;
   margin-bottom: 12px;
   padding: 0 4px;
-
   button {
     background: transparent;
     border: none;
@@ -213,35 +180,29 @@ ion-content {
     font-size: 0.7rem;
     cursor: pointer;
     font-family: inherit;
-
     &.btn-prev {
       border: 1px solid rgba($primary-blue, 0.2);
       border-radius: 20px;
-      padding: 2px 6px; /* Padding dikecilin lagi */
-      
+      padding: 2px 6px; 
       ion-icon { margin-right: 2px; font-size: 0.85rem; }
       .double-chevron-left { margin-right: 2px; margin-left: -6px; font-size: 0.85rem; }
     }
-
     &.btn-next {
       background: $primary-blue;
       color: white;
       border-radius: 20px;
-      padding: 2px 8px; /* Padding dikecilin lagi */
-
+      padding: 2px 8px; 
       ion-icon { margin-left: 2px; font-size: 0.85rem; }
       .double-chevron-right { margin-left: -6px; margin-right: 2px; font-size: 0.85rem; }
     }
   }
-
   .page-numbers {
     display: flex;
     align-items: center;
-    gap: 4px; /* Gap page numbers dikurangi */
-
+    gap: 4px; 
     .page-number {
-      width: 24px; /* Ukuran dikecilin */
-      height: 24px; /* Ukuran dikecilin */
+      width: 24px; 
+      height: 24px; 
       border-radius: 50%;
       display: flex;
       justify-content: center;
@@ -249,13 +210,11 @@ ion-content {
       font-weight: 700;
       font-size: 0.85rem;
       color: $primary-blue;
-
       &.active-page {
         background-color: $primary-blue;
         color: white;
       }
     }
-
     .page-dot {
       color: $primary-blue;
       font-weight: bold;
@@ -263,41 +222,35 @@ ion-content {
     }
   }
 }
-
-// ── Form Header ──
 .form-header-vector {
   position: relative;
   line-height: 0;
-  margin-bottom: -1px; // prevent subpixel gap with white background
-  
+  margin-bottom: -1px; 
   svg {
     width: 100%;
     height: auto;
     display: block;
   }
-
   .custom-form-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
     .header-title {
       position: absolute;
       left: 24px;
       top: 12px;
-      font-size: 18px; // Diperkecil dari 22px agar tidak nabrak tombol close
+      font-size: 18px; 
       font-weight: 700;
       color: white;
       margin: 0;
       line-height: 38px;
-      max-width: calc(100% - 90px); // Batasi lebar maksimal area teks
-      white-space: nowrap; // Jangan turun ke baris baru
-      overflow: hidden; // Sembunyikan teks yang kepanjangan
-      text-overflow: ellipsis; // Tambahkan titik-titik jika terpotong
+      max-width: calc(100% - 90px); 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
     }
-
     .btn-close {
       position: absolute;
       right: 24px;
@@ -309,35 +262,28 @@ ion-content {
     }
   }
 }
-
-// ── Form Body ──
 .form-content-container {
   padding-top: 10px;
   padding-bottom: 40px;
 }
-
 .form-card-wrapper {
   background-color: #3451B2;
   border-radius: 20px;
   padding: 24px 20px;
   margin-bottom: 20px;
   box-shadow: 0 8px 24px rgba(52, 81, 178, 0.2);
-
   .form-group {
     margin-bottom: 16px;
-
     .field-label {
       display: block;
       color: white;
       font-size: 12px;
       font-weight: 600;
       margin-bottom: 8px;
-
       &.required::after {
         content: " *";
-        color: #EF5350; // Red
+        color: #EF5350; 
       }
-
       .optional {
         font-weight: 400;
         opacity: 0.7;
@@ -345,7 +291,6 @@ ion-content {
         margin-left: 4px;
       }
     }
-
     ion-input, ion-textarea, ion-select {
       --background: transparent;
       --border-color: rgba(255, 255, 255, 0.8);
@@ -358,20 +303,17 @@ ion-content {
       font-size: 14px;
       border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: 8px;
-
       &.input-error {
         --border-color: #EF5350;
         border-color: #EF5350;
       }
     }
-
     .error-text-small {
       color: #EF5350;
       font-size: 11px;
       margin-top: 4px;
     }
   }
-
   .btn-add-photo-outline {
     width: 100%;
     background: transparent;
@@ -386,23 +328,19 @@ ion-content {
     gap: 8px;
     font-size: 12px;
     font-weight: 600;
-
     ion-icon {
       font-size: 24px;
     }
-
     &:disabled {
       opacity: 0.5;
     }
   }
-
   .photo-grid {
     display: flex;
     gap: 12px;
     margin-bottom: 12px;
     overflow-x: auto;
     padding-bottom: 8px;
-
     .photo-item {
       position: relative;
       width: 80px;
@@ -410,13 +348,11 @@ ion-content {
       flex-shrink: 0;
       border-radius: 8px;
       overflow: hidden;
-
       .photo-preview {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-
       .btn-remove-photo {
         position: absolute;
         top: -4px;
@@ -427,7 +363,6 @@ ion-content {
       }
     }
   }
-
   .btn-submit-cyan {
     width: 100%;
     height: 48px;
@@ -442,7 +377,6 @@ ion-content {
     justify-content: center;
     gap: 8px;
     margin-top: 24px;
-
     ion-icon {
       font-size: 20px;
     }

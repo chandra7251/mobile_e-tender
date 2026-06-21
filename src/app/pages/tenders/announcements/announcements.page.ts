@@ -1,5 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 @Component({
   standalone: false,
   selector: 'app-announcements',
@@ -7,11 +6,7 @@
   styleUrls: ['./announcements.page.scss'],
 })
 export class AnnouncementsPage implements OnInit {
-
   constructor() { }
-
   ngOnInit() {
   }
-
 }
-

@@ -1,26 +1,19 @@
 <ion-content>
-
-  <!-- Vector Gelombang Atas -->
   <div class="top-vector-container">
     <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
     </svg>
-
     <div class="custom-header">
       <ion-button fill="clear" class="btn-header-back" routerLink="/tabs/home">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
       <span class="header-title">Notifikasi</span>
-      
       <ion-button fill="clear" class="btn-header-delete-all" (click)="deleteAllNotifications()" *ngIf="notifications.length > 0">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
     </div>
   </div>
-
   <div class="page-content ion-padding-horizontal">
-
-    <!-- Pull-to-refresh -->
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content
         pullingIcon="chevron-down-circle-outline"
@@ -29,8 +22,6 @@
         refreshingText="Memperbarui...">
       </ion-refresher-content>
     </ion-refresher>
-
-    <!-- Loading skeleton -->
     <div *ngIf="isLoading" class="skeleton-container">
       <div class="notif-skeleton" *ngFor="let i of [1,2,3,4,5]">
         <ion-skeleton-text animated class="skel-icon"></ion-skeleton-text>
@@ -41,8 +32,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Error state -->
     <div *ngIf="!isLoading && hasError" class="empty-state">
       <div class="empty-icon-container">
         <ion-icon name="cloud-offline-outline"></ion-icon>
@@ -53,10 +42,7 @@
         Coba Lagi
       </ion-button>
     </div>
-
-    <!-- Daftar notifikasi -->
     <div *ngIf="!isLoading && !hasError">
-
       <ion-list class="notif-list" *ngIf="notifications.length > 0" lines="none" style="background: transparent; padding: 0;">
         <ion-item-sliding *ngFor="let notif of notifications" 
           [class.deleting-animation]="notif.isDeleting"
@@ -67,8 +53,6 @@
               [class.notif-unread]="!notif.read_at"
               (click)="onNotificationClick(notif)"
               style="width: 100%; margin: 0;">
-
-              <!-- Icon status -->
               <div class="notif-icon-wrap" [class.unread-icon-bg]="!notif.read_at">
                 <ion-icon
                   [name]="notif.read_at ? 'document-text-outline' : 'document-text'"
@@ -76,13 +60,9 @@
                   [style.color]="!notif.read_at ? '#FFFFFF' : null">
                 </ion-icon>
               </div>
-
-              <!-- Konten -->
               <div class="notif-content">
                 <div class="notif-title">{{ notif.data.tender_title }}</div>
                 <div class="notif-message">{{ notif.data.message }}</div>
-
-                <!-- Status badge -->
                 <div class="notif-meta">
                   <span class="status-change" *ngIf="notif.data.new_status">
                     <ion-icon name="arrow-forward-outline" style="vertical-align: middle; font-size: 10px;"></ion-icon>
@@ -91,13 +71,9 @@
                   <span class="notif-time">{{ notif.created_at | date:'dd MMM yyyy, HH:mm' }}</span>
                 </div>
               </div>
-
-              <!-- Titik merah: belum dibaca -->
               <div class="unread-dot" *ngIf="!notif.read_at"></div>
-
             </div>
           </ion-item>
-          
           <ion-item-options side="end" (ionSwipe)="deleteNotification(notif)">
             <ion-item-option color="danger" expandable="true" (click)="deleteNotification(notif)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
@@ -105,8 +81,6 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
-
-      <!-- Empty state -->
       <div *ngIf="notifications.length === 0" class="empty-state">
         <div class="empty-icon-container">
           <ion-icon name="notifications-off-outline"></ion-icon>
@@ -114,16 +88,12 @@
         <p class="title-blue">Belum ada notifikasi</p>
         <p class="desc-light">Notifikasi perubahan status tender akan muncul di sini.</p>
       </div>
-
     </div>
-
-    <!-- Infinite scroll -->
     <ion-infinite-scroll (ionInfinite)="loadData($event)" [disabled]="currentPage >= lastPage">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"
         loadingText="Memuat lebih banyak...">
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
-
   </div>
 </ion-content>

@@ -4,9 +4,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { GuestGuard } from './core/guards/guest.guard';
 import { VendorApprovedGuard } from './core/guards/vendor-approved.guard';
 import { IntroGuard } from './core/guards/intro.guard';
-
 const routes: Routes = [
-  // Root redirect
   {
     path: '',
     redirectTo: 'splash',
@@ -17,8 +15,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/welcome/welcome.module').then( m => m.WelcomePageModule),
     canActivate: [IntroGuard]
   },
-
-  // Public routes
   {
     path: 'login',
     loadChildren: () => import('./pages/auth/login/login.module').then(m => m.LoginPageModule),
@@ -39,15 +35,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule),
     canActivate: [GuestGuard]
   },
-
-  // Protected routes
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [AuthGuard]
   },
-
-  // Vendor submission
   {
     path: 'vendor/pengajuan',
     loadChildren: () => import('./pages/pengajuan-tender/pengajuan-tender.module')
@@ -60,18 +52,15 @@ const routes: Routes = [
       .then(m => m.RiwayatPengajuanPageModule),
     canActivate: [AuthGuard, VendorApprovedGuard]
   },
-
   {
     path: 'splash',
     loadChildren: () => import('./pages/splash/splash.module').then( m => m.SplashPageModule)
   },
-  // Wildcard fallback
   {
     path: '**',
     redirectTo: 'splash'
   }
 ];
-
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })

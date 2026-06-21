@@ -6,7 +6,6 @@ import { PhotoService } from '../../core/services/photo.service';
 import { VendorSubmissionService } from '../../core/services/vendor-submission.service';
 import { NetworkService } from '../../core/services/network.service';
 import { Subscription } from 'rxjs';
-
 @Component({
   selector: 'app-pengajuan-tender',
   templateUrl: './pengajuan-tender.page.html',
@@ -14,7 +13,6 @@ import { Subscription } from 'rxjs';
   standalone: false,
 })
 export class PengajuanTenderPage implements OnInit {
-
   form!: FormGroup;
   kategoriOptions = [
     'Peralatan IT',
@@ -26,18 +24,13 @@ export class PengajuanTenderPage implements OnInit {
   ];
   photos: string[] = [];
   readonly MAX_PHOTOS = 3;
-
-  // Variabel buat pagination (nampilin data per halaman biar ga berat)
   pengajuanList: any[] = [];
   currentPage = 1;
-  itemsPerPage = 4; // Ditampilin 4 biji doang per halaman
-
-  // Buka tutup modal form pengajuan
+  itemsPerPage = 4; 
   isFormOpen = false;
   private backButtonSub?: Subscription;
   private previousPage: string | null = null;
   private openedFromQuickAction = false;
-
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -51,7 +44,6 @@ export class PengajuanTenderPage implements OnInit {
     private platform: Platform,
     private navCtrl: NavController,
   ) {}
-
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
       if (this.isFormOpen) {
@@ -60,18 +52,16 @@ export class PengajuanTenderPage implements OnInit {
         if (this.previousPage === '/tabs/home') {
           this.navCtrl.navigateBack('/tabs/home');
         } else {
-          processNextHandler(); // Lanjut ke global handler di app.component.ts
+          processNextHandler(); 
         }
       }
     });
   }
-
   ionViewWillLeave() {
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
     }
   }
-
   ngOnInit(): void {
     this.form = this.fb.group({
       nama_barang:    ['', [Validators.required, Validators.maxLength(255)]],
@@ -82,26 +72,20 @@ export class PengajuanTenderPage implements OnInit {
       catatan:        [''],
     });
   }
-
   ionViewWillEnter() {
     this.loadData();
-    // Kalau user mencet dari dashboard Quick Action, langsung bukain formnya
     const openForm = this.route.snapshot.queryParamMap.get('openForm');
     const from = this.route.snapshot.queryParamMap.get('from');
-
     if (from === 'home') {
       this.previousPage = '/tabs/home';
     } else {
-      this.previousPage = null; // Reset kalau bukan dari home, jaga-jaga
+      this.previousPage = null; 
     }
-
     if (openForm === 'true') {
       this.isFormOpen = true;
       this.openedFromQuickAction = true;
     }
-
     if (openForm === 'true' || from === 'home') {
-      // Hapus URL query param biar formnya ga kebuka mulu pas di-refresh
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {},
@@ -109,7 +93,6 @@ export class PengajuanTenderPage implements OnInit {
       });
     }
   }
-
   async loadData(event?: any) {
     try {
       const submissions = await this.submissionService.getMySubmissions();
@@ -123,37 +106,27 @@ export class PengajuanTenderPage implements OnInit {
         foto: this.resolveImageUrl((sub as any)['photo_url'] || (sub as any)['foto'] || (sub.photos?.length ? sub.photos[0].photo_url : null))
       }));
     } catch (err: any) {
-      // Gagal load list — tampilkan error di UI lewat list yang tetap kosong
-      // (toast atau retry bisa ditambahkan di sini jika diperlukan)
     } finally {
       if (event) {
         event.target.complete();
       }
     }
   }
-
   resolveImageUrl(url: string | null | undefined): string | null {
     if (!url) return null;
     if (url.startsWith('data:')) return url;
-
     let fixedUrl = url;
-    // Benerin URL kalo backend balikin alamat localhost (biasa kejadian pas ngetes di lokal tapi frontend buka di device asli)
     fixedUrl = fixedUrl.replace('http://localhost/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://localhost:8000/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://127.0.0.1:8000/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://127.0.0.1:8080/', 'https://vandrafcy.my.id/');
     fixedUrl = fixedUrl.replace('http://e-tender.test/', 'https://vandrafcy.my.id/');
-
     if (fixedUrl.startsWith('http')) {
       return fixedUrl;
     }
-
-    // Kalo URLnya disimpen pake path relatif doang, tambahin domain backend kita depannya
     const cleanUrl = fixedUrl.startsWith('/') ? fixedUrl.substring(1) : fixedUrl;
     return `https://vandrafcy.my.id/${cleanUrl}`;
   }
-
-
   getStatusLabel(status: string): string {
     const map: Record<string, string> = {
       pending: 'Menunggu',
@@ -162,16 +135,11 @@ export class PengajuanTenderPage implements OnInit {
     };
     return map[status] || status;
   }
-
-
-
-  // Fungsi buat upload / milih foto
   async openPhotoOptions(): Promise<void> {
     if (this.photos.length >= this.MAX_PHOTOS) {
       await this.showAlert('Batas Foto', `Maksimal ${this.MAX_PHOTOS} foto yang bisa ditambahkan.`);
       return;
     }
-
     const sheet = await this.actionSheetCtrl.create({
       header: 'Tambah Foto',
       buttons: [
@@ -194,52 +162,40 @@ export class PengajuanTenderPage implements OnInit {
     });
     await sheet.present();
   }
-
   private async addPhoto(source: 'camera' | 'gallery'): Promise<void> {
     const base64 = source === 'camera'
       ? await this.photoService.takePhoto()
       : await this.photoService.pickFromGallery();
-
     if (base64) {
       this.photos = [...this.photos, base64];
     }
   }
-
   removePhoto(index: number): void {
     this.photos = this.photos.filter((_, i) => i !== index);
   }
-
   getPhotoSrc(base64: string): string {
     return `data:image/jpeg;base64,${base64}`;
   }
-
-  // Eksekusi kirim form
   async onSubmit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       await this.showAlert('Form Tidak Lengkap', 'Mohon lengkapi semua field yang wajib diisi.');
       return;
     }
-
-    // Pastiin ada sinyal internet sblm nembak API, biar ga nyangkut
     const isOnline = await this.networkService.checkConnection();
     if (!isOnline) {
       await this.showAlert('Tidak Ada Koneksi', 'Pengajuan tender membutuhkan koneksi internet. Silakan coba lagi saat online.');
       return;
     }
-
     const loading = await this.loadingCtrl.create({
       message: 'Mengirim pengajuan...',
       spinner: 'crescent',
     });
     await loading.present();
-
     try {
       const formData = this.form.value;
       await this.submissionService.createSubmission(formData, this.photos);
-
       await loading.dismiss();
-
       const alert = await this.alertCtrl.create({
         header: 'Berhasil!',
         message: 'Pengajuan tender Anda telah berhasil dikirim. Admin akan meninjau pengajuan Anda.',
@@ -247,7 +203,7 @@ export class PengajuanTenderPage implements OnInit {
           {
             text: 'Lihat Riwayat',
             handler: () => {
-              this.previousPage = null; // Biar tetep di halaman riwayat (gak mental ke home)
+              this.previousPage = null; 
               this.closeForm();
               this.form.reset();
               this.photos = [];
@@ -257,15 +213,12 @@ export class PengajuanTenderPage implements OnInit {
         ],
       });
       await alert.present();
-
     } catch (err: any) {
       await loading.dismiss();
       const message = err?.error?.message || 'Gagal mengirim pengajuan. Silakan coba lagi.';
       await this.showAlert('Gagal', message);
     }
   }
-
-  // Helper atau fungsi bantuan doang
   private async showAlert(header: string, message: string): Promise<void> {
     const alert = await this.alertCtrl.create({
       header,
@@ -274,36 +227,27 @@ export class PengajuanTenderPage implements OnInit {
     });
     await alert.present();
   }
-
   isFieldInvalid(field: string): boolean {
     const ctrl = this.form.get(field);
     return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
   }
-
-  // Fungsi bantuan buat modal & ngatur halamannya
   openForm() {
     this.isFormOpen = true;
   }
-
   closeForm() {
     this.isFormOpen = false;
-    // Kalo form dibuka langsung dari Dashboard Quick Action (Ajukan Tender),
-    // pas ditutup kita balikin ke Dashboard.
     if (this.openedFromQuickAction && this.previousPage === '/tabs/home') {
       this.openedFromQuickAction = false;
       this.navCtrl.navigateBack('/tabs/home');
     }
   }
-
   get paginatedList(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.pengajuanList.slice(startIndex, startIndex + this.itemsPerPage);
   }
-
   get totalPages(): number {
     return Math.ceil(this.pengajuanList.length / this.itemsPerPage);
   }
-
   get pagesArray(): (number | string)[] {
     const pages: (number | string)[] = [];
     for (let i = 1; i <= this.totalPages; i++) {
@@ -311,25 +255,21 @@ export class PengajuanTenderPage implements OnInit {
     }
     return pages;
   }
-
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
     }
   }
-
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-
   goToPage(page: number | string): void {
     if (typeof page === 'number') {
       this.currentPage = page;
     }
   }
-
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -337,14 +277,12 @@ export class PengajuanTenderPage implements OnInit {
       minimumFractionDigits: 0
     }).format(amount);
   }
-
   formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
       day: 'numeric', month: 'short', year: 'numeric'
     });
   }
-
   getStatusColor(status: string): string {
     switch (status?.toLowerCase()) {
       case 'disetujui': return 'success';
@@ -353,7 +291,6 @@ export class PengajuanTenderPage implements OnInit {
       default: return 'medium';
     }
   }
-
   goBack(): void {
     this.router.navigate(['/tabs/home']);
   }

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
-
 const routes: Routes = [
   {
     path: '',
@@ -47,7 +46,6 @@ const routes: Routes = [
         path: 'notifications',
         loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsPageModule)
       },
-      // Default tab
       {
         path: '',
         redirectTo: 'home',
@@ -56,7 +54,6 @@ const routes: Routes = [
     ]
   }
 ];
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

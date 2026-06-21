@@ -6,7 +6,6 @@ import { OfflineCacheService } from '../../../core/services/offline-cache.servic
 import { Tender, Announcement } from '../../../core/models/user.model';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 @Component({
   standalone: false,
   selector: 'app-tender-detail',
@@ -14,51 +13,41 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./tender-detail.page.scss'],
 })
 export class TenderDetailPage {
-
   tender: Tender | null = null;
   announcements: Announcement[] = [];
-  
   currentPhotoIndex: number = 0;
-
   tenderId!: number;
   isLoading = false;
   detailError = '';
   isJoining = false;
   hasJoined = false;
   joinError = '';
-
   announcementsLoading = false;
   announcementsError: string = '';
-
   hasSubmittedBid: boolean = false;
   myBidPrice: number | null = null;
   isLoadingBid: boolean = false;
   biddingCountdown: string = '';
   private timer: any;
-
   private backButtonSub?: Subscription;
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private navCtrl: NavController,    // Ionic-aware back nav — respects tab stack
+    private navCtrl: NavController,    
     private tenderService: TenderService,
     private offlineCache: OfflineCacheService,
     private toast: ToastController,
     private platform: Platform
   ) {}
-
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.tenderId = idParam ? +idParam : 0;
   }
-
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
       this.goBack();
     });
   }
-
   ionViewWillLeave() {
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
@@ -67,7 +56,6 @@ export class TenderDetailPage {
       clearInterval(this.timer);
     }
   }
-
   ionViewWillEnter(): void {
     if (!this.tenderId) {
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -75,15 +63,11 @@ export class TenderDetailPage {
     }
     this.loadAll();
   }
-
-  // ── Load ──────────────────────────────────────────────────────────────────
-
   loadAll(): void {
     this.loadDetail();
     this.loadAnnouncements();
     this.loadMyBid();
   }
-
   loadMyBid(): void {
     if (!this.tenderId) return;
     this.isLoadingBid = true;
@@ -102,12 +86,10 @@ export class TenderDetailPage {
       }
     });
   }
-
   async loadDetail(): Promise<void> {
     if (!this.tenderId) return;
     this.isLoading = true;
     this.detailError = '';
-
     const cached = await this.offlineCache.getCachedTenderDetail(this.tenderId);
     if (cached) {
       this.tender = cached;
@@ -115,15 +97,11 @@ export class TenderDetailPage {
       this.isLoading = false;
       this.startCountdown();
     }
-
-    // GET /api/tenders/{tender} sudah menyertakan is_participant di response
-    // Tidak perlu request tambahan ke /participants/check
     this.tenderService.getTenderDetail(this.tenderId).subscribe({
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success' && res.data) {
           this.tender = res.data;
-          // Baca is_participant langsung dari TenderResource (hemat 1 HTTP request)
           this.hasJoined = res.data.is_participant ?? false;
           await this.offlineCache.cacheTenderDetail(this.tenderId, res.data);
           this.startCountdown();
@@ -139,7 +117,6 @@ export class TenderDetailPage {
       }
     });
   }
-
   private startCountdown(): void {
     if (this.timer) clearInterval(this.timer);
     this.updateCountdown();
@@ -147,16 +124,13 @@ export class TenderDetailPage {
       this.updateCountdown();
     }, 1000);
   }
-
   private updateCountdown(): void {
     if (!this.tender || this.tender.status !== 'bidding') return;
     const endDateString = (this.tender as any).bidding_end || this.tender.end_date;
     if (!endDateString) return;
-    
     const now = new Date().getTime();
     const end = new Date(endDateString).getTime();
     const diff = end - now;
-    
     if (diff <= 0) {
       this.biddingCountdown = '00:00:00';
     } else {
@@ -166,20 +140,16 @@ export class TenderDetailPage {
       this.biddingCountdown = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
     }
   }
-
   private pad(n: number): string {
     return n < 10 ? '0' + n : n.toString();
   }
-
   retryLoad(): void {
     this.loadAll();
   }
-
   loadAnnouncements(): void {
     if (!this.tenderId) return;
     this.announcementsLoading = true;
     this.announcementsError = '';
-
     this.tenderService.getAnnouncements(this.tenderId).subscribe({
       next: (res) => {
         this.announcementsLoading = false;
@@ -189,19 +159,16 @@ export class TenderDetailPage {
       },
       error: (err) => {
         this.announcementsLoading = false;
-        // 403 berarti belum join — tidak tampilkan sebagai error keras
         if (err?.status !== 403) {
           this.announcementsError = err?.error?.message || 'Gagal memuat pengumuman.';
         }
       }
     });
   }
-
   doRefresh(event: any): void {
     const detail$ = this.tenderService.getTenderDetail(this.tenderId).pipe(catchError(() => of(null)));
     const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
     const bid$    = this.tenderService.getMyBid(this.tenderId).pipe(catchError(() => of(null)));
-
     forkJoin([detail$, ann$, bid$]).subscribe(async ([detailRes, annRes, bidRes]) => {
       if (detailRes?.status === 'success' && detailRes?.data) {
         this.tender    = detailRes.data;
@@ -221,14 +188,10 @@ export class TenderDetailPage {
       event.target.complete();
     });
   }
-
-  // ── Join Tender ───────────────────────────────────────────────────────────
-
   onJoin(): void {
     if (this.isJoining || this.hasJoined) return;
     this.isJoining = true;
     this.joinError = '';
-
     this.tenderService.joinTender(this.tenderId).subscribe({
       next: async (res) => {
         this.isJoining = false;
@@ -244,7 +207,6 @@ export class TenderDetailPage {
         this.isJoining = false;
         const msg = err?.error?.message || '';
         const verificationStatus = err?.error?.data?.verification_status;
-
         if (verificationStatus === 'pending') {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (verificationStatus === 'rejected') {
@@ -256,7 +218,6 @@ export class TenderDetailPage {
           msg.toLowerCase().includes('sudah pernah bergabung') ||
           msg.toLowerCase().includes('bergabung')
         ) {
-          // Backend: "Vendor sudah pernah bergabung pada tender ini."
           this.joinError = '';
           this.hasJoined = true;
         } else {
@@ -265,68 +226,47 @@ export class TenderDetailPage {
       }
     });
   }
-
-  // ── UI helpers ────────────────────────────────────────────────────────────
-
-  // Gunakan navCtrl.back() bukan location.back() —
-  // navCtrl menggunakan Ionic page stack, bukan browser history
-  // sehingga back selalu ke halaman Ionic sebelumnya, bukan entry history acak
   goBack(): void { this.navCtrl.navigateBack(['/tabs/tenders']); }
-
-  /** Sembunyikan gambar jika URL foto gagal dimuat */
   onPhotoError(event: Event): void {
     const img = event.target as HTMLImageElement;
     if (img) img.style.display = 'none';
   }
-
   get photoList(): string[] {
     if (!this.tender) return [];
-    // Cek jika backend mengembalikan array photos (misal setelah backend diupdate user)
     const t = this.tender as any;
     if (t.photos && Array.isArray(t.photos) && t.photos.length > 0) {
       return t.photos.map((p: any) => typeof p === 'string' ? p : p.photo_url);
     }
-    // Fallback ke single photo_url jika ada
     return this.tender.photo_url ? [this.tender.photo_url] : [];
   }
-
   nextPhoto(): void {
     if (this.currentPhotoIndex < this.photoList.length - 1) {
       this.currentPhotoIndex++;
     }
   }
-
   prevPhoto(): void {
     if (this.currentPhotoIndex > 0) {
       this.currentPhotoIndex--;
     }
   }
-
   goBid(): void {
     this.router.navigate(['/tabs/tenders', this.tenderId, 'penawaran']);
   }
-
   get showJoinButton(): boolean {
     if (!this.tender) return false;
-    // Tampilkan card join SELALU saat open/aanwijzing (biar bisa tampil state "sudah bergabung")
     return this.tender.status === 'open' || this.tender.status === 'aanwijzing';
   }
-
   get showBidButton(): boolean {
     if (!this.tender) return false;
-    // Hanya tampilkan tombol bid jika status bidding DAN vendor sudah join tender ini
     return this.tender.status === 'bidding' && this.hasJoined;
   }
-
   get showResultButton(): boolean {
     if (!this.tender) return false;
     return this.tender.status === 'closed' || this.tender.status === 'finished';
   }
-
   goResult(): void {
     this.router.navigate(['/tabs/tenders', this.tenderId, 'result']);
   }
-
   getStatusColor(status: string): string {
     switch (status) {
       case 'open':       return 'success';
@@ -337,7 +277,6 @@ export class TenderDetailPage {
       default:           return 'light';
     }
   }
-
   getStatusLabel(status: string): string {
     switch (status) {
       case 'open':       return 'Open';
@@ -348,27 +287,23 @@ export class TenderDetailPage {
       default:           return status;
     }
   }
-
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(amount);
   }
-
   formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
   }
-
   formatDateShort(dateStr: string | null | undefined): string {
     if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('id-ID', {
       day: 'numeric', month: 'short', year: 'numeric'
     });
   }
-
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2500, color, position: 'top' });
     await t.present();

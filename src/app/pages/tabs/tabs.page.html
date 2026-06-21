@@ -1,49 +1,39 @@
 <ion-tabs>
-
-  <!-- Hanya tampilkan wave jika keyboard ditutup -->
   <div class="bottom-wave-container" [ngClass]="themeClass" *ngIf="!isKeyboardOpen">
     <svg viewBox="0 0 360 127" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M321.346 36.3582C348.913 35.1116 358.508 11.6 359.859 0L408 174L-4.49336 161.015V70.1194C-17.0607 39.3707 20.6752 34.8 41.114 36.3582C123.038 36.8776 293.779 37.6048 321.346 36.3582Z" />
     </svg>
   </div>
-
-  <!-- Hide ion-tab-bar using CSS display none when keyboard open -->
   <ion-tab-bar slot="bottom" [ngClass]="themeClass" [style.display]="isKeyboardOpen ? 'none' : 'flex'">
-
     <ion-tab-button tab="home" href="/tabs/home">
       <div class="icon-wrapper">
         <ion-icon name="home"></ion-icon>
       </div>
       <ion-label>Home</ion-label>
     </ion-tab-button>
-
     <ion-tab-button tab="tenders" href="/tabs/tenders">
       <div class="icon-wrapper">
         <ion-icon name="document-text"></ion-icon>
       </div>
       <ion-label>Tender</ion-label>
     </ion-tab-button>
-
     <ion-tab-button tab="pengajuan-tender" href="/tabs/pengajuan-tender">
       <div class="icon-wrapper">
         <ion-icon name="clipboard"></ion-icon>
       </div>
       <ion-label>Pengajuan</ion-label>
     </ion-tab-button>
-
     <ion-tab-button tab="results" href="/tabs/results">
       <div class="icon-wrapper">
         <ion-icon name="trophy"></ion-icon>
       </div>
       <ion-label>Hasil</ion-label>
     </ion-tab-button>
-
     <ion-tab-button tab="profile" href="/tabs/profile">
       <div class="icon-wrapper">
         <ion-icon name="person-circle"></ion-icon>
       </div>
       <ion-label>Profil</ion-label>
     </ion-tab-button>
-
   </ion-tab-bar>
 </ion-tabs>

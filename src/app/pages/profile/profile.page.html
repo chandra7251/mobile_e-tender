@@ -1,6 +1,4 @@
 <ion-content class="view-mode-bg">
-
-  <!-- ── Loading skeleton ── -->
   <div *ngIf="isLoading" class="page-wrapper">
     <div class="top-vector-container">
       <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -10,7 +8,6 @@
         <span class="header-title">Profile Vendor</span>
       </div>
     </div>
-
     <div class="auth-container profile-container-spacing">
       <div class="profile-card-outline">
         <div class="avatar-circle">
@@ -22,7 +19,6 @@
           <ion-skeleton-text animated style="width:110px; height:28px; border-radius:20px; margin:0;"></ion-skeleton-text>
         </div>
       </div>
-
       <div class="info-title">
         <ion-skeleton-text animated style="width:40%; height:16px; border-radius:4px;"></ion-skeleton-text>
       </div>
@@ -32,7 +28,6 @@
           <ion-skeleton-text animated style="width:70%; height:16px; border-radius:4px; margin:0;"></ion-skeleton-text>
         </div>
       </div>
-
       <div class="documents-card" style="margin-bottom: 20px;">
         <div class="docs-info" style="width: 100%;">
           <ion-skeleton-text animated style="width:60%; height:18px; margin:0 0 12px; border-radius:4px;"></ion-skeleton-text>
@@ -41,8 +36,6 @@
       </div>
     </div>
   </div>
-
-  <!-- ── Error state ── -->
   <div class="page-wrapper" *ngIf="errorMessage && !isEditMode && !isLoading">
     <div class="auth-container profile-container-spacing" style="padding-top: 24px;">
       <ion-card color="danger" style="margin-bottom: 24px;">
@@ -51,58 +44,40 @@
           {{ errorMessage }}
         </ion-card-content>
       </ion-card>
-      
       <div class="action-buttons">
         <button class="btn-logout" (click)="logout()">Logout</button>
       </div>
     </div>
   </div>
-
-  <!-- ════════════════ VIEW MODE ════════════════ -->
   <ng-container *ngIf="profile && !isLoading && !isEditMode">
-
     <div class="page-wrapper">
-      <!-- Top Vector -->
       <div class="top-vector-container">
         <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
         </svg>
-
-
-
-        <!-- Header inside top vector -->
         <div class="custom-header">
           <span class="header-title">Profile Vendor</span>
         </div>
       </div>
-
       <div class="auth-container profile-container-spacing">
-        <!-- Profile Card -->
         <div class="profile-card-outline">
           <div class="avatar-circle">
             <ion-icon name="person"></ion-icon>
           </div>
           <h2 class="name">{{ profile.user.name }}</h2>
           <p class="email">{{ profile.user.email }}</p>
-
-          <!-- Status badge -->
           <div class="status-row">
             <div class="status-badge" [ngClass]="verificationStatus">
               <ion-icon name="checkmark-outline" *ngIf="verificationStatus === 'approved'"></ion-icon>
               {{ statusLabel }}
             </div>
           </div>
-
-          <!-- Catatan penolakan -->
           <div class="rejection-note" *ngIf="verificationStatus === 'rejected' && verificationNotes">
             <ion-icon name="information-circle-outline"></ion-icon>
             <span>{{ verificationNotes }}</span>
           </div>
         </div>
-
-        <!-- Detail info -->
         <div class="info-title">INFORMASI PERUSAHAAN</div>
-
         <div class="info-list">
           <div class="info-item">
             <ion-icon name="business"></ion-icon>
@@ -121,8 +96,6 @@
             <span>{{ profile.user.email }}</span>
           </div>
         </div>
-
-        <!-- Dokumen Card -->
         <div class="documents-card" (click)="goToDocuments()">
           <div class="docs-info">
             <h3>{{ totalDocuments }} Dokumen Di unggah</h3>
@@ -137,76 +110,52 @@
           </div>
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </div>
-
-
-
-        <!-- Aksi profil -->
         <div class="action-buttons">
           <button class="btn-edit" (click)="enterEditMode()">Edit Profile</button>
           <button class="btn-logout" (click)="logout()">Logout</button>
         </div>
       </div>
-
     </div>
   </ng-container>
-
-  <!-- ════════════════ EDIT MODE ════════════════ -->
   <ng-container *ngIf="isEditMode">
-
     <div class="page-wrapper">
-
-      <!-- Top Vector -->
       <div class="top-vector-container">
-
         <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
         </svg>
-
         <div class="custom-header">
           <span class="header-title">Edit Profile</span>
         </div>
       </div>
-
       <div class="auth-container profile-container-spacing">
-
-        <!-- Center Avatar -->
         <div class="edit-avatar-container">
           <div class="avatar-circle">
             <ion-icon name="person"></ion-icon>
           </div>
           <h2 class="edit-title">Edit Profile</h2>
         </div>
-
-        <!-- Error -->
         <div class="error-box" *ngIf="errorMessage">
           <ion-icon name="alert-circle-outline"></ion-icon>
           {{ errorMessage }}
         </div>
-
-        <!-- Form fields custom tanpa ion-item -->
         <div class="edit-form-container">
           <div class="custom-input-row">
             <ion-icon name="person-circle-outline"></ion-icon>
             <input type="text" [(ngModel)]="editForm.name" placeholder="Masukan Nama Anda">
           </div>
-
           <div class="custom-input-row">
             <ion-icon name="business"></ion-icon>
             <input type="text" [(ngModel)]="editForm.company_name" placeholder="Masukan Nama Perusahaan/Instannsi Anda">
           </div>
-
           <div class="custom-input-row">
             <ion-icon name="call"></ion-icon>
             <input type="tel" [(ngModel)]="editForm.phone" placeholder="Masukan Nomor Telephone Anda">
           </div>
-
           <div class="custom-input-row">
             <ion-icon name="location"></ion-icon>
             <input type="text" [(ngModel)]="editForm.address" placeholder="Masukan Alamat Lengkap Anda.">
           </div>
         </div>
-
-        <!-- Actions -->
         <div class="action-buttons edit-actions">
           <button class="btn-edit" (click)="onSave()" [disabled]="isSaving">
             <ion-spinner *ngIf="isSaving" name="crescent" class="btn-spinner"></ion-spinner>
@@ -216,10 +165,7 @@
             Cancel
           </button>
         </div>
-
       </div>
     </div>
-
   </ng-container>
-
 </ion-content>

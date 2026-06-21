@@ -1,46 +1,15 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
 
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
-
-/* =========================================
-   GLOBAL OVERRIDES FOR VECTORS & KEYBOARD
-   ========================================= */
-
-/* Sembunyikan gelombang bawah dan tab bar saat keyboard terbuka agar tidak menutupi konten/form */
 body.keyboard-is-open,
 body.ion-keyboard-is-open {
   .bottom-vector-container,
@@ -49,29 +18,23 @@ body.ion-keyboard-is-open {
     display: none !important;
   }
 }
-
-/* Kurangi ketinggian berlebih pada vector atas dan bawah */
 .top-vector-container {
   overflow: hidden;
-  background-color: #26366C; /* Cover safe area with blue */
+  background-color: #26366C; 
   padding-top: var(--ion-safe-area-top, 0px);
-
   .custom-header {
     top: var(--ion-safe-area-top, 0px) !important;
   }
-
   svg {
-    margin-top: -12px !important; /* Tarik ke atas untuk memotong bagian kosong */
+    margin-top: -12px !important; 
   }
 }
-
 .bottom-vector-container {
   overflow: hidden;
   svg {
-    margin-bottom: -15px !important; /* Tarik ke bawah untuk memotong bagian solid */
+    margin-bottom: -15px !important; 
   }
 }
-
 .bottom-wave-container {
   overflow: hidden;
   svg {

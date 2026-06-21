@@ -9,7 +9,6 @@ import { VendorProfile, Tender, Announcement } from '../../core/models/user.mode
 import { TenderService } from '../../core/services/tender.service';
 import { ActivityService, ActivityLog } from '../../core/services/activity.service';
 import { NotificationService } from '../../core/services/notification.service';
-
 @Component({
   standalone: false,
   selector: 'app-home',
@@ -17,28 +16,20 @@ import { NotificationService } from '../../core/services/notification.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage {
-
   vendorProfile: VendorProfile | null = null;
   openTenders: Tender[] = [];
   isLoadingTenders = false;
-
-  // Notifikasi badge
   unreadCount: number = 0;
   private unreadSub?: Subscription;
-
   myTendersCount = { bidding: 0, open: 0, aanwijzing: 0, finished: 0 };
   isLoadingMyTenders = false;
-
   biddingTenders: Tender[] = [];
   isLoadingBidding = false;
   countdowns: { [id: number]: string } = {};
   private timer: any;
-
   aanwijzings: (Announcement & { tenderTitle?: string })[] = [];
   isLoadingAanwijzing = false;
-
   activities: ActivityLog[] = [];
-
   constructor(
     private auth: AuthService,
     private vendorService: VendorService,
@@ -49,7 +40,6 @@ export class HomePage {
     public activityService: ActivityService,
     private notificationService: NotificationService
   ) {}
-
   ionViewWillEnter(): void {
     this.loadProfile();
     this.loadOpenTenders();
@@ -58,22 +48,17 @@ export class HomePage {
     this.loadActivities();
     this.subscribeUnreadCount();
   }
-
   ngOnDestroy(): void {
     if (this.timer) clearInterval(this.timer);
     this.unreadSub?.unsubscribe();
   }
-
   private subscribeUnreadCount(): void {
-    // Unsubscribe sebelumnya agar tidak double-subscribe
     this.unreadSub?.unsubscribe();
     this.unreadSub = this.notificationService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
     });
-    // Fetch page 1 untuk update badge
     this.notificationService.getNotifications(1).subscribe();
   }
-
   private loadProfile(): void {
     this.vendorService.getProfile().subscribe({
       next: (res) => {
@@ -86,7 +71,6 @@ export class HomePage {
       }
     });
   }
-
   private loadOpenTenders(): void {
     this.isLoadingTenders = true;
     this.tenderService.getTenders({ status: 'open' }).subscribe({
@@ -101,7 +85,6 @@ export class HomePage {
       }
     });
   }
-
   private loadMyTenders(): void {
     this.isLoadingMyTenders = true;
     this.vendorService.getMyTenders().subscribe({
@@ -120,30 +103,22 @@ export class HomePage {
       error: () => this.isLoadingMyTenders = false
     });
   }
-
   private loadMyAnnouncements(tenders: Tender[]): void {
     this.isLoadingAanwijzing = true;
     this.aanwijzings = [];
-
     if (tenders.length === 0) {
       this.isLoadingAanwijzing = false;
       return;
     }
-
-    // Batasi request pengumuman hanya untuk max 5 tender yang paling relevan.
-    // Prioritaskan tender berstatus 'aanwijzing' karena di sanalah pengumuman aktif.
-    // UI hanya menampilkan 5 item (slice(0,5)), jadi tidak perlu lebih dari itu.
     const relevant = [
       ...tenders.filter(t => t.status === 'aanwijzing'),
       ...tenders.filter(t => t.status !== 'aanwijzing'),
     ].slice(0, 5);
-
     let loadedCount = 0;
     relevant.forEach(t => {
       this.tenderService.getAnnouncements(t.id).subscribe({
         next: (res) => {
           if (res.status === 'success' && res.data && res.data.length > 0) {
-            // Sertakan judul tender di setiap pengumuman agar mudah diidentifikasi di UI
             const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
             this.aanwijzings = [...this.aanwijzings, ...mapped];
           }
@@ -161,17 +136,14 @@ export class HomePage {
       });
     });
   }
-
   private finalizeAnnouncements(): void {
     this.aanwijzings.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     this.aanwijzings = this.aanwijzings.slice(0, 5);
     this.isLoadingAanwijzing = false;
   }
-
   private loadActivities(): void {
     this.activities = this.activityService.getActivities().slice(0, 5);
   }
-
   private loadBiddingTenders(): void {
     this.isLoadingBidding = true;
     this.tenderService.getTenders({ status: 'bidding' }).subscribe({
@@ -185,28 +157,22 @@ export class HomePage {
       error: () => this.isLoadingBidding = false
     });
   }
-
   private startCountdown(): void {
     if (this.timer) clearInterval(this.timer);
-    this.updateCountdowns(); // initial call
+    this.updateCountdowns(); 
     this.timer = setInterval(() => {
       this.updateCountdowns();
     }, 1000);
   }
-
   private updateCountdowns(): void {
     const now = new Date().getTime();
-    
-    // Filter out tenders that have already expired
     this.biddingTenders = this.biddingTenders.filter(t => {
       const endDateString = t.bidding_end || t.end_date;
       if (!endDateString) return false;
-      
       const end = new Date(endDateString).getTime();
       const diff = end - now;
-      
       if (diff <= 0) {
-        return false; // Tender expired, remove from list
+        return false; 
       } else {
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -216,11 +182,9 @@ export class HomePage {
       }
     });
   }
-
   private pad(n: number): string {
     return n < 10 ? '0' + n : n.toString();
   }
-
   onLogout(): void {
     this.auth.logout().subscribe({
       next: async () => {
@@ -233,19 +197,15 @@ export class HomePage {
       }
     });
   }
-
   get companyName(): string {
     return this.vendorProfile?.company_name ?? '';
   }
-
   get vendorStatus(): string {
     return this.vendorProfile?.verification_status ?? '';
   }
-
   goAjukanTender(): void {
     this.router.navigate(['/tabs/pengajuan-tender'], { queryParams: { openForm: 'true', from: 'home' } });
   }
-
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2000, color, position: 'top' });
     await t.present();

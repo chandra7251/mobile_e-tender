@@ -1,42 +1,20 @@
 <ion-content [fullscreen]="true">
   <div class="page-wrapper">
-    
-    
-        <!-- Top Vector -->
     <div class="top-vector-container">
       <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
       </svg>
-
-      <!-- Header inside top vector -->
       <div class="custom-header">
         <span class="header-title">Login</span>
       </div>
     </div>
-
-    <!-- <div style="position: absolute; top: 0; left: 0; width: 100%; overflow: hidden; line-height: 0;">
-        <svg 
-          viewBox="0 0 360 99" 
-          xmlns="http://www.w3.org/2000/svg"
-          style="width: 100%; height: auto; display: block;"
-          preserveAspectRatio="xMidYMax slice"
-        >
-        <path d="M355 -65.4833C373.803 -66.7248 395.439 -24.3516 394.489 20.3394C397.26 33.6403 390.095 60.2421 339.268 60.2421H42.3807C13.8795 60.0648 -41.1041 67.3714 -33.0287 98.0166L-93 -19.5632C28.9218 -41.022 301.798 -107.195 355 -65.4833Z" fill="#26366C"/>
-      </svg>
-      <h2 class="title">Login</h2>
-    </div> -->
-  
     <div class="auth-container">
-      <!-- Logo / Header -->
       <div class="auth-header">
         <img src="assets/logo.png" class="auth-logo" alt="E-Tender Logo" />
         <h1 class="nama-apk">ZETA</h1>
         <h5 class="desk-apk">Zona E-Procurement Tender Akses</h5>
       </div>
-
-      <!-- Login Form -->
       <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-        
         <div class="field-wrapper">
           <ion-icon name="mail"></ion-icon>
           <ion-input
@@ -48,7 +26,6 @@
             autocomplete="email">
           </ion-input>
         </div>
-
         <div class="field-wrapper">
           <ion-icon name="lock-closed"></ion-icon>
           <ion-input
@@ -64,25 +41,20 @@
             style="cursor: pointer; color: #9CA3AF; font-size: 20px;">
           </ion-icon>
         </div>
-
         <div class="auth-error" *ngIf="errorMessage">
           <ion-icon name="alert-circle-outline"></ion-icon>
           {{ errorMessage }}
         </div>
-
         <div *ngIf="isUnverified" style="text-align: center; margin-top: 10px;">
           <ion-button fill="outline" color="primary" size="small" (click)="resendEmail()" [disabled]="isResending">
             <ion-spinner *ngIf="isResending" name="crescent" style="margin-right: 5px;"></ion-spinner>
             <span *ngIf="!isResending">Kirim Ulang Email Verifikasi</span>
           </ion-button>
         </div>
-
         <div class="forgot-password">
           <ion-button fill="clear" routerLink="/forgot-password">Forget Password</ion-button>
         </div>
-
         <div class="divider"></div>
-
         <ion-button
           expand="block"
           type="submit"
@@ -91,23 +63,18 @@
           <span *ngIf="!isLoading">Login</span>
           <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
         </ion-button>
-
         <ion-button
           expand="block"
           class="btn-register"
           routerLink="/register">
           Register
         </ion-button>
-
       </form>
     </div>
-
-    <!-- BOTTOM WAVE — ganti SVG yang lama -->
     <div class="bottom-vector-container">
      <svg width="360" height="108" viewBox="0 0 360 108" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M322.346 36.3582C349.913 35.1116 359.508 11.6 360.859 0L409 174L-3.49336 161.015V70.1194C-16.0607 39.3707 21.6752 34.8 42.114 36.3582C124.038 36.8776 294.779 37.6048 322.346 36.3582Z" fill="#26366C"/>
      </svg>
     </div>
-
   </div>
 </ion-content>

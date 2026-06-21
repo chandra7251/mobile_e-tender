@@ -1,32 +1,22 @@
 <ion-content>
-  
-  <!-- Vector Gelombang Atas -->
   <div class="top-vector-container">
     <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
     </svg>
-
-    <!-- Header inside top vector -->
     <div class="custom-header">
       <span class="header-title">Riwayat Hasil Tender</span>
     </div>
   </div>
-
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingText="Tarik untuk refresh"
       refreshingText="Memuat ulang...">
     </ion-refresher-content>
   </ion-refresher>
-
   <div class="page-content ion-padding">
-
-    <!-- ════ INFO TENDER DITEMUKAN ════ -->
     <div class="info-title-row" *ngIf="!isLoading && results.length > 0">
       <span class="info-text">{{ results.length }} Tender ditemukan</span>
     </div>
-
-    <!-- ════ SKELETON ════ -->
     <ng-container *ngIf="isLoading">
       <ion-card class="result-card" *ngFor="let i of skeletonItems">
         <ion-card-content>
@@ -36,24 +26,17 @@
         </ion-card-content>
       </ion-card>
     </ng-container>
-
-    <!-- ════ ERROR ════ -->
     <div class="error-box" *ngIf="errorMessage && !isLoading">
       <ion-icon name="alert-circle-outline"></ion-icon>
       <span>{{ errorMessage }}</span>
       <ion-button fill="clear" size="small" (click)="loadResults()">Coba Lagi</ion-button>
     </div>
-
-    <!-- ════ EMPTY ════ -->
     <div class="empty-state" *ngIf="!isLoading && !errorMessage && results.length === 0">
       <ion-icon name="trophy-outline"></ion-icon>
       <h3>Belum Ada Hasil</h3>
       <p>Tender yang sudah selesai dan diikuti akan muncul di sini.</p>
     </div>
-
-    <!-- ════ LIST ════ -->
     <ng-container *ngIf="!isLoading && results.length > 0">
-
       <ion-card
         class="result-card"
         *ngFor="let result of paginatedResults"
@@ -61,38 +44,26 @@
         button
         id="btn-tender-result-{{ result.tender_id }}">
         <ion-card-content>
-
-          <!-- Badge Selesai -->
           <div class="status-row">
             <span class="badge-selesai">Selesai</span>
           </div>
-
-          <!-- Judul tender -->
           <h2 class="tender-title">{{ result.tender_title }}</h2>
-
-          <!-- Tanggal berakhir -->
           <div class="date-row">
             <ion-icon name="calendar-outline"></ion-icon>
             <span>Berakhir {{ formatDate(result.decided_at) }}</span>
           </div>
-
-          <!-- CTA -->
           <div class="cta-row">
             <span class="cta-text">Lihat Hasil</span>
             <ion-icon name="chevron-forward-outline"></ion-icon>
           </div>
-
         </ion-card-content>
       </ion-card>
-
-      <!-- ════ PAGINATION ════ -->
       <div class="pagination-container" *ngIf="results.length > 3">
         <button class="btn-prev" (click)="prevPage()" [disabled]="currentPage === 1">
           <ion-icon name="chevron-back-outline"></ion-icon>
           <ion-icon name="chevron-back-outline" class="double-chevron-left"></ion-icon>
           <span class="btn-text">Previous</span>
         </button>
-
         <div class="page-numbers">
           <ng-container *ngFor="let p of pagesArray">
             <span class="page-dot" *ngIf="p === '...'">{{ p }}</span>
@@ -105,16 +76,12 @@
             </button>
           </ng-container>
         </div>
-
         <button class="btn-next" (click)="nextPage()" [disabled]="currentPage === totalPages">
           <span class="btn-text">Next</span>
           <ion-icon name="chevron-forward-outline"></ion-icon>
           <ion-icon name="chevron-forward-outline" class="double-chevron-right"></ion-icon>
         </button>
       </div>
-
     </ng-container>
-
   </div>
-
 </ion-content>

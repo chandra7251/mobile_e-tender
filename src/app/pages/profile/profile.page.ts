@@ -8,7 +8,6 @@ import { ActivityService } from '../../core/services/activity.service';
 import { OfflineCacheService } from '../../core/services/offline-cache.service';
 import { VendorProfile } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
-
 @Component({
   standalone: false,
   selector: 'app-profile',
@@ -16,25 +15,19 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage {
-
   profile: VendorProfile | null = null;
   totalDocuments = 0;
-
-  // Form edit
   isEditMode = false;
   isLoading = false;
   isSaving = false;
   errorMessage = '';
-
   editForm: UpdateProfilePayload = {
     name: '',
     company_name: '',
     phone: '',
     address: ''
   };
-
   private backButtonSub?: Subscription;
-
   constructor(
     private vendorService: VendorService,
     private authService: AuthService,
@@ -46,42 +39,32 @@ export class ProfilePage {
     private platform: Platform,
     private activityService: ActivityService
   ) {}
-
-  // Dipanggil setiap kali halaman ditampilkan
   ionViewWillEnter(): void {
     this.loadProfile();
     this.loadDocumentsCount();
   }
-
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
       if (this.isEditMode) {
         this.cancelEdit();
       } else {
-        processNextHandler(); // Lanjut ke global handler di app.component.ts untuk balik ke Dashboard
+        processNextHandler(); 
       }
     });
   }
-
   ionViewWillLeave() {
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
     }
   }
-
-  // ─── Load data ──────────────────────────────────────────────────────────────
-
   async loadProfile(): Promise<void> {
     this.isLoading = true;
     this.errorMessage = '';
-
     const cached = await this.offlineCache.getCachedVendorProfile();
     if (cached) {
       this.profile = cached;
       this.isLoading = false;
     }
-
-    // Satu endpoint: GET /api/vendors/me — sudah mengandung verification_status
     this.vendorService.getProfile().subscribe({
       next: async (res) => {
         this.isLoading = false;
@@ -95,7 +78,6 @@ export class ProfilePage {
         if (!this.profile) {
           const status = err?.status;
           if (status === 404) {
-            // Vendor record tidak ada — registrasi mungkin tidak selesai
             this.errorMessage = 'Profil vendor tidak ditemukan. Registrasi Anda mungkin belum selesai. Silakan hubungi admin.';
           } else if (!status || status === 0) {
             this.errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
@@ -106,7 +88,6 @@ export class ProfilePage {
       }
     });
   }
-
   loadDocumentsCount(): void {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
@@ -119,19 +100,12 @@ export class ProfilePage {
       }
     });
   }
-
-  // ─── Computed status (dari satu sumber: profile.vendor) ───────────────────────
-
   get verificationStatus(): string {
     return this.profile?.verification_status ?? '';
   }
-
   get verificationNotes(): string | null {
     return this.profile?.verification_notes ?? null;
   }
-
-  // ─── Edit mode ──────────────────────────────────────────────────────────────
-
   enterEditMode(): void {
     if (!this.profile) return;
     this.editForm = {
@@ -143,28 +117,20 @@ export class ProfilePage {
     this.errorMessage = '';
     this.isEditMode = true;
   }
-
   cancelEdit(): void {
     this.isEditMode = false;
     this.errorMessage = '';
   }
-
-  // Navigasi ke halaman dokumen
   goToDocuments(): void {
     this.router.navigate(['/tabs/documents']);
   }
-
-  // ─── Save ─────────────────────────────────────────────────────────────────────
-
   onSave(): void {
     if (!this.editForm.company_name || !this.editForm.phone || !this.editForm.address) {
       this.errorMessage = 'Semua field wajib diisi.';
       return;
     }
-
     this.isSaving = true;
     this.errorMessage = '';
-
     this.vendorService.updateProfile(this.editForm).subscribe({
       next: async (res) => {
         this.isSaving = false;
@@ -172,7 +138,7 @@ export class ProfilePage {
           this.activityService.log('Memperbarui profil perusahaan', 'create-outline');
           this.isEditMode = false;
           await this.showToast('Profil berhasil diperbarui!', 'success');
-          this.loadProfile(); // refresh data
+          this.loadProfile(); 
         } else {
           this.errorMessage = res.message || 'Gagal menyimpan.';
         }
@@ -189,9 +155,6 @@ export class ProfilePage {
       }
     });
   }
-
-  // ─── Logout ───────────────────────────────────────────────────────────────────
-
   logout(): void {
     this.authService.logout().subscribe({
       next: async () => {
@@ -204,9 +167,6 @@ export class ProfilePage {
       }
     });
   }
-
-  // ─── Helpers ────────────────────────────────────────────────────────────────────
-
   get statusColor(): string {
     switch (this.verificationStatus) {
       case 'approved': return 'success';
@@ -214,7 +174,6 @@ export class ProfilePage {
       default:         return 'warning';
     }
   }
-
   get statusLabel(): string {
     switch (this.verificationStatus) {
       case 'approved': return '✓ Terverifikasi';
@@ -222,7 +181,6 @@ export class ProfilePage {
       default:         return '⏳ Menunggu Verifikasi';
     }
   }
-
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2500, color, position: 'top' });
     await t.present();

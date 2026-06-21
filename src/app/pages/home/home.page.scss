@@ -3,34 +3,28 @@ ion-content.dashboard-bg {
   --padding-top: 0;
   --padding-bottom: 0;
 }
-
 .page-wrapper {
   display: flex;
   flex-direction: column;
 }
-
 ion-content.dashboard-bg {
   --padding-top: 0px !important;
 }
-
 .top-vector-container {
   position: relative;
   line-height: 0;
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
-  
   svg {
     width: 100%;
     height: auto;
     display: block;
   }
-  
   .custom-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
     .header-title {
       position: absolute;
       left: 24px;
@@ -40,7 +34,6 @@ ion-content.dashboard-bg {
       font-weight: 700;
       line-height: 38px;
     }
-
     .notif-header-btn {
       position: absolute;
       right: 24px;
@@ -55,17 +48,14 @@ ion-content.dashboard-bg {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(4px);
       transition: background 0.2s ease, transform 0.15s ease;
-
       &:active {
         background: rgba(255, 255, 255, 0.3);
         transform: scale(0.93);
       }
-
       ion-icon {
         font-size: 22px;
         color: #FFFFFF;
       }
-
       .notif-badge {
         position: absolute;
         top: -3px;
@@ -87,17 +77,13 @@ ion-content.dashboard-bg {
       }
     }
   }
-
 }
-
 .dashboard-container {
   padding: 0 20px 24px;
   margin-top: -30px; 
   z-index: 10;
   position: relative;
 }
-
-/* ── Welcome Card ── */
 .welcome-card {
   background: #3F51B5;
   border-radius: 16px;
@@ -107,7 +93,6 @@ ion-content.dashboard-bg {
   justify-content: space-between;
   box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
   margin-bottom: 16px;
-
   .welcome-info {
     color: #FFF;
     .welcome-text {
@@ -128,38 +113,31 @@ ion-content.dashboard-bg {
       font-size: 11px;
       font-weight: 700;
       color: #FFF;
-      
       &.pending, &.waiting { background: #FF9800; }
       &.approved { background: #00BCD4; }
       &.rejected { background: #EF5350; }
     }
   }
-  
   .welcome-icon {
     font-size: 48px;
     color: rgba(255,255,255,0.7);
   }
 }
-
-/* ── Quick Action Card ── */
 .quick-action-card {
   background: #3F51B5;
   border-radius: 16px;
   padding: 16px 20px 20px;
   margin-bottom: 24px;
-  
   .section-title-white {
     color: #FFF;
     font-size: 13px;
     font-weight: 600;
     margin: 0 0 12px;
   }
-  
   .quick-action-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    
     .action-btn {
       background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
       border: 1px solid rgba(255,255,255,0.2);
@@ -170,13 +148,11 @@ ion-content.dashboard-bg {
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      
       ion-icon {
         font-size: 24px;
         color: #FFF;
         opacity: 0.9;
       }
-      
       span {
         color: #FFF;
         font-size: 11px;
@@ -184,7 +160,6 @@ ion-content.dashboard-bg {
         text-align: center;
         line-height: 1.3;
       }
-      
       &:active {
         opacity: 0.8;
         transform: scale(0.97);
@@ -193,34 +168,27 @@ ion-content.dashboard-bg {
     }
   }
 }
-
-/* ── Typography & Spacing ── */
 .mt-24 { margin-top: 24px !important; }
 .mb-16 { margin-bottom: 16px !important; }
 .mb-32 { margin-bottom: 32px !important; }
-
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
-
 .section-title {
   color: #3F51B5;
   font-size: 14px;
   font-weight: 700;
   margin: 0;
 }
-
 .see-all {
   color: #3F51B5;
   font-size: 12px;
   font-weight: 600;
   opacity: 0.8;
 }
-
-/* ── Horizontal Scroll (Cards) ── */
 .horizontal-scroll {
   display: flex;
   overflow-x: auto;
@@ -229,13 +197,11 @@ ion-content.dashboard-bg {
   margin: 0 -20px;
   padding-left: 20px;
   padding-right: 20px;
-  
   &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
 }
-
 .tender-mini-card {
   min-width: 240px;
   background: #FFF;
@@ -246,7 +212,6 @@ ion-content.dashboard-bg {
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   display: flex;
   flex-direction: column;
-  
   .badge-live {
     display: inline-block;
     background: #3F51B5;
@@ -256,23 +221,20 @@ ion-content.dashboard-bg {
     padding: 4px 8px;
     border-radius: 6px;
     margin-bottom: 10px;
-    margin-left: -2px; /* Visual optical alignment */
+    margin-left: -2px; 
     align-self: flex-start;
   }
-  
   .card-content {
     display: flex;
     flex-direction: column;
     flex: 1;
   }
-  
   .title-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
     gap: 12px;
-    
     h4 {
       margin: 0;
       font-size: 13px;
@@ -281,7 +243,6 @@ ion-content.dashboard-bg {
       flex: 1;
       line-height: 1.4;
     }
-    
     .hammer-icon {
       font-size: 20px;
       color: rgba(52, 81, 178, 0.4);
@@ -290,13 +251,11 @@ ion-content.dashboard-bg {
       margin-top: 2px;
     }
   }
-  
   .schedule-box {
     margin-top: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    
     .schedule-item {
       display: flex;
       flex-direction: column;
@@ -304,11 +263,9 @@ ion-content.dashboard-bg {
       border-left: 3px solid #3F51B5;
       padding: 6px 10px;
       border-radius: 0 6px 6px 0;
-      
       &.bidding-item {
         background: #fffaf0;
         border-left-color: #FF9800;
-        
         .lbl {
           color: #E65100;
         }
@@ -316,20 +273,17 @@ ion-content.dashboard-bg {
           color: #E65100;
         }
       }
-      
       .sched-header {
         display: flex;
         align-items: center;
         gap: 4px;
         margin-bottom: 4px;
-        
         ion-icon {
           font-size: 12px;
           color: #3F51B5;
           opacity: 0.9;
         }
       }
-      
       .lbl {
         font-size: 10px;
         font-weight: 700;
@@ -346,14 +300,11 @@ ion-content.dashboard-bg {
     }
   }
 }
-
-/* ── Stats Grid ── */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-
 .stat-card {
   border-radius: 16px;
   padding: 16px;
@@ -364,50 +315,40 @@ ion-content.dashboard-bg {
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   min-height: 110px;
-  
   .stat-icon {
     position: absolute;
     top: 12px;
     left: 12px;
     font-size: 16px;
   }
-  
   .stat-value {
     font-size: 32px;
     font-weight: 800;
     margin: 4px 0 8px;
   }
-  
   .stat-label {
     font-size: 12px;
     font-weight: 700;
   }
-  
-  /* Colors */
   &.bg-bidding { background: #344A9A; }
   &.bg-open { background: #3A61BD; }
   &.bg-aanwijzing { background: #4556A8; }
   &.bg-finished { background: #2B4699; }
-  
   .text-yellow { color: #FCD34D; }
   .text-cyan { color: #22D3EE; }
   .text-pink { color: #F472B6; }
   .text-white { color: #FFFFFF; }
 }
-
-/* ── Countdown Card styling removed, using tender-mini-card instead ── *//* ── Pengumuman Card ── */
 .announcement-card {
   background: #3F51B5;
   border-radius: 16px;
   padding: 16px 20px 32px;
   color: #FFF;
-  
   .announcement-header {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 24px;
-    
     ion-icon { font-size: 20px; }
     h3 {
       margin: 0;
@@ -415,36 +356,30 @@ ion-content.dashboard-bg {
       font-weight: 600;
     }
   }
-  
   .announcement-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     opacity: 0.6;
-    
     .empty-icon {
       font-size: 48px;
       margin-bottom: 12px;
     }
-    
     p {
       margin: 0;
       font-size: 12px;
     }
   }
-
   .announcement-list {
     margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    
     .announcement-item {
       background: rgba(255, 255, 255, 0.1);
       padding: 12px;
       border-radius: 8px;
-      
       h4 {
         margin: 0 0 4px;
         font-size: 13px;
@@ -463,35 +398,28 @@ ion-content.dashboard-bg {
     }
   }
 }
-
-/* ── Log Activity ── */
 .activity-card {
   background: #FFF;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  
   .text-primary {
     color: #3F51B5;
     margin-bottom: 20px;
   }
-  
   .activity-list {
     display: flex;
     flex-direction: column;
   }
-  
   .activity-item {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    
     .activity-icon {
       font-size: 18px;
       color: #3F51B5;
       margin-top: 2px;
     }
-    
     .activity-content {
       flex: 1;
       p {
@@ -502,22 +430,18 @@ ion-content.dashboard-bg {
         line-height: 1.4;
       }
     }
-    
     .activity-time {
       font-size: 9px;
       color: #9CA3AF;
       white-space: nowrap;
     }
   }
-  
   .activity-divider {
     height: 1px;
     background: rgba(0,0,0,0.05);
     margin: 12px 0;
   }
 }
-
-// ── Badge pop animation ────────────────────────────────────────────────────
 @keyframes badge-pop {
   from { transform: scale(0); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }

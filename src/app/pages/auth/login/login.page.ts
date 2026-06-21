@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ActivityService } from '../../../core/services/activity.service';
-
 @Component({
   standalone: false,
   selector: 'app-login',
@@ -11,7 +10,6 @@ import { ActivityService } from '../../../core/services/activity.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-
   email = '';
   password = '';
   isLoading = false;
@@ -19,33 +17,26 @@ export class LoginPage {
   errorMessage = '';
   isUnverified = false;
   isResending = false;
-
   constructor(
     private auth: AuthService,
     private router: Router,
     private toast: ToastController,
     private activityService: ActivityService
   ) {}
-
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
-
   onLogin(): void {
     if (!this.email || !this.password) return;
-
     this.isLoading = true;
     this.errorMessage = '';
-
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success') {
-
           await this.showToast('Login berhasil!', 'success');
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
         } else {
-          // Backend return status 'error' with HTTP 200
           this.errorMessage = res.message || 'Login gagal.';
         }
       },
@@ -65,10 +56,8 @@ export class LoginPage {
       }
     });
   }
-
   resendEmail(): void {
     if (!this.email) return;
-
     this.isResending = true;
     this.auth.resendVerificationEmail(this.email).subscribe({
       next: async (res) => {
@@ -82,7 +71,6 @@ export class LoginPage {
       }
     });
   }
-
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2000, color, position: 'top' });
     await t.present();

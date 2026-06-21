@@ -2,13 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { VendorService } from '../../../core/services/vendor.service';
 import { VendorResult } from '../../../core/models/user.model';
-
-/**
- * ResultHistoryPage — Daftar hasil tender yang pernah diikuti vendor.
- *
- * Menggunakan endpoint dedicated GET /api/vendors/results (Mobile_Integration.md)
- * Menggantikan workaround lama: getTenders() + filter(status === 'finished')
- */
 @Component({
   standalone: false,
   selector: 'app-result-history',
@@ -16,28 +9,22 @@ import { VendorResult } from '../../../core/models/user.model';
   styleUrls: ['./result-history.page.scss'],
 })
 export class ResultHistoryPage {
-
   results: VendorResult[] = [];
   isLoading = false;
   errorMessage = '';
-
   currentPage = 1;
   itemsPerPage = 3;
-
   constructor(
     private vendorService: VendorService,
     private router: Router
   ) {}
-
   ionViewWillEnter(): void {
     this.loadResults();
   }
-
   loadResults(): void {
     this.isLoading = true;
     this.errorMessage = '';
     this.currentPage = 1;
-
     this.vendorService.getMyResults().subscribe({
       next: (res) => {
         this.isLoading = false;
@@ -51,7 +38,6 @@ export class ResultHistoryPage {
       }
     });
   }
-
   doRefresh(event: any): void {
     this.currentPage = 1;
     this.vendorService.getMyResults().subscribe({
@@ -64,21 +50,17 @@ export class ResultHistoryPage {
       error: () => event.target.complete()
     });
   }
-
   get paginatedResults(): VendorResult[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.results.slice(start, start + this.itemsPerPage);
   }
-
   get totalPages(): number {
     return Math.ceil(this.results.length / this.itemsPerPage);
   }
-
   get pagesArray(): (number | string)[] {
     const total = this.totalPages;
     const current = this.currentPage;
     const pages: (number | string)[] = [];
-
     if (total <= 7) {
       for (let i = 1; i <= total; i++) pages.push(i);
     } else {
@@ -100,29 +82,24 @@ export class ResultHistoryPage {
     }
     return pages;
   }
-
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
     }
   }
-
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-
   goToPage(page: number | string): void {
     if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
   }
-
   goToResult(result: VendorResult): void {
     this.router.navigate(['/tabs/tenders', result.tender_id, 'result']);
   }
-
   formatDate(dateStr: string | null | undefined): string {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
@@ -132,7 +109,6 @@ export class ResultHistoryPage {
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
   }
-
   get skeletonItems(): number[] {
     return [1, 2, 3];
   }

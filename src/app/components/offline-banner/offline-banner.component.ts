@@ -1,13 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NetworkService } from '../../core/services/network.service';
-
-/**
- * OfflineBannerComponent — tampilkan banner merah saat tidak ada koneksi.
- *
- * Cara pakai: tambahkan <app-offline-banner> di app.component.html
- * Daftarkan di AppModule declarations.
- */
 @Component({
   selector: 'app-offline-banner',
   templateUrl: './offline-banner.component.html',
@@ -15,18 +8,14 @@ import { NetworkService } from '../../core/services/network.service';
   standalone: false,
 })
 export class OfflineBannerComponent implements OnInit, OnDestroy {
-
   isOffline = false;
   private sub?: Subscription;
-
   constructor(private networkService: NetworkService) {}
-
   ngOnInit(): void {
     this.sub = this.networkService.isOnline$.subscribe(online => {
       this.isOffline = !online;
     });
   }
-
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }

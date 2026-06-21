@@ -1,27 +1,22 @@
-// Base page background
+
 ion-content {
   --background: #3451B2;
 }
-
-// ── Top Vector & Header ──
 .top-vector-container {
   position: relative;
   line-height: 0;
   background: linear-gradient(to bottom, #26366C 0%, #26366C 30%, transparent 30%, transparent 100%);
-
   svg {
     width: 100%;
     display: block;
     height: auto;
   }
-
   .custom-header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
     .btn-header-back {
       position: absolute;
       left: 20px;
@@ -35,7 +30,6 @@ ion-content {
         font-size: 26px;
       }
     }
-
     .header-title {
       position: absolute;
       left: 60px;
@@ -47,27 +41,19 @@ ion-content {
     }
   }
 }
-
-// ── Layout ────────────────────────────────────────────────────────────────
-
 .page-content {
   padding: 16px 16px 80px;
 }
-
-// ── Current bid card ──────────────────────────────────────────────────────
-
 .current-bid-card {
   border-radius: 16px;
   margin-bottom: 14px;
   background: rgba(var(--ion-color-success-rgb), 0.06);
   border: 1.5px solid rgba(var(--ion-color-success-rgb), 0.3);
   box-shadow: none;
-
   ion-card-content {
     padding: 16px;
   }
 }
-
 .current-bid-header {
   display: flex;
   align-items: center;
@@ -78,24 +64,20 @@ ion-content {
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 14px;
-
   ion-icon {
     font-size: 18px;
   }
 }
-
 .current-bid-body {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
 .bid-stat {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-
 .bid-stat-label {
   font-size: 11px;
   color: var(--ion-color-medium);
@@ -103,33 +85,26 @@ ion-content {
   letter-spacing: 0.4px;
   font-weight: 600;
 }
-
 .bid-stat-value {
   font-size: 15px;
   font-weight: 700;
   color: var(--ion-color-dark);
-
   &.notes-val {
     font-size: 13px;
     font-weight: 400;
     color: var(--ion-color-medium-shade);
   }
 }
-
-// ── Form card ─────────────────────────────────────────────────────────────
-
 .form-card {
   border-radius: 12px;
   margin-bottom: 14px;
   box-shadow: none;
   border: 1px solid #FBDB0B;
   background: transparent;
-
   ion-card-content {
     padding: 16px;
   }
 }
-
 .form-title {
   display: flex;
   align-items: center;
@@ -137,46 +112,35 @@ ion-content {
   font-size: 16px;
   font-weight: 700;
   color: #FFFFFF;
-
   ion-icon {
     font-size: 20px;
     color: #FBDB0B;
   }
 }
-
 ion-card-subtitle {
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
   margin-top: 4px;
 }
-
-// ── Field ────────────────────────────────────────────────────────────────
-
 .field-group {
   margin-bottom: 20px;
 }
-
 .field-label {
   display: block;
   font-size: 13px;
   font-weight: 700;
   color: #FFFFFF;
   margin-bottom: 8px;
-
   .required {
     color: #FF4A4A;
     margin-left: 2px;
   }
-
   .optional {
     font-weight: 400;
     color: rgba(255, 255, 255, 0.7);
     font-size: 12px;
   }
 }
-
-// ── Currency input ────────────────────────────────────────────────────────
-
 .currency-input-wrap {
   display: flex;
   align-items: center;
@@ -185,13 +149,11 @@ ion-card-subtitle {
   overflow: hidden;
   background: rgba(255, 255, 255, 0.15);
   transition: border-color 0.2s;
-
   &:focus-within {
     border-color: #FBDB0B;
     background: rgba(255, 255, 255, 0.2);
   }
 }
-
 .currency-prefix {
   padding: 0 12px;
   font-size: 14px;
@@ -204,7 +166,6 @@ ion-card-subtitle {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
-
 .currency-input {
   flex: 1;
   height: 48px;
@@ -215,30 +176,23 @@ ion-card-subtitle {
   font-weight: 600;
   color: #FFFFFF;
   background: transparent;
-
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
     font-weight: 400;
     font-size: 14px;
   }
-
-  // Remove arrows on number input
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 }
-
 .field-hint {
   font-size: 12px;
   color: #FBDB0B;
   font-weight: 600;
   margin: 6px 0 0 2px;
 }
-
-// ── Textarea notes ────────────────────────────────────────────────────────
-
 .notes-textarea {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -253,19 +207,14 @@ ion-card-subtitle {
   box-sizing: border-box;
   font-family: inherit;
   transition: border-color 0.2s;
-
   &:focus {
     border-color: #FBDB0B;
     background: rgba(255, 255, 255, 0.2);
   }
-
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
   }
 }
-
-// ── Submit button ─────────────────────────────────────────────────────────
-
 .submit-btn {
   --border-radius: 8px;
   height: 48px;
@@ -276,7 +225,6 @@ ion-card-subtitle {
   --background: #FBDB0B;
   color: #000000;
 }
-
 .submit-note {
   display: flex;
   align-items: center;
@@ -286,14 +234,10 @@ ion-card-subtitle {
   color: rgba(255, 255, 255, 0.7);
   text-align: center;
   margin: 10px 0 0;
-
   ion-icon {
     font-size: 13px;
   }
 }
-
-// ── Error box ─────────────────────────────────────────────────────────────
-
 .error-box {
   display: flex;
   align-items: flex-start;
@@ -305,16 +249,12 @@ ion-card-subtitle {
   font-size: 13px;
   margin-bottom: 16px;
   line-height: 1.4;
-
   ion-icon {
     font-size: 18px;
     flex-shrink: 0;
     margin-top: 1px;
   }
 }
-
-// ── Error center ──────────────────────────────────────────────────────────
-
 .error-center {
   display: flex;
   flex-direction: column;
@@ -323,20 +263,17 @@ ion-card-subtitle {
   min-height: 50vh;
   padding: 24px;
   text-align: center;
-
   ion-icon {
     font-size: 60px;
     color: var(--ion-color-medium-tint);
     margin-bottom: 16px;
   }
-
   h3 {
     font-size: 18px;
     font-weight: 700;
     color: var(--ion-color-dark);
     margin: 0 0 8px;
   }
-
   p {
     font-size: 14px;
     color: var(--ion-color-medium);
@@ -344,37 +281,30 @@ ion-card-subtitle {
     line-height: 1.5;
   }
 }
-
-// ── HPS Info Box ──────────────────────────────────────────────────────────
-
 .hps-info-box {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(251, 219, 11, 0.1); // Warna kuning/emas lembut
+  background: rgba(251, 219, 11, 0.1); 
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 20px;
   border-left: 4px solid #FBDB0B;
-
   ion-icon {
     font-size: 24px;
     color: #FBDB0B;
   }
-
   .hps-text {
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
-
   .hps-label {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
     font-weight: 600;
   }
-
   .hps-value {
     font-size: 15px;
     font-weight: 700;

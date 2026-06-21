@@ -1,7 +1,6 @@
 ion-content {
-  --background: #F7F8FA; // Putih lembut (Off-white), tidak bikin sakit mata
+  --background: #F7F8FA; 
 }
-
 .splash-container {
   display: flex;
   flex-direction: column;
@@ -11,60 +10,53 @@ ion-content {
   width: 100%;
   padding: 20px;
 }
-
 .logo-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
   .zeta-logo-img {
-    width: 200px; // Sesuaikan ukuran gambar logo
+    width: 200px; 
     max-width: 80%;
     height: auto;
     object-fit: contain;
     margin-bottom: 16px;
   }
-
   .zeta-text {
     font-size: 36px;
     font-weight: 900;
-    color: #26366C; // Navy
+    color: #26366C; 
     letter-spacing: 6px;
     margin: 0;
   }
 }
-
 .loading-wrapper {
   width: 100%;
   max-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 60px; // Padding dari bawah layar
-  
+  margin-bottom: 60px; 
   .loading-bar {
     width: 100%;
     height: 6px;
-    background-color: rgba(38, 54, 108, 0.15); // Light navy
+    background-color: rgba(38, 54, 108, 0.15); 
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 16px;
     position: relative;
-    
     .loading-progress {
       position: absolute;
       top: 0;
       left: -100%;
       height: 100%;
       width: 50%;
-      background-color: #26366C; // Solid navy
+      background-color: #26366C; 
       border-radius: 10px;
       animation: progress 2.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
     }
   }
-  
   .loading-text {
     color: #26366C;
     font-size: 13px;
@@ -74,7 +66,6 @@ ion-content {
     opacity: 0.8;
   }
 }
-
 @keyframes progress {
   0% { left: -50%; width: 30%; }
   50% { width: 60%; }

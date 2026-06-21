@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthService, RegisterPayload } from '../../../core/services/auth.service';
 import { ActivityService } from '../../../core/services/activity.service';
-
 @Component({
   standalone: false,
   selector: 'app-register',
@@ -11,7 +10,6 @@ import { ActivityService } from '../../../core/services/activity.service';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage {
-
   form: RegisterPayload = {
     name: '',
     email: '',
@@ -21,37 +19,30 @@ export class RegisterPage {
     phone: '',
     address: ''
   };
-
   isLoading = false;
   showPassword = false;
   errorMessage = '';
-
   constructor(
     private auth: AuthService,
     private router: Router,
     private toast: ToastController,
     private activityService: ActivityService
   ) {}
-
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
-
   onRegister(): void {
     if (this.form.password !== this.form.password_confirmation) {
       this.errorMessage = 'Password dan konfirmasi tidak cocok.';
       return;
     }
-
     this.isLoading = true;
     this.errorMessage = '';
-
     this.auth.register(this.form).subscribe({
       next: async (res) => {
         this.isLoading = false;
         if (res.status === 'success') {
           this.activityService.log('Mendaftar akun ZETA', 'person-add-outline');
-          // Registrasi berhasil, tapi user belum bisa login sebelum verifikasi email
           await this.showToast('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.', 'success');
           this.router.navigate(['/login'], { replaceUrl: true });
         } else {
@@ -60,7 +51,6 @@ export class RegisterPage {
       },
       error: (err) => {
         this.isLoading = false;
-        // Baca detail error validasi dari key 'errors' (bukan 'data')
         const errors = err?.error?.errors;
         if (errors && Object.keys(errors).length > 0) {
           const firstKey = Object.keys(errors)[0];
@@ -71,10 +61,8 @@ export class RegisterPage {
       }
     });
   }
-
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2000, color, position: 'top' });
     await t.present();
   }
 }
-

@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 import { RiwayatPengajuanPage } from './riwayat-pengajuan.page';
-
 const routes: Routes = [
   { path: '', component: RiwayatPengajuanPage }
 ];
-
 @NgModule({
   imports: [
     CommonModule,

@@ -1,11 +1,8 @@
 <ion-content>
-
-  <!-- Vector Gelombang Atas -->
   <div class="top-vector-container">
     <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
     </svg>
-
     <div class="custom-header">
       <ion-button fill="clear" class="btn-header-back" (click)="goBack()">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
@@ -13,19 +10,14 @@
       <span class="header-title">Hasil Tender</span>
     </div>
   </div>
-
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
       pullingText="Tarik untuk refresh"
       refreshingText="Memuat ulang...">
     </ion-refresher-content>
   </ion-refresher>
-
   <div class="page-content">
-
-    <!-- ════════ SKELETON LOADING ════════ -->
     <ng-container *ngIf="isLoading">
-      <!-- Skeleton: Your Result -->
       <ion-card class="result-card skeleton-card">
         <ion-card-content>
           <ion-skeleton-text animated style="width:50%; height:14px; margin-bottom:16px;"></ion-skeleton-text>
@@ -34,7 +26,6 @@
           <ion-skeleton-text animated style="width:55%; height:14px;"></ion-skeleton-text>
         </ion-card-content>
       </ion-card>
-      <!-- Skeleton: Winner -->
       <ion-card class="winner-card skeleton-card">
         <ion-card-content>
           <ion-skeleton-text animated style="width:35%; height:14px; margin-bottom:16px;"></ion-skeleton-text>
@@ -44,11 +35,7 @@
         </ion-card-content>
       </ion-card>
     </ng-container>
-
-    <!-- ════════ CONTENT ════════ -->
     <ng-container *ngIf="!isLoading">
-
-      <!-- ── Section: Your Result ── -->
       <ion-card class="result-card">
         <ion-card-header>
           <ion-card-title class="section-title">
@@ -57,8 +44,6 @@
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
-
-          <!-- Result badge -->
           <div class="result-badge-row">
             <ion-badge
               [color]="getResultColor(myResult)"
@@ -68,34 +53,25 @@
               {{ getResultLabel(myResult) }}
             </ion-badge>
           </div>
-
-          <!-- My bid amount (dari winner.my_bid_amount) -->
           <div class="stat-row" *ngIf="winner?.my_bid_amount">
             <div class="stat-item">
               <span class="stat-label">Penawaran Saya</span>
               <span class="stat-value">{{ formatCurrency(winner!.my_bid_amount) }}</span>
             </div>
           </div>
-
-          <!-- Notes dari TenderResult -->
           <div class="stat-row" *ngIf="tenderResult?.notes">
             <div class="stat-item">
               <span class="stat-label">Catatan</span>
               <span class="stat-value">{{ tenderResult!.notes }}</span>
             </div>
           </div>
-
-          <!-- Empty state: result belum tersedia -->
           <div class="no-result-state" *ngIf="!tenderResult">
             <ion-icon name="time-outline"></ion-icon>
             <p>Hasil tender belum tersedia</p>
             <p class="hint-text" *ngIf="resultError">{{ resultError }}</p>
           </div>
-
         </ion-card-content>
       </ion-card>
-
-      <!-- ── Section: Pemenang ── -->
       <ion-card class="winner-card">
         <ion-card-header>
           <ion-card-title class="section-title">
@@ -104,49 +80,33 @@
           </ion-card-title>
         </ion-card-header>
         <ion-card-content>
-
-          <!-- Winner data -->
           <ng-container *ngIf="winner">
-
-            <!-- Company name -->
             <div class="winner-company">
               <ion-icon name="business-outline"></ion-icon>
-              <span>{{ winner.winner_company }}</span>  <!-- backend: winner_company -->
+              <span>{{ winner.winner_company }}</span>  
             </div>
-
             <div class="winner-stats">
-
               <div class="stat-item">
                 <span class="stat-label">Nilai Penawaran Menang</span>
                 <span class="stat-value winner-price">{{ formatCurrency(winnerBidAmount) }}</span>
               </div>
-
               <div class="stat-item" *ngIf="winner.selection_method">
                 <span class="stat-label">Metode Seleksi</span>
                 <span class="stat-value">{{ winner.selection_method }}</span>
               </div>
-
               <div class="stat-item">
                 <span class="stat-label">Dipilih Pada</span>
-                <span class="stat-value">{{ formatDate(winner.decided_at) }}</span>  <!-- backend: decided_at -->
+                <span class="stat-value">{{ formatDate(winner.decided_at) }}</span>  
               </div>
-
             </div>
-
           </ng-container>
-
-          <!-- No winner state -->
           <div class="no-result-state" *ngIf="!winner">
             <ion-icon name="hourglass-outline"></ion-icon>
             <p>Pemenang belum dipilih</p>
             <p class="hint-text" *ngIf="winnerError">{{ winnerError }}</p>
           </div>
-
         </ion-card-content>
       </ion-card>
-
     </ng-container>
-
   </div>
-
 </ion-content>
