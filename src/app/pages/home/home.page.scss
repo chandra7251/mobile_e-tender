@@ -271,19 +271,23 @@ ion-content.dashboard-bg {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
+    gap: 12px;
     
     h4 {
       margin: 0;
       font-size: 13px;
       font-weight: 700;
       color: #3F51B5;
-      width: 80%;
+      flex: 1;
       line-height: 1.4;
     }
     
     .hammer-icon {
       font-size: 20px;
       color: rgba(52, 81, 178, 0.4);
+      flex-shrink: 0;
+      margin-right: 4px;
+      margin-top: 2px;
     }
   }
   
