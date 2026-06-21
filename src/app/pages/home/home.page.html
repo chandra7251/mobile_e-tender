@@ -158,21 +158,27 @@
       <!-- Countdown Bidding Closed -->
       <h3 class="section-title mt-24 mb-16" *ngIf="isLoadingBidding || biddingTenders.length > 0">Countdown Bidding Closed</h3>
       <div class="horizontal-scroll" *ngIf="!isLoadingBidding && biddingTenders.length > 0">
-        <div class="countdown-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders', tender.id]">
-          <div class="countdown-header">
-            <h4>{{ tender.title }}</h4>
-            <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
-          </div>
-          <div class="divider"></div>
-          <p class="desc">{{ tender.description ? (tender.description.length > 40 ? (tender.description | slice:0:40) + '...' : tender.description) : '-' }}<br><strong>{{ tender.specification || '' }}</strong></p>
-          <div class="countdown-footer">
-            <div class="date-range">
-              <ion-icon name="calendar-outline"></ion-icon>
-              <span>{{ tender.start_date | date:'dd MMM yyyy' }} - {{ tender.end_date | date:'dd MMM yyyy' }}</span>
+        <div class="tender-mini-card" *ngFor="let tender of biddingTenders" [routerLink]="['/tabs/tenders', tender.id]">
+          <div class="badge-live" style="background: #FFC107; color: #1F2937;">Bidding</div>
+          <div class="card-content">
+            <div class="title-row">
+              <h4>{{ tender.title }}</h4>
+              <ion-icon name="hammer-outline" class="hammer-icon"></ion-icon>
             </div>
-            <div class="countdown-timer">
-              <ion-icon name="time-outline"></ion-icon>
-              <span>{{ countdowns[tender.id] || '00:00:00' }}</span>
+            
+            <p class="desc" style="font-size: 11px; color: #6B7280; margin-bottom: 12px; line-height: 1.4;">
+              {{ tender.description ? (tender.description.length > 40 ? (tender.description | slice:0:40) + '...' : tender.description) : '-' }}
+              <strong *ngIf="tender.specification" style="display: block; margin-top: 4px; color: #3F51B5;">{{ tender.specification }}</strong>
+            </p>
+
+            <div class="schedule-box">
+              <div class="schedule-item bidding-item">
+                <div class="sched-header">
+                  <ion-icon name="time-outline" style="color: #E65100;"></ion-icon>
+                  <span class="lbl" style="color: #E65100;">Sisa Waktu Bidding</span>
+                </div>
+                <span class="val" style="color: #E65100; font-weight: 700; font-size: 12px;">{{ countdowns[tender.id] || '00:00:00' }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -180,18 +186,21 @@
 
       <!-- Loading Skeleton for Bidding -->
       <div class="horizontal-scroll" *ngIf="isLoadingBidding">
-        <div class="countdown-card" *ngFor="let item of [1,2]">
-          <div class="countdown-header">
-            <ion-skeleton-text animated style="width: 70%; height: 16px; border-radius: 4px;"></ion-skeleton-text>
-          </div>
-          <div class="divider"></div>
-          <p class="desc">
-            <ion-skeleton-text animated style="width: 100%; height: 12px; margin-bottom: 4px;"></ion-skeleton-text>
-            <ion-skeleton-text animated style="width: 50%; height: 12px;"></ion-skeleton-text>
-          </p>
-          <div class="countdown-footer">
-            <ion-skeleton-text animated style="width: 60%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
-            <ion-skeleton-text animated style="width: 30%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
+        <div class="tender-mini-card" *ngFor="let item of [1,2]">
+          <ion-skeleton-text animated style="width: 40px; height: 16px; border-radius: 6px; margin-bottom: 8px;"></ion-skeleton-text>
+          <div class="card-content">
+            <div class="title-row" style="margin-bottom: 8px;">
+              <ion-skeleton-text animated style="width: 70%; height: 14px; border-radius: 4px;"></ion-skeleton-text>
+              <ion-icon name="hammer-outline" class="hammer-icon" style="opacity: 0.3;"></ion-icon>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <ion-skeleton-text animated style="width: 100%; height: 11px; margin-bottom: 4px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 50%; height: 11px;"></ion-skeleton-text>
+            </div>
+            <div class="schedule-box">
+              <ion-skeleton-text animated style="width: 100%; height: 40px; border-radius: 6px; margin-bottom: 8px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 100%; height: 40px; border-radius: 6px;"></ion-skeleton-text>
+            </div>
           </div>
         </div>
       </div>
