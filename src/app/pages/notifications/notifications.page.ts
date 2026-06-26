@@ -30,7 +30,7 @@ export class NotificationsPage implements OnInit {
     }
     this.notificationService.getNotifications(page).subscribe({
       next: (res) => {
-        if (res.status === 'success') {
+        if (res.status === true) {
           const incoming = res.data.data;
           if (page === 1) {
             this.notifications = incoming;

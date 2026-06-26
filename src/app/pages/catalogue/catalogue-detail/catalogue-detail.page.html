@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/catalogue"></ion-back-button></ion-buttons>
+    <ion-title>Detail Produk</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="isLoading" style="padding:40px;text-align:center;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <ng-container *ngIf="item && !isLoading">
+    <!-- Photos -->
+    <div style="background:#f5f5f5;height:240px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+      <img *ngIf="item.photos && item.photos[activePhoto]"
+        [src]="item.photos[activePhoto].url"
+        style="width:100%;height:100%;object-fit:cover;">
+      <ion-icon *ngIf="!item.photos?.length" name="image-outline" style="font-size:64px;color:#ccc;"></ion-icon>
+    </div>
+    <!-- Photo thumbnails -->
+    <div *ngIf="item.photos && item.photos.length > 1" style="display:flex;gap:8px;padding:10px;overflow-x:auto;">
+      <img *ngFor="let photo of item.photos; let i=index"
+        [src]="photo.url"
+        (click)="activePhoto=i"
+        [style.border]="activePhoto===i ? '2px solid #3553A8' : '2px solid transparent'"
+        style="width:56px;height:56px;object-fit:cover;border-radius:8px;cursor:pointer;">
+    </div>
+    <!-- Info -->
+    <div style="padding:16px;">
+      <ion-badge *ngIf="item.category" color="primary" style="margin-bottom:8px;">{{item.category.name}}</ion-badge>
+      <h1 style="font-size:18px;font-weight:700;color:#222;margin:0 0 4px;">{{item.name}}</h1>
+      <p style="font-size:13px;color:#888;margin:0 0 12px;">{{item.vendor?.company_name || ''}}</p>
+      <div style="background:#f0f4ff;border-radius:10px;padding:12px 16px;margin-bottom:16px;">
+        <p style="font-size:12px;color:#666;margin:0 0 2px;">Estimasi Harga</p>
+        <p style="font-size:22px;font-weight:700;color:#3553A8;margin:0;">{{formatPrice(item.price_estimate)}}</p>
+        <p *ngIf="item.price_estimate" style="font-size:11px;color:#888;margin:2px 0 0;">per {{item.unit}}</p>
+      </div>
+      <div *ngIf="item.description" style="margin-bottom:16px;">
+        <p style="font-size:13px;font-weight:600;color:#333;margin:0 0 6px;">Deskripsi</p>
+        <p style="font-size:13px;color:#555;line-height:1.6;white-space:pre-line;margin:0;">{{item.description}}</p>
+      </div>
+      <!-- Specs -->
+      <div *ngIf="getSpecKeys().length > 0" style="margin-bottom:16px;">
+        <p style="font-size:13px;font-weight:600;color:#333;margin:0 0 8px;">Spesifikasi</p>
+        <div *ngFor="let key of getSpecKeys()" style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+          <span style="font-size:12px;color:#888;">{{key}}</span>
+          <span style="font-size:12px;font-weight:600;color:#333;">{{item.specs![key]}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ion-content>

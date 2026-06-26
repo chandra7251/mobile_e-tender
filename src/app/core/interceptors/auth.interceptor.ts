@@ -103,7 +103,7 @@ export class AuthInterceptor implements HttpInterceptor {
           { headers: { Authorization: `Bearer ${oldToken}` } }
         ).pipe(
           switchMap(res => {
-            if (res.status === 'success' && res.data?.token) {
+            if (res.status === true && res.data?.token) {
               const newToken = res.data.token;
               return from(
                 this.storage.setToken(newToken).then(() => newToken)

@@ -1,0 +1,80 @@
+{
+  "APP_NAME": "ZETA",
+  "DASHBOARD": "Dasbor",
+  "TENDERS": "Tender",
+  "CATALOGUE": "Katalog",
+  "PROFILE": "Profil",
+  "KONTRAK": "Kontrak",
+  "PAYMENT": "Pembayaran",
+  "SEARCH": "Cari",
+  "FILTER": "Filter",
+  "LOADING": "Memuat...",
+  "SAVE": "Simpan",
+  "CANCEL": "Batal",
+  "DELETE": "Hapus",
+  "EDIT": "Ubah",
+  "BACK": "Kembali",
+  "SUBMIT": "Kirim",
+  "SUCCESS": "Berhasil",
+  "ERROR": "Gagal",
+  "STATUS": "Status",
+  "TENDER": {
+    "TITLE": "Judul Tender",
+    "STATUS": "Status Tender",
+    "BIDDING": "Penawaran",
+    "EVALUATION": "Evaluasi",
+    "FINISHED": "Selesai",
+    "DRAFT": "Draf",
+    "OPEN": "Dibuka",
+    "CANCELLED": "Dibatalkan",
+    "HPS": "Harga Perkiraan Sendiri",
+    "BID_PRICE": "Harga Penawaran",
+    "WINNER": "Pemenang",
+    "DEADLINE": "Batas Waktu",
+    "COUNTDOWN": "Sisa Waktu Penawaran"
+  },
+  "VENDOR": {
+    "COMPANY": "Nama Perusahaan",
+    "NPWP": "NPWP",
+    "STATUS": "Status Vendor",
+    "BLACKLISTED": "Diblokir",
+    "VERIFIED": "Terverifikasi",
+    "RATING": "Rating"
+  },
+  "CONTRACT": {
+    "NUMBER": "Nomor Kontrak",
+    "VALUE": "Nilai Kontrak",
+    "STATUS": "Status Kontrak",
+    "ACTIVE": "Aktif",
+    "DRAFT": "Draf",
+    "COMPLETED": "Selesai",
+    "SIGN": "Tanda Tangan",
+    "DELIVERY": "Pengiriman"
+  },
+  "AI": {
+    "PRICE_PREDICT": "Prediksi Harga AI",
+    "VENDOR_SCORE": "Skor Vendor AI",
+    "ANOMALY": "Deteksi Anomali"
+  },
+  "BLOCKCHAIN": {
+    "VERIFIED": "Terverifikasi Blockchain",
+    "HASH": "Hash Blockchain",
+    "VERIFY": "Verifikasi"
+  },
+  "PAYMENT": {
+    "DEPOSIT": "Deposit Jaminan",
+    "STATUS": "Status Pembayaran",
+    "PENDING": "Menunggu",
+    "PAID": "Lunas",
+    "REFUNDED": "Dikembalikan",
+    "PAY_NOW": "Bayar Sekarang"
+  },
+  "CATALOGUE": {
+    "TITLE": "E-Katalog",
+    "MY_ITEMS": "Katalog Saya",
+    "ADD_ITEM": "Tambah Item",
+    "PRICE": "Harga Estimasi",
+    "CATEGORY": "Kategori",
+    "DESCRIPTION": "Deskripsi"
+  }
+}

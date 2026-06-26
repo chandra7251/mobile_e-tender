@@ -1,3 +1,7 @@
+html {
+  --ion-dynamic-font: true;
+  scroll-behavior: smooth;
+}
 
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";

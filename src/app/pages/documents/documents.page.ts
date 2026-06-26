@@ -80,7 +80,7 @@ export class DocumentsPage implements OnInit {
     this.listError = '';
     this.vendorService.getProfile().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.vendorStatus = res.data.verification_status;
         }
         this.loadDocuments(false); 
@@ -99,7 +99,7 @@ export class DocumentsPage implements OnInit {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.documents = res.data;
         }
       },
@@ -112,7 +112,7 @@ export class DocumentsPage implements OnInit {
   doRefresh(event: any): void {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.data) this.documents = res.data;
+        if (res.status === true && res.data) this.documents = res.data;
         event.target.complete();
       },
       error: () => event.target.complete()
@@ -136,7 +136,7 @@ export class DocumentsPage implements OnInit {
     this.vendorService.uploadDocument(this.selectedType as DocumentType, this.selectedFile).subscribe({
       next: async (res) => {
         this.isUploading = false;
-        if (res.status === 'success') {
+        if (res.status === true) {
           this.activityService.log(`Berhasil mengunggah dokumen ${this.selectedType}`, 'cloud-upload-outline');
           await this.showToast('Dokumen berhasil diupload!', 'success');
           this.resetForm();

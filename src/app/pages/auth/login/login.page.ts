@@ -33,7 +33,7 @@ export class LoginPage {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: async (res) => {
         this.isLoading = false;
-        if (res.status === 'success') {
+        if (res.status === true) {
           await this.showToast('Login berhasil!', 'success');
           this.router.navigate(['/tabs/home'], { replaceUrl: true });
         } else {

@@ -1,0 +1,13 @@
+.top-vector-container { position: relative; height: 102px; overflow: hidden; svg { position: absolute; top:0; left:0; width:100%; } }
+.custom-header { position: absolute; top: 16px; left: 0; right: 0; display: flex; align-items: center; padding: 0 8px; .btn-header-back { --color: #fff; } .header-title { color: #fff; font-weight: 700; font-size: 18px; } }
+.page-content { padding: 12px 16px 32px; }
+.section-card { border-radius: 14px; box-shadow: 0 2px 12px rgba(38,54,108,.08); margin-bottom: 14px; }
+.section-title { font-size: 14px; font-weight: 700; color: #26366C; display: flex; align-items: center; gap: 6px; }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; &:last-child { border-bottom: none; } }
+.info-label { font-size: 12px; color: #888; }
+.info-value { font-size: 13px; color: #333; font-weight: 600; text-align: right; max-width: 60%; }
+.sign-btn { --background: #26366C; --border-radius: 10px; font-weight: 700; }
+.delivery-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; &:last-child { border-bottom: none; } cursor: pointer; }
+.delivery-desc { font-size: 13px; font-weight: 600; color: #26366C; }
+.delivery-meta { font-size: 11px; color: #888; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.hash-box { background: #f8f9ff; border-radius: 8px; padding: 10px 12px; font-family: monospace; font-size: 10px; word-break: break-all; color: #26366C; border: 1px solid #e0e4f0; }

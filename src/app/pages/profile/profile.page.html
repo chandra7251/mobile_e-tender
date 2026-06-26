@@ -1,12 +1,12 @@
 <ion-content class="view-mode-bg">
+
+  <!-- ─── LOADING SKELETON ─────────────────────────────────────────── -->
   <div *ngIf="isLoading" class="page-wrapper">
     <div class="top-vector-container">
       <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
       </svg>
-      <div class="custom-header">
-        <span class="header-title">Profile Vendor</span>
-      </div>
+      <div class="custom-header"><span class="header-title">Profile Vendor</span></div>
     </div>
     <div class="auth-container profile-container-spacing">
       <div class="profile-card-outline">
@@ -19,29 +19,23 @@
           <ion-skeleton-text animated style="width:110px; height:28px; border-radius:20px; margin:0;"></ion-skeleton-text>
         </div>
       </div>
-      <div class="info-title">
-        <ion-skeleton-text animated style="width:40%; height:16px; border-radius:4px;"></ion-skeleton-text>
-      </div>
+      <div class="info-title"><ion-skeleton-text animated style="width:40%; height:16px; border-radius:4px;"></ion-skeleton-text></div>
       <div class="info-list">
         <div class="info-item" *ngFor="let i of [1,2,3,4]">
           <div style="width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.2); flex-shrink:0;"></div>
           <ion-skeleton-text animated style="width:70%; height:16px; border-radius:4px; margin:0;"></ion-skeleton-text>
         </div>
       </div>
-      <div class="documents-card" style="margin-bottom: 20px;">
-        <div class="docs-info" style="width: 100%;">
-          <ion-skeleton-text animated style="width:60%; height:18px; margin:0 0 12px; border-radius:4px;"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width:30%; height:20px; margin:0; border-radius:8px;"></ion-skeleton-text>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- ─── ERROR STATE ───────────────────────────────────────────────── -->
   <div class="page-wrapper" *ngIf="errorMessage && !isEditMode && !isLoading">
     <div class="auth-container profile-container-spacing" style="padding-top: 24px;">
       <ion-card color="danger" style="margin-bottom: 24px;">
         <ion-card-content>
           <ion-icon name="alert-circle-outline"></ion-icon>
-          {{ errorMessage }}
+           errorMessage 
         </ion-card-content>
       </ion-card>
       <div class="action-buttons">
@@ -49,60 +43,52 @@
       </div>
     </div>
   </div>
+
+  <!-- ─── VIEW MODE ─────────────────────────────────────────────────── -->
   <ng-container *ngIf="profile && !isLoading && !isEditMode">
     <div class="page-wrapper">
       <div class="top-vector-container">
         <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
         </svg>
-        <div class="custom-header">
-          <span class="header-title">Profile Vendor</span>
-        </div>
+        <div class="custom-header"><span class="header-title">Profile Vendor</span></div>
       </div>
+
       <div class="auth-container profile-container-spacing">
+
+        <!-- Avatar & Status -->
         <div class="profile-card-outline">
-          <div class="avatar-circle">
-            <ion-icon name="person"></ion-icon>
-          </div>
-          <h2 class="name">{{ profile.user.name }}</h2>
-          <p class="email">{{ profile.user.email }}</p>
+          <div class="avatar-circle"><ion-icon name="person"></ion-icon></div>
+          <h2 class="name"> profile.user.name </h2>
+          <p class="email"> profile.user.email </p>
           <div class="status-row">
             <div class="status-badge" [ngClass]="verificationStatus">
               <ion-icon name="checkmark-outline" *ngIf="verificationStatus === 'approved'"></ion-icon>
-              {{ statusLabel }}
+               statusLabel 
             </div>
           </div>
           <div class="rejection-note" *ngIf="verificationStatus === 'rejected' && verificationNotes">
             <ion-icon name="information-circle-outline"></ion-icon>
-            <span>{{ verificationNotes }}</span>
+            <span> verificationNotes </span>
           </div>
         </div>
+
+        <!-- Info Perusahaan -->
         <div class="info-title">INFORMASI PERUSAHAAN</div>
         <div class="info-list">
-          <div class="info-item">
-            <ion-icon name="business"></ion-icon>
-            <span>{{ profile.company_name || '-' }}</span>
-          </div>
-          <div class="info-item">
-            <ion-icon name="call"></ion-icon>
-            <span>{{ profile.phone || '-' }}</span>
-          </div>
-          <div class="info-item">
-            <ion-icon name="location"></ion-icon>
-            <span>{{ profile.address || '-' }}</span>
-          </div>
-          <div class="info-item">
-            <ion-icon name="mail"></ion-icon>
-            <span>{{ profile.user.email }}</span>
-          </div>
+          <div class="info-item"><ion-icon name="business"></ion-icon><span> profile.company_name </span></div>
+          <div class="info-item"><ion-icon name="call"></ion-icon><span> profile.phone </span></div>
+          <div class="info-item"><ion-icon name="location"></ion-icon><span> profile.address </span></div>
+          <div class="info-item"><ion-icon name="mail"></ion-icon><span> profile.user.email </span></div>
         </div>
+
+        <!-- Dokumen -->
         <div class="documents-card" (click)="goToDocuments()">
           <div class="docs-info">
-            <h3>{{ totalDocuments }} Dokumen Di unggah</h3>
+            <h3> totalDocuments  Dokumen Diunggah</h3>
             <div class="docs-badges" *ngIf="totalDocuments > 0">
-              <span class="badge-approved" *ngIf="verificationStatus === 'approved'">{{ totalDocuments }}
-                Diterima</span>
-              <span class="badge-pending" *ngIf="verificationStatus !== 'approved'">{{ totalDocuments }} Menunggu</span>
+              <span class="badge-approved" *ngIf="verificationStatus === 'approved'"> totalDocuments  Diterima</span>
+              <span class="badge-pending" *ngIf="verificationStatus !== 'approved'"> totalDocuments  Menunggu</span>
             </div>
             <div class="docs-badges" *ngIf="totalDocuments === 0">
               <span class="badge-pending">0 Dokumen</span>
@@ -110,33 +96,85 @@
           </div>
           <ion-icon name="chevron-forward-outline"></ion-icon>
         </div>
+
+        <!-- ─── Rating Saya ─────────────────────────────────────────── -->
+        <div class="rating-card">
+          <div class="rating-header">
+            <h4>⭐ RATING SAYA</h4>
+            <span class="rating-count" *ngIf="ratingSummary"> ratingSummary.total_ratings  ulasan</span>
+          </div>
+
+          <ng-container *ngIf="isLoadingRating">
+            <ion-skeleton-text animated style="width:60%; height:20px; border-radius:4px; margin-bottom:8px;"></ion-skeleton-text>
+          </ng-container>
+
+          <ng-container *ngIf="!isLoadingRating && ratingSummary">
+            <!-- Blacklist warning -->
+            <div class="blacklist-badge" *ngIf="ratingSummary.is_blacklisted">
+              <ion-icon name="ban-outline"></ion-icon>
+              Akun Diblokir —  ratingSummary.blacklist_reason || 'Hubungi admin' 
+            </div>
+
+            <!-- Score -->
+            <ng-container *ngIf="ratingSummary.total_ratings > 0; else noRating">
+              <div class="rating-score-row">
+                <span class="score-number"> (ratingSummary.average_rating | number:'1.1-1') </span>
+                <div class="stars">
+                  <ion-icon *ngFor="let s of getStars(ratingSummary.average_rating)" [name]="s"></ion-icon>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noRating>
+              <p class="rating-empty">Belum ada rating dari admin.</p>
+            </ng-template>
+          </ng-container>
+
+          <ng-container *ngIf="!isLoadingRating && !ratingSummary">
+            <p class="rating-empty">Gagal memuat rating.</p>
+          </ng-container>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="action-buttons">
           <button class="btn-edit" (click)="enterEditMode()">Edit Profile</button>
           <button class="btn-logout" (click)="logout()">Logout</button>
         </div>
+
+        <!-- ─── Danger Zone: Hapus Akun ─────────────────────────────── -->
+        <div class="danger-zone">
+          <div class="danger-title">⚠ DANGER ZONE</div>
+          <div class="danger-desc">
+            Hapus akun secara permanen. Semua data vendor, dokumen, dan riwayat tender akan dihapus dan tidak bisa dipulihkan.
+          </div>
+          <button class="btn-delete-account" (click)="confirmDeleteAccount()" [disabled]="isDeletingAccount">
+            <ion-spinner *ngIf="isDeletingAccount" name="crescent"></ion-spinner>
+            <ion-icon *ngIf="!isDeletingAccount" name="trash-outline"></ion-icon>
+            <span *ngIf="!isDeletingAccount">Hapus Akun Saya</span>
+            <span *ngIf="isDeletingAccount">Menghapus...</span>
+          </button>
+        </div>
+
       </div>
     </div>
   </ng-container>
+
+  <!-- ─── EDIT MODE ─────────────────────────────────────────────────── -->
   <ng-container *ngIf="isEditMode">
     <div class="page-wrapper">
       <div class="top-vector-container">
         <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
         </svg>
-        <div class="custom-header">
-          <span class="header-title">Edit Profile</span>
-        </div>
+        <div class="custom-header"><span class="header-title">Edit Profile</span></div>
       </div>
       <div class="auth-container profile-container-spacing">
         <div class="edit-avatar-container">
-          <div class="avatar-circle">
-            <ion-icon name="person"></ion-icon>
-          </div>
+          <div class="avatar-circle"><ion-icon name="person"></ion-icon></div>
           <h2 class="edit-title">Edit Profile</h2>
         </div>
         <div class="error-box" *ngIf="errorMessage">
           <ion-icon name="alert-circle-outline"></ion-icon>
-          {{ errorMessage }}
+           errorMessage 
         </div>
         <div class="edit-form-container">
           <div class="custom-input-row">
@@ -145,15 +183,15 @@
           </div>
           <div class="custom-input-row">
             <ion-icon name="business"></ion-icon>
-            <input type="text" [(ngModel)]="editForm.company_name" placeholder="Masukan Nama Perusahaan/Instannsi Anda">
+            <input type="text" [(ngModel)]="editForm.company_name" placeholder="Nama Perusahaan/Instansi">
           </div>
           <div class="custom-input-row">
             <ion-icon name="call"></ion-icon>
-            <input type="tel" [(ngModel)]="editForm.phone" placeholder="Masukan Nomor Telephone Anda">
+            <input type="tel" [(ngModel)]="editForm.phone" placeholder="Nomor Telephone">
           </div>
           <div class="custom-input-row">
             <ion-icon name="location"></ion-icon>
-            <input type="text" [(ngModel)]="editForm.address" placeholder="Masukan Alamat Lengkap Anda.">
+            <input type="text" [(ngModel)]="editForm.address" placeholder="Alamat Lengkap">
           </div>
         </div>
         <div class="action-buttons edit-actions">
@@ -161,11 +199,10 @@
             <ion-spinner *ngIf="isSaving" name="crescent" class="btn-spinner"></ion-spinner>
             <span *ngIf="!isSaving">Confirm</span>
           </button>
-          <button class="btn-cancel-outline" (click)="cancelEdit()" [disabled]="isSaving">
-            Cancel
-          </button>
+          <button class="btn-cancel-outline" (click)="cancelEdit()" [disabled]="isSaving">Cancel</button>
         </div>
       </div>
     </div>
   </ng-container>
+
 </ion-content>

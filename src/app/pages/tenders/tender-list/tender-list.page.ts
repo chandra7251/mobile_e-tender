@@ -60,7 +60,7 @@ export class TenderListPage {
     this.tenderService.getTenders().subscribe({
       next: async (res) => {
         if (!event) this.isLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           const validTenders = res.data.filter((t: any) =>
             ['open','aanwijzing','bidding','closed','finished'].includes(t.status)
           );

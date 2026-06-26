@@ -40,7 +40,7 @@ export class AuthService {
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
     return this.api.post<AuthData>('auth/login', payload).pipe(
       tap(async (res) => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           await this.storage.setToken(res.data.token);
         }
       })
@@ -59,12 +59,12 @@ export class AuthService {
   refreshToken(): Observable<string> {
     return this.api.post<RefreshData>('auth/refresh', {}).pipe(
       tap(async (res) => {
-        if (res.status === 'success' && res.data?.token) {
+        if (res.status === true && res.data?.token) {
           await this.storage.setToken(res.data.token);
         }
       }),
       map(res => {
-        if (res.status === 'success' && res.data?.token) {
+        if (res.status === true && res.data?.token) {
           return res.data.token;
         }
         throw new Error('Refresh gagal: response tidak valid');
@@ -89,4 +89,13 @@ export class AuthService {
   isLoggedIn(): Observable<boolean> {
     return from(this.storage.getToken().then(token => !!token));
   }
+
+  deleteAccount(password: string): import('rxjs').Observable<import('../models/user.model').ApiResponse<null>> {
+    return this.api.delete<null>('auth/delete-account', { body: { password } }).pipe(
+      tap(async () => {
+        await this.storage.clearAll();
+      })
+    );
+  }
+
 }

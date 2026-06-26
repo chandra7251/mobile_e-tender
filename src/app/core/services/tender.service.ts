@@ -41,7 +41,7 @@ export class TenderService {
   checkParticipation(tenderId: number): Observable<boolean> {
     return this.api.get<ParticipationCheck>(`tenders/${tenderId}/participants/check`).pipe(
       map(res => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           return res.data.is_participant;
         }
         return false;

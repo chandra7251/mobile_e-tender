@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "132748680981",
+    "project_id": "zeta-8be7a",
+    "storage_bucket": "zeta-8be7a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132748680981:android:523fd7e4b6932cdf49531c",
+        "android_client_info": {
+          "package_name": "com.vandrafcy.zeta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoIDSsfYycOQ67R5CerjWjXdKajCkuaJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

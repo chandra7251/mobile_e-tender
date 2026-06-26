@@ -74,7 +74,7 @@ export class TenderDetailPage {
     this.tenderService.getMyBid(this.tenderId).subscribe({
       next: (res) => {
         this.isLoadingBid = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.hasSubmittedBid = true;
           this.myBidPrice = res.data.bid_amount;
         }
@@ -100,7 +100,7 @@ export class TenderDetailPage {
     this.tenderService.getTenderDetail(this.tenderId).subscribe({
       next: async (res) => {
         this.isLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.tender = res.data;
           this.hasJoined = res.data.is_participant ?? false;
           await this.offlineCache.cacheTenderDetail(this.tenderId, res.data);
@@ -153,7 +153,7 @@ export class TenderDetailPage {
     this.tenderService.getAnnouncements(this.tenderId).subscribe({
       next: (res) => {
         this.announcementsLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.announcements = res.data;
         }
       },
@@ -170,15 +170,15 @@ export class TenderDetailPage {
     const ann$    = this.tenderService.getAnnouncements(this.tenderId).pipe(catchError(() => of(null)));
     const bid$    = this.tenderService.getMyBid(this.tenderId).pipe(catchError(() => of(null)));
     forkJoin([detail$, ann$, bid$]).subscribe(async ([detailRes, annRes, bidRes]) => {
-      if (detailRes?.status === 'success' && detailRes?.data) {
+      if (detailRes?.status === true && detailRes?.data) {
         this.tender    = detailRes.data;
         this.hasJoined = detailRes.data.is_participant ?? false;
         await this.offlineCache.cacheTenderDetail(this.tenderId, detailRes.data);
       }
-      if (annRes?.status === 'success' && annRes?.data) {
+      if (annRes?.status === true && annRes?.data) {
         this.announcements = annRes.data;
       }
-      if (bidRes?.status === 'success' && bidRes?.data) {
+      if (bidRes?.status === true && bidRes?.data) {
         this.hasSubmittedBid = true;
         this.myBidPrice = bidRes.data.bid_amount;
       } else {
@@ -195,7 +195,7 @@ export class TenderDetailPage {
     this.tenderService.joinTender(this.tenderId).subscribe({
       next: async (res) => {
         this.isJoining = false;
-        if (res.status === 'success') {
+        if (res.status === true) {
           this.hasJoined = true;
           await this.showToast('Berhasil bergabung ke tender!', 'success');
           this.loadAnnouncements();
@@ -226,6 +226,16 @@ export class TenderDetailPage {
       }
     });
   }
+
+  goSanggahan(): void {
+    this.router.navigate(['/tabs/tenders', this.tenderId, 'sanggahan']);
+  }
+
+  get showSanggahanButton(): boolean {
+    if (!this.tender) return false;
+    return this.tender.status === 'finished' && this.hasJoined;
+  }
+
   goBack(): void { this.navCtrl.navigateBack(['/tabs/tenders']); }
   onPhotoError(event: Event): void {
     const img = event.target as HTMLImageElement;

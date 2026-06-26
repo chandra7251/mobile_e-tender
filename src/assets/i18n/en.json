@@ -1,0 +1,80 @@
+{
+  "APP_NAME": "ZETA",
+  "DASHBOARD": "Dashboard",
+  "TENDERS": "Tenders",
+  "CATALOGUE": "Catalogue",
+  "PROFILE": "Profile",
+  "KONTRAK": "Contracts",
+  "PAYMENT": "Payment",
+  "SEARCH": "Search",
+  "FILTER": "Filter",
+  "LOADING": "Loading...",
+  "SAVE": "Save",
+  "CANCEL": "Cancel",
+  "DELETE": "Delete",
+  "EDIT": "Edit",
+  "BACK": "Back",
+  "SUBMIT": "Submit",
+  "SUCCESS": "Success",
+  "ERROR": "Failed",
+  "STATUS": "Status",
+  "TENDER": {
+    "TITLE": "Tender Title",
+    "STATUS": "Tender Status",
+    "BIDDING": "Bidding",
+    "EVALUATION": "Evaluation",
+    "FINISHED": "Finished",
+    "DRAFT": "Draft",
+    "OPEN": "Open",
+    "CANCELLED": "Cancelled",
+    "HPS": "Estimated Price (HPS)",
+    "BID_PRICE": "Bid Price",
+    "WINNER": "Winner",
+    "DEADLINE": "Deadline",
+    "COUNTDOWN": "Bidding Countdown"
+  },
+  "VENDOR": {
+    "COMPANY": "Company Name",
+    "NPWP": "Tax ID",
+    "STATUS": "Vendor Status",
+    "BLACKLISTED": "Blacklisted",
+    "VERIFIED": "Verified",
+    "RATING": "Rating"
+  },
+  "CONTRACT": {
+    "NUMBER": "Contract Number",
+    "VALUE": "Contract Value",
+    "STATUS": "Contract Status",
+    "ACTIVE": "Active",
+    "DRAFT": "Draft",
+    "COMPLETED": "Completed",
+    "SIGN": "Sign Contract",
+    "DELIVERY": "Delivery"
+  },
+  "AI": {
+    "PRICE_PREDICT": "AI Price Prediction",
+    "VENDOR_SCORE": "AI Vendor Score",
+    "ANOMALY": "Anomaly Detection"
+  },
+  "BLOCKCHAIN": {
+    "VERIFIED": "Blockchain Verified",
+    "HASH": "Blockchain Hash",
+    "VERIFY": "Verify"
+  },
+  "PAYMENT": {
+    "DEPOSIT": "Guarantee Deposit",
+    "STATUS": "Payment Status",
+    "PENDING": "Pending",
+    "PAID": "Paid",
+    "REFUNDED": "Refunded",
+    "PAY_NOW": "Pay Now"
+  },
+  "CATALOGUE": {
+    "TITLE": "E-Catalogue",
+    "MY_ITEMS": "My Catalogue",
+    "ADD_ITEM": "Add Item",
+    "PRICE": "Estimated Price",
+    "CATEGORY": "Category",
+    "DESCRIPTION": "Description"
+  }
+}

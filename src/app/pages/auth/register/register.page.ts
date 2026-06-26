@@ -41,7 +41,7 @@ export class RegisterPage {
     this.auth.register(this.form).subscribe({
       next: async (res) => {
         this.isLoading = false;
-        if (res.status === 'success') {
+        if (res.status === true) {
           this.activityService.log('Mendaftar akun ZETA', 'person-add-outline');
           await this.showToast('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.', 'success');
           this.router.navigate(['/login'], { replaceUrl: true });

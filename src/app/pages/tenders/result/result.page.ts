@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController, Platform } from '@ionic/angular';
+import { NavController, Platform, ToastController } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
+import { PaymentService } from '../../../core/services/payment.service';
 import { Winner, TenderResult } from '../../../core/models/user.model';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -23,7 +24,9 @@ export class ResultPage implements OnInit {
     private route: ActivatedRoute,
     private navCtrl: NavController,    
     private tenderService: TenderService,
-    private platform: Platform
+    private paymentService: PaymentService,
+    private platform: Platform,
+    private toast: ToastController
   ) {}
   ngOnInit(): void {
     this.tenderId = this.extractTenderId();
@@ -77,10 +80,10 @@ export class ResultPage implements OnInit {
     );
     forkJoin([winner$, result$]).subscribe(([winnerRes, resultRes]) => {
       this.isLoading = false;
-      if (winnerRes?.status === 'success' && winnerRes?.data) {
+      if (winnerRes?.status === true && winnerRes?.data) {
         this.winner = winnerRes.data;
       }
-      if (resultRes?.status === 'success' && resultRes?.data) {
+      if (resultRes?.status === true && resultRes?.data) {
         this.tenderResult = resultRes.data;
       }
     });
@@ -91,8 +94,8 @@ export class ResultPage implements OnInit {
     const winner$ = this.tenderService.getWinner(this.tenderId).pipe(catchError(() => of(null)));
     const result$ = this.tenderService.getTenderResult(this.tenderId).pipe(catchError(() => of(null)));
     forkJoin([winner$, result$]).subscribe(([winnerRes, resultRes]) => {
-      if (winnerRes?.status === 'success' && winnerRes?.data) this.winner = winnerRes.data;
-      if (resultRes?.status === 'success' && resultRes?.data) this.tenderResult = resultRes.data;
+      if (winnerRes?.status === true && winnerRes?.data) this.winner = winnerRes.data;
+      if (resultRes?.status === true && resultRes?.data) this.tenderResult = resultRes.data;
       event.target.complete();
     });
   }
@@ -145,5 +148,41 @@ export class ResultPage implements OnInit {
   }
   get skeletonRows(): number[] {
     return [1, 2, 3];
+  }
+
+  isPayingDeposit = false;
+  async paySuccessFee(): Promise<void> {
+    if (this.isPayingDeposit) return;
+    this.isPayingDeposit = true;
+    
+    // Simulate deposit/success fee amount (e.g., 500,000 for standard tender)
+    const depositAmount = 500000; 
+
+    this.paymentService.createDeposit(this.tenderId, depositAmount).subscribe({
+      next: (res) => {
+        this.isPayingDeposit = false;
+        if (res?.data?.token) {
+          this.paymentService.openSnapPayment(res.data.token);
+        } else if (res?.data?.snap_token) { // Fallback if API returns snap_token
+          this.paymentService.openSnapPayment(res.data.snap_token);
+        } else {
+          this.showToast('Gagal memproses pembayaran. Token tidak ditemukan.', 'danger');
+        }
+      },
+      error: (err) => {
+        this.isPayingDeposit = false;
+        this.showToast('Gagal memproses pembayaran: ' + (err?.error?.message || 'Error server'), 'danger');
+      }
+    });
+  }
+
+  private async showToast(message: string, color: string = 'dark') {
+    const toast = await this.toast.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom'
+    });
+    toast.present();
   }
 }

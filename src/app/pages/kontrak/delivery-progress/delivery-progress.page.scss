@@ -1,0 +1,14 @@
+.top-vector-container { position: relative; height: 102px; overflow: hidden; svg { position: absolute; top:0; left:0; width:100%; } }
+.custom-header { position: absolute; top: 16px; left: 0; right: 0; display: flex; align-items: center; padding: 0 8px; .btn-header-back { --color: #fff; } .header-title { color: #fff; font-weight: 700; font-size: 18px; } }
+.page-content { padding: 12px 16px 32px; }
+.section-card { border-radius: 14px; box-shadow: 0 2px 12px rgba(38,54,108,.08); margin-bottom: 14px; }
+.section-title { font-size: 14px; font-weight: 700; color: #26366C; display: flex; align-items: center; gap: 6px; }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; &:last-child { border-bottom: none; } }
+.info-label { font-size: 12px; color: #888; }
+.info-value { font-size: 13px; color: #333; font-weight: 600; }
+.submit-btn { --background: #26366C; --border-radius: 10px; font-weight: 700; margin-top: 8px; }
+.status-box { border-radius: 10px; padding: 16px; margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start; ion-icon { font-size: 28px; flex-shrink: 0; } }
+.status-box.verified { background: #e8f5e9; ion-icon { color: #2e7d32; } }
+.status-box.submitted { background: #fff8e1; ion-icon { color: #f57f17; } }
+.status-box.rejected { background: #ffebee; ion-icon { color: #c62828; } }
+.error-box { background: #fff0f0; border-radius: 8px; padding: 10px 12px; margin: 8px 0; display: flex; align-items: center; gap: 8px; ion-icon { color: #e53935; font-size: 18px; } span { font-size: 13px; color: #e53935; } }

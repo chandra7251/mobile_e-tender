@@ -6,8 +6,10 @@ import { AuthService } from '../../core/services/auth.service';
 import { StorageService } from '../../core/services/storage.service';
 import { ActivityService } from '../../core/services/activity.service';
 import { OfflineCacheService } from '../../core/services/offline-cache.service';
-import { VendorProfile } from '../../core/models/user.model';
+import { FcmService } from '../../core/services/fcm.service';
+import { VendorProfile, VendorRatingSummary } from '../../core/models/user.model';
 import { Subscription } from 'rxjs';
+
 @Component({
   standalone: false,
   selector: 'app-profile',
@@ -20,43 +22,55 @@ export class ProfilePage {
   isEditMode = false;
   isLoading = false;
   isSaving = false;
+  isDeletingAccount = false;
   errorMessage = '';
+  ratingSummary: VendorRatingSummary | null = null;
+  isLoadingRating = false;
+
   editForm: UpdateProfilePayload = {
     name: '',
     company_name: '',
     phone: '',
     address: ''
   };
+
   private backButtonSub?: Subscription;
+
   constructor(
     private vendorService: VendorService,
     private authService: AuthService,
     private storage: StorageService,
     private offlineCache: OfflineCacheService,
+    private fcmService: FcmService,
     private router: Router,
     private toast: ToastController,
     private alert: AlertController,
     private platform: Platform,
     private activityService: ActivityService
   ) {}
+
   ionViewWillEnter(): void {
     this.loadProfile();
     this.loadDocumentsCount();
+    this.loadRating();
   }
+
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(20, (processNextHandler) => {
       if (this.isEditMode) {
         this.cancelEdit();
       } else {
-        processNextHandler(); 
+        processNextHandler();
       }
     });
   }
+
   ionViewWillLeave() {
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
     }
   }
+
   async loadProfile(): Promise<void> {
     this.isLoading = true;
     this.errorMessage = '';
@@ -68,7 +82,7 @@ export class ProfilePage {
     this.vendorService.getProfile().subscribe({
       next: async (res) => {
         this.isLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.profile = res.data;
           await this.offlineCache.cacheVendorProfile(res.data);
         }
@@ -88,24 +102,46 @@ export class ProfilePage {
       }
     });
   }
+
   loadDocumentsCount(): void {
     this.vendorService.getDocuments().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.totalDocuments = res.data.length;
         }
       },
-      error: () => {
-        this.totalDocuments = 0;
-      }
+      error: () => { this.totalDocuments = 0; }
     });
   }
+
+  loadRating(): void {
+    this.isLoadingRating = true;
+    this.vendorService.getMyRating().subscribe({
+      next: (res) => {
+        this.isLoadingRating = false;
+        if (res.status === true && res.data) {
+          this.ratingSummary = res.data;
+        }
+      },
+      error: () => { this.isLoadingRating = false; }
+    });
+  }
+
+  /** Render bintang rating (1–5) */
+  getStars(score: number | null): string[] {
+    if (!score) return ['star-outline', 'star-outline', 'star-outline', 'star-outline', 'star-outline'];
+    const filled = Math.round((score / 100) * 5);
+    return Array(5).fill('star-outline').map((_, i) => i < filled ? 'star' : 'star-outline');
+  }
+
   get verificationStatus(): string {
     return this.profile?.verification_status ?? '';
   }
+
   get verificationNotes(): string | null {
     return this.profile?.verification_notes ?? null;
   }
+
   enterEditMode(): void {
     if (!this.profile) return;
     this.editForm = {
@@ -117,13 +153,16 @@ export class ProfilePage {
     this.errorMessage = '';
     this.isEditMode = true;
   }
+
   cancelEdit(): void {
     this.isEditMode = false;
     this.errorMessage = '';
   }
+
   goToDocuments(): void {
     this.router.navigate(['/tabs/documents']);
   }
+
   onSave(): void {
     if (!this.editForm.company_name || !this.editForm.phone || !this.editForm.address) {
       this.errorMessage = 'Semua field wajib diisi.';
@@ -134,11 +173,11 @@ export class ProfilePage {
     this.vendorService.updateProfile(this.editForm).subscribe({
       next: async (res) => {
         this.isSaving = false;
-        if (res.status === 'success') {
+        if (res.status === true) {
           this.activityService.log('Memperbarui profil perusahaan', 'create-outline');
           this.isEditMode = false;
           await this.showToast('Profil berhasil diperbarui!', 'success');
-          this.loadProfile(); 
+          this.loadProfile();
         } else {
           this.errorMessage = res.message || 'Gagal menyimpan.';
         }
@@ -155,7 +194,10 @@ export class ProfilePage {
       }
     });
   }
+
   logout(): void {
+    // Hapus FCM token dari server sebelum logout
+    this.fcmService.unregisterToken().subscribe({ error: () => {} });
     this.authService.logout().subscribe({
       next: async () => {
         await this.showToast('Berhasil logout.', 'medium');
@@ -167,6 +209,61 @@ export class ProfilePage {
       }
     });
   }
+
+  /** Tampilkan dialog konfirmasi hapus akun */
+  async confirmDeleteAccount(): Promise<void> {
+    const alert = await this.alert.create({
+      header: '⚠️ Hapus Akun',
+      subHeader: 'Tindakan ini tidak dapat dibatalkan.',
+      message: 'Semua data akun, profil vendor, dan riwayat Anda akan dihapus permanen. Masukkan password untuk konfirmasi.',
+      inputs: [
+        {
+          name: 'password',
+          type: 'password',
+          placeholder: 'Password Anda',
+          cssClass: 'delete-account-input',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Batal',
+          role: 'cancel',
+          cssClass: 'alert-btn-cancel'
+        },
+        {
+          text: 'Hapus Akun',
+          cssClass: 'alert-btn-danger',
+          handler: (data) => {
+            if (!data?.password) {
+              this.showToast('Password wajib diisi.', 'warning');
+              return false;
+            }
+            this.executeDeleteAccount(data.password);
+            return true;
+          }
+        }
+      ],
+      cssClass: 'delete-account-alert'
+    });
+    await alert.present();
+  }
+
+  private executeDeleteAccount(password: string): void {
+    this.isDeletingAccount = true;
+    this.authService.deleteAccount(password).subscribe({
+      next: async () => {
+        this.isDeletingAccount = false;
+        await this.showToast('Akun berhasil dihapus.', 'medium');
+        this.router.navigate(['/login'], { replaceUrl: true });
+      },
+      error: async (err) => {
+        this.isDeletingAccount = false;
+        const msg = err?.error?.message || 'Gagal menghapus akun. Coba lagi.';
+        await this.showToast(msg, 'danger');
+      }
+    });
+  }
+
   get statusColor(): string {
     switch (this.verificationStatus) {
       case 'approved': return 'success';
@@ -174,6 +271,7 @@ export class ProfilePage {
       default:         return 'warning';
     }
   }
+
   get statusLabel(): string {
     switch (this.verificationStatus) {
       case 'approved': return '✓ Terverifikasi';
@@ -181,6 +279,7 @@ export class ProfilePage {
       default:         return '⏳ Menunggu Verifikasi';
     }
   }
+
   private async showToast(message: string, color: string): Promise<void> {
     const t = await this.toast.create({ message, duration: 2500, color, position: 'top' });
     await t.present();

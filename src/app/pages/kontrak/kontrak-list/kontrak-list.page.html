@@ -1,0 +1,67 @@
+<ion-content>
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
+    </svg>
+    <div class="custom-header">
+      <span class="header-title" style="margin-left:16px;">Kontrak Saya</span>
+    </div>
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Tarik untuk refresh" refreshingText="Memuat..."></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-content">
+    <div *ngIf="isLoading">
+      <ion-card class="contract-card" *ngFor="let i of [1,2,3]">
+        <ion-card-content>
+          <ion-skeleton-text animated style="width:40%;height:12px;border-radius:6px;margin-bottom:8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:80%;height:16px;border-radius:6px;margin-bottom:8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width:50%;height:14px;border-radius:6px;"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-card *ngIf="loadError && !isLoading" style="border-radius:14px;">
+      <ion-card-content style="text-align:center;padding:24px;">
+        <ion-icon name="cloud-offline-outline" style="font-size:48px;color:#ccc;display:block;margin:0 auto 12px;"></ion-icon>
+        <p style="color:#888;">{{ loadError }}</p>
+        <ion-button fill="outline" size="small" (click)="loadContracts()">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>Coba Lagi
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="empty-state" *ngIf="!isLoading && !loadError && contracts.length === 0">
+      <ion-icon name="document-outline"></ion-icon>
+      <p>Belum ada kontrak untuk Anda.</p>
+      <p style="font-size:12px;">Kontrak akan muncul setelah Anda memenangkan tender dan admin membuat kontrak.</p>
+    </div>
+
+    <ion-card class="contract-card" *ngFor="let c of contracts" (click)="goDetail(c.id)">
+      <ion-card-content>
+        <div class="contract-header">
+          <span class="contract-number">{{ c.contract_number }}</span>
+          <ion-badge [color]="getStatusColor(c.status)" style="font-size:10px;">{{ getStatusLabel(c.status) }}</ion-badge>
+        </div>
+        <p class="contract-title">{{ c.tender?.title || 'Tender' }}</p>
+        <p class="contract-value">{{ formatCurrency(c.contract_value) }}</p>
+        <div class="meta-row">
+          <span class="meta-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            Mulai: {{ formatDate(c.start_date) }}
+          </span>
+          <span class="meta-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            Selesai: {{ formatDate(c.end_date) }}
+          </span>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:4px;" *ngIf="c.status === 'sent_to_vendor'">
+          <ion-icon name="pencil-outline" style="color:#26366C;font-size:14px;"></ion-icon>
+          <span style="font-size:12px;color:#26366C;font-weight:600;">Menunggu tanda tangan Anda</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

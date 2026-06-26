@@ -1,0 +1,178 @@
+<ion-content>
+  <div class="top-vector-container">
+    <svg width="360" height="102" viewBox="0 0 360 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M316 -32.5001C332.5 -30.012 383.314 -20.691 382.5 24C384.873 37.3009 355.799 64.2256 312.263 64.2256H57.9614C33.5485 64.0482 -13.5481 71.3548 -6.63115 102L-58 -15.5798C46.4331 -37.0386 253 -42 316 -32.5001Z" fill="#26366C"/>
+    </svg>
+    <div class="custom-header">
+      <ion-button fill="clear" class="btn-header-back" (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+      <span class="header-title">Sanggahan &amp; Banding</span>
+    </div>
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="Tarik untuk refresh" refreshingText="Memuat..."></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-content">
+
+    <!-- Tender Info -->
+    <ion-card class="section-card" *ngIf="tender">
+      <ion-card-content>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <ion-icon name="document-text-outline" style="font-size:24px;color:#26366C;flex-shrink:0;"></ion-icon>
+          <div>
+            <p style="margin:0;font-size:11px;color:#888;">Tender</p>
+            <p style="margin:0;font-weight:700;font-size:14px;color:#26366C;">{{ tender.title }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Info Box -->
+    <ion-card class="section-card">
+      <ion-card-content>
+        <div style="display:flex;gap:10px;">
+          <ion-icon name="information-circle-outline" style="font-size:22px;color:#26366C;flex-shrink:0;margin-top:2px;"></ion-icon>
+          <div>
+            <p style="margin:0;font-weight:700;font-size:13px;color:#26366C;">Ketentuan Sanggahan</p>
+            <p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">
+              Sanggahan dapat diajukan setelah pemenang tender diumumkan. Batas waktu pengajuan sesuai ketentuan yang berlaku.
+              Isi alasan sanggahan dengan jelas dan lengkap (minimal 30 karakter).
+            </p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" style="padding:16px;">
+      <ion-skeleton-text animated style="width:100%;height:80px;border-radius:12px;"></ion-skeleton-text>
+    </div>
+
+    <!-- Error -->
+    <div class="error-box" *ngIf="loadError && !isLoading">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ loadError }}</span>
+    </div>
+
+    <!-- Riwayat Sanggahan -->
+    <ion-card class="section-card" *ngIf="!isLoading">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="list-outline"></ion-icon>
+          Riwayat Sanggahan Saya
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="empty-state" *ngIf="myComplaints.length === 0">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <p>Belum ada sanggahan yang diajukan untuk tender ini.</p>
+        </div>
+        <div class="complaint-item" *ngFor="let c of myComplaints">
+          <div class="complaint-meta">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <ion-badge [color]="getStatusColor(c.status)" style="font-size:10px;">{{ getStatusLabel(c.status) }}</ion-badge>
+              <span class="complaint-type">{{ getTypeLabel(c.type) }}</span>
+            </div>
+            <span class="complaint-date">{{ formatDate(c.created_at) }}</span>
+          </div>
+          <p class="complaint-reason">{{ c.reason }}</p>
+          <p class="deadline-info" *ngIf="c.deadline">
+            <ion-icon name="time-outline"></ion-icon>
+            Batas sanggahan: {{ formatDate(c.deadline) }}
+          </p>
+          <div class="response-box" *ngIf="c.response">
+            <p class="response-label">Respons Admin:</p>
+            <p class="response-text">{{ c.response }}</p>
+            <p style="font-size:10px;color:#888;margin:4px 0 0;">{{ formatDate(c.responded_at) }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Tombol Buka Form -->
+    <ion-button
+      expand="block"
+      class="submit-btn"
+      *ngIf="!showForm && !hasPendingSanggahan"
+      (click)="toggleForm()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Ajukan Sanggahan / Banding
+    </ion-button>
+
+    <ion-card class="section-card" *ngIf="hasPendingSanggahan && !showForm">
+      <ion-card-content>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <ion-icon name="hourglass-outline" style="font-size:22px;color:#FF8C00;"></ion-icon>
+          <p style="margin:0;font-size:13px;color:#FF8C00;font-weight:600;">Anda sudah memiliki sanggahan yang sedang diproses oleh admin.</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Form Sanggahan -->
+    <ion-card class="section-card" *ngIf="showForm">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="create-outline"></ion-icon>
+          Form Pengajuan Sanggahan
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <ion-item lines="none" style="margin-bottom:10px;">
+            <ion-label position="stacked" style="font-weight:600;font-size:13px;color:#26366C;">Jenis Pengajuan *</ion-label>
+            <ion-select formControlName="type" placeholder="Pilih jenis" interface="action-sheet">
+              <ion-select-option *ngFor="let opt of typeOptions" [value]="opt.value">
+                {{ opt.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <p style="font-size:11px;color:#888;margin:-6px 0 12px 16px;" *ngIf="form.get('type')?.value === 'sanggahan'">
+            Keberatan terhadap hasil evaluasi atau penetapan pemenang tender.
+          </p>
+          <p style="font-size:11px;color:#888;margin:-6px 0 12px 16px;" *ngIf="form.get('type')?.value === 'banding'">
+            Banding atas keputusan sanggahan yang sebelumnya telah ditolak.
+          </p>
+
+          <ion-item lines="none" style="margin-bottom:4px;">
+            <ion-label position="stacked" style="font-weight:600;font-size:13px;color:#26366C;">Alasan Sanggahan * (min. 30 karakter)</ion-label>
+            <ion-textarea
+              formControlName="reason"
+              placeholder="Jelaskan alasan sanggahan Anda dengan lengkap dan detail..."
+              rows="6"
+              [counter]="true"
+              maxlength="2000">
+            </ion-textarea>
+          </ion-item>
+          <p class="char-count">{{ reasonLength }} / 2000</p>
+          <div *ngIf="form.get('reason')?.invalid && form.get('reason')?.touched">
+            <p style="font-size:11px;color:#e53935;margin:0 0 8px 16px;"
+               *ngIf="form.get('reason')?.errors?.['required']">Alasan wajib diisi.</p>
+            <p style="font-size:11px;color:#e53935;margin:0 0 8px 16px;"
+               *ngIf="form.get('reason')?.errors?.['minlength']">Alasan minimal 30 karakter.</p>
+          </div>
+
+          <div class="error-box" *ngIf="submitError">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>{{ submitError }}</span>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <ion-button fill="outline" style="flex:1;" (click)="toggleForm()" [disabled]="isSubmitting">
+              Batal
+            </ion-button>
+            <ion-button type="submit" class="submit-btn" style="flex:2;" [disabled]="isSubmitting || form.invalid">
+              <ion-spinner *ngIf="isSubmitting" name="crescent" slot="start"></ion-spinner>
+              <ion-icon *ngIf="!isSubmitting" name="send-outline" slot="start"></ion-icon>
+              {{ isSubmitting ? 'Mengirim...' : 'Ajukan Sanggahan' }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

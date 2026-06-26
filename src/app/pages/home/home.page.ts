@@ -62,7 +62,7 @@ export class HomePage {
   private loadProfile(): void {
     this.vendorService.getProfile().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.vendorProfile = res.data;
         }
       },
@@ -76,7 +76,7 @@ export class HomePage {
     this.tenderService.getTenders({ status: 'open' }).subscribe({
       next: (res) => {
         this.isLoadingTenders = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.openTenders = res.data.slice(0, 5);
         }
       },
@@ -90,7 +90,7 @@ export class HomePage {
     this.vendorService.getMyTenders().subscribe({
       next: (res) => {
         this.isLoadingMyTenders = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.myTendersCount = {
             bidding: res.data.filter(t => t.status === 'bidding').length,
             open: res.data.filter(t => t.status === 'open').length,
@@ -118,7 +118,7 @@ export class HomePage {
     relevant.forEach(t => {
       this.tenderService.getAnnouncements(t.id).subscribe({
         next: (res) => {
-          if (res.status === 'success' && res.data && res.data.length > 0) {
+          if (res.status === true && res.data && res.data.length > 0) {
             const mapped = res.data.map(a => ({ ...a, tenderTitle: t.title } as any));
             this.aanwijzings = [...this.aanwijzings, ...mapped];
           }
@@ -149,7 +149,7 @@ export class HomePage {
     this.tenderService.getTenders({ status: 'bidding' }).subscribe({
       next: (res) => {
         this.isLoadingBidding = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.biddingTenders = res.data;
           this.startCountdown();
         }

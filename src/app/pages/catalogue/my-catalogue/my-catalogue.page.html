@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/catalogue"></ion-back-button></ion-buttons>
+    <ion-title>Katalog Saya</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showForm=!showForm">
+        <ion-icon [name]="showForm ? 'close-outline' : 'add-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- Add Form -->
+  <div *ngIf="showForm" style="padding:16px;background:#f0f4ff;border-bottom:1px solid #dde3ff;">
+    <p style="font-size:14px;font-weight:700;color:#3553A8;margin:0 0 12px;">Tambah Item Katalog</p>
+    <ion-item lines="inset" style="--background:white;border-radius:8px;margin-bottom:8px;">
+      <ion-label position="floating">Nama Produk/Jasa *</ion-label>
+      <ion-input [(ngModel)]="newItem.name" placeholder="contoh: Laptop ASUS"></ion-input>
+    </ion-item>
+    <ion-item lines="inset" style="--background:white;border-radius:8px;margin-bottom:8px;">
+      <ion-label position="floating">Deskripsi</ion-label>
+      <ion-textarea [(ngModel)]="newItem.description" rows="3"></ion-textarea>
+    </ion-item>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <ion-item lines="inset" style="--background:white;border-radius:8px;">
+        <ion-label position="floating">Harga Estimasi</ion-label>
+        <ion-input type="number" [(ngModel)]="newItem.price_estimate"></ion-input>
+      </ion-item>
+      <ion-item lines="inset" style="--background:white;border-radius:8px;">
+        <ion-label position="floating">Satuan</ion-label>
+        <ion-input [(ngModel)]="newItem.unit" placeholder="unit"></ion-input>
+      </ion-item>
+    </div>
+    <ion-button expand="block" (click)="addItem()" [disabled]="isSaving || !newItem.name.trim()">
+      <ion-spinner *ngIf="isSaving" name="crescent" style="margin-right:8px;"></ion-spinner>
+      {{isSaving ? 'Menyimpan...' : 'Simpan Item'}}
+    </ion-button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" style="padding:40px;text-align:center;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- Items -->
+  <ion-list *ngIf="!isLoading">
+    <ion-item-sliding *ngFor="let item of items">
+      <ion-item [routerLink]="['/tabs/catalogue', item.id]">
+        <ion-thumbnail slot="start">
+          <img *ngIf="item.photos?.length" [src]="item.photos![0].url" style="object-fit:cover;border-radius:8px;">
+          <ion-icon *ngIf="!item.photos?.length" name="image-outline" style="font-size:32px;color:#ccc;"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2 style="font-weight:700;font-size:14px;">{{item.name}}</h2>
+          <p style="font-size:12px;color:#28C5D4;">{{item.category?.name || 'Tanpa Kategori'}}</p>
+          <p style="font-size:13px;font-weight:600;color:#3553A8;">{{formatPrice(item.price_estimate)}}</p>
+        </ion-label>
+        <ion-badge slot="end" [color]="item.is_active ? 'success' : 'medium'">
+          {{item.is_active ? 'Aktif' : 'Nonaktif'}}
+        </ion-badge>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteItem(item)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <div *ngIf="!isLoading && items.length === 0" style="padding:60px 24px;text-align:center;">
+    <ion-icon name="storefront-outline" style="font-size:60px;color:#ddd;"></ion-icon>
+    <p style="color:#999;margin-top:16px;">Belum ada item di katalog Anda</p>
+    <p style="color:#bbb;font-size:13px;">Tap + di atas untuk menambahkan</p>
+  </div>
+</ion-content>

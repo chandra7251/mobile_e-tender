@@ -16,7 +16,10 @@ export class ApiService {
   put<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
     return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
   }
-  delete<T>(endpoint: string): Observable<ApiResponse<T>> {
-    return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`);
+  patch<T>(endpoint: string, body: any): Observable<ApiResponse<T>> {
+    return this.http.patch<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, body);
+  }
+  delete<T>(endpoint: string, options?: { body?: any }): Observable<ApiResponse<T>> {
+    return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${endpoint}`, { body: options?.body });
   }
 }

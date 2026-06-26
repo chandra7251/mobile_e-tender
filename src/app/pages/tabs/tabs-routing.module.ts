@@ -47,6 +47,34 @@ const routes: Routes = [
         loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsPageModule)
       },
       {
+        path: 'tenders/:id/sanggahan',
+        loadChildren: () => import('../tenders/sanggahan/sanggahan.module').then(m => m.SanggahanPageModule)
+      },
+      {
+        path: 'kontrak',
+        loadChildren: () => import('../kontrak/kontrak-list/kontrak-list.module').then(m => m.KontrakListPageModule)
+      },
+      {
+        path: 'kontrak/:contractId',
+        loadChildren: () => import('../kontrak/kontrak-detail/kontrak-detail.module').then(m => m.KontrakDetailPageModule)
+      },
+      {
+        path: 'kontrak/:contractId/delivery/:deliveryId',
+        loadChildren: () => import('../kontrak/delivery-progress/delivery-progress.module').then(m => m.DeliveryProgressPageModule)
+      },
+        {
+          path: 'catalogue',
+          loadChildren: () => import('../catalogue/catalogue-list/catalogue-list.module').then(m => m.CatalogueListPageModule)
+        },
+        {
+          path: 'catalogue/my',
+          loadChildren: () => import('../catalogue/my-catalogue/my-catalogue.module').then(m => m.MyCataloguePageModule)
+        },
+        {
+          path: 'catalogue/:id',
+          loadChildren: () => import('../catalogue/catalogue-detail/catalogue-detail.module').then(m => m.CatalogueDetailPageModule)
+        },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

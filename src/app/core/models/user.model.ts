@@ -62,6 +62,7 @@ export interface Tender {
   bidding_end?: string | null;
   created_at?: string;
   photo_url?: string | null;   
+  photos?: string[];
   is_participant: boolean;   
   joined_at: string | null;  
 }
@@ -90,6 +91,10 @@ export interface Bid {
   tender_id: number;
   bid_amount: number;        
   notes?: string | null;
+  technical_status?: string | null;
+  technical_score?: number | null;
+  price_score?: number | null;
+  bid_items?: any[];
   submitted_at: string;      
   updated_at?: string;
 }
@@ -110,7 +115,7 @@ export interface TenderResult {
   decided_at?: string;
 }
 export interface ApiResponse<T = any> {
-  status: 'success' | 'error';
+  status: boolean;
   message: string;
   data: T;
   errors?: any;
@@ -141,4 +146,114 @@ export interface SubmissionForm {
   kategori?: string;
   estimasi_harga?: number;
   catatan?: string;
+}
+
+export interface VendorRatingItem {
+  tender_title: string | null;
+  overall_score: number;
+  quality_score: number;
+  delivery_score: number;
+  communication_score: number;
+  compliance_score: number;
+  review: string | null;
+  rated_at: string;
+}
+
+export interface VendorRatingSummary {
+  average_rating: number | null;
+  total_ratings: number;
+  is_blacklisted: boolean;
+  blacklist_reason: string | null;
+  ratings: VendorRatingItem[];
+}
+
+// ─── COMPLAINT / SANGGAHAN ───────────────────────────────────────────────────
+export type ComplaintType   = 'sanggahan' | 'banding';
+export type ComplaintStatus = 'pending' | 'accepted' | 'rejected';
+export interface Complaint {
+  id: number;
+  tender_id: number;
+  vendor_id: number;
+  type: ComplaintType;
+  reason: string;
+  status: ComplaintStatus;
+  response: string | null;
+  responded_at: string | null;
+  deadline: string | null;
+  created_at: string;
+  tender?: { id: number; title: string };
+}
+
+// ─── CONTRACT / KONTRAK ──────────────────────────────────────────────────────
+export type ContractStatus =
+  | 'draft' | 'sent_to_vendor' | 'signed_vendor' | 'signed_admin' | 'active' | 'completed' | 'terminated';
+
+export interface ContractDelivery {
+  id: number;
+  contract_id: number;
+  milestone_name: string;
+  description: string | null;
+  due_date: string | null;
+  vendor_notes: string | null;
+  evidence_path: string | null;
+  delivered_at: string | null;
+  verified_at: string | null;
+  status: 'scheduled' | 'in_progress' | 'delivered' | 'verified' | 'overdue';
+}
+
+export interface Contract {
+  id: number;
+  contract_number: string;
+  tender_id: number;
+  vendor_id: number;
+  status: ContractStatus;
+  contract_value: number;
+  start_date: string | null;
+  end_date: string | null;
+  terms: string | null;
+  vendor_signed_at: string | null;
+  admin_signed_at: string | null;
+  document_hash: string | null;
+  created_at: string;
+  tender?: { id: number; title: string };
+  deliveries?: ContractDelivery[];
+}
+
+export interface CatalogueCategory {
+  id: number;
+  name: string;
+  slug: string;
+  parent_id: number | null;
+  items_count?: number;
+}
+
+export interface CataloguePhoto {
+  id: number;
+  photo_path: string;
+  is_primary: boolean;
+  url: string;
+}
+
+export interface CatalogueItem {
+  id: number;
+  vendor_id: number;
+  category_id: number | null;
+  name: string;
+  description: string | null;
+  price_estimate: number | null;
+  unit: string;
+  specs: Record<string, string> | null;
+  is_active: boolean;
+  created_at: string;
+  vendor?: VendorProfile;
+  category?: CatalogueCategory;
+  photos?: CataloguePhoto[];
+}
+
+export interface CatalogueListResponse {
+  data: CatalogueItem[];
+  current_page: number;
+  last_page: number;
+  total: number;
+  per_page: number;
 }

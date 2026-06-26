@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -14,7 +15,14 @@ import { OfflineBannerComponent } from './components/offline-banner/offline-bann
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    BrowserAnimationsModule,
+    IonicModule.forRoot({
+      mode: 'ios',
+      animated: true,
+      rippleEffect: true,
+      hardwareBackButton: true,
+      swipeBackEnabled: true
+    }),
     AppRoutingModule,
     HttpClientModule
   ],

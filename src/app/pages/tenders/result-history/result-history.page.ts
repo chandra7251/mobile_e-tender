@@ -28,7 +28,7 @@ export class ResultHistoryPage {
     this.vendorService.getMyResults().subscribe({
       next: (res) => {
         this.isLoading = false;
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.results = Array.isArray(res.data) ? res.data : [];
         }
       },
@@ -42,7 +42,7 @@ export class ResultHistoryPage {
     this.currentPage = 1;
     this.vendorService.getMyResults().subscribe({
       next: (res) => {
-        if (res.status === 'success' && res.data) {
+        if (res.status === true && res.data) {
           this.results = Array.isArray(res.data) ? res.data : [];
         }
         event.target.complete();

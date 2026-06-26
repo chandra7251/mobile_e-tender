@@ -195,6 +195,26 @@
         </ion-button>
       </ion-card-content>
     </ion-card>
+        <!-- TOMBOL SANGGAHAN (muncul setelah tender finished & vendor ikut) -->
+    <ion-card class="detail-card" *ngIf="showSanggahanButton">
+      <ion-card-content>
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;">
+          <ion-icon name="chatbubbles-outline" style="font-size:28px;color:#26366C;flex-shrink:0;"></ion-icon>
+          <div>
+            <span style="font-weight:700;font-size:14px;color:#26366C;">Sanggahan &amp; Banding</span><br>
+            <span style="font-size:12px;color:#555;">Ajukan keberatan terhadap hasil tender dalam batas waktu yang ditentukan.</span>
+          </div>
+        </div>
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="goSanggahan()"
+          style="--border-color:#26366C;--color:#26366C;font-weight:700;">
+          <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
+          Lihat / Ajukan Sanggahan
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
     <ion-card class="detail-card">
       <ion-card-header>
         <ion-card-title class="section-title">

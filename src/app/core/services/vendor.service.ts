@@ -11,7 +11,8 @@ import {
   VendorDocument,
   VendorTender,
   VendorResult,
-  DocumentType
+  DocumentType,
+  VendorRatingSummary
 } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 export interface UpdateProfilePayload {
@@ -30,7 +31,7 @@ export class VendorService {
   getProfile(): Observable<ApiResponse<VendorProfile>> {
     return this.api.get<VendorProfile>('vendors/me').pipe(
       tap(res => {
-        if (res?.status === 'success' && res.data) {
+        if (res?.status === true && res.data) {
           Preferences.set({
             key: 'vendor_data',
             value: JSON.stringify(res.data),
@@ -93,4 +94,9 @@ export class VendorService {
   getMyResults(): Observable<ApiResponse<VendorResult[]>> {
     return this.api.get<VendorResult[]>('vendors/results');
   }
+
+  getMyRating(): import('rxjs').Observable<import('../models/user.model').ApiResponse<VendorRatingSummary>> {
+    return this.api.get<VendorRatingSummary>('vendors/my-rating');
+  }
+
 }

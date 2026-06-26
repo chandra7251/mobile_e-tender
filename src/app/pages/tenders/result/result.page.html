@@ -70,6 +70,19 @@
             <p>Hasil tender belum tersedia</p>
             <p class="hint-text" *ngIf="resultError">{{ resultError }}</p>
           </div>
+          
+          <div style="margin-top: 16px;" *ngIf="myResult === 'won'">
+            <ion-button
+              expand="block"
+              color="warning"
+              class="submit-btn"
+              (click)="paySuccessFee()"
+              [disabled]="isPayingDeposit">
+              <ion-icon name="card-outline" slot="start"></ion-icon>
+              Bayar Jaminan Pelaksanaan
+              <ion-spinner *ngIf="isPayingDeposit" name="crescent" slot="end"></ion-spinner>
+            </ion-button>
+          </div>
         </ion-card-content>
       </ion-card>
       <ion-card class="winner-card">

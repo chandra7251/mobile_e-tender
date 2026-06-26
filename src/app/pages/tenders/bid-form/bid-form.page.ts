@@ -89,7 +89,7 @@ export class BidFormPage implements OnInit {
         this.loadError = this.mapError(tenderAny.error);
         return;
       }
-      if (tenderAny?.status === 'success' && tenderAny.data) {
+      if (tenderAny?.status === true && tenderAny.data) {
         this.tender = tenderAny.data;
       }
       if (bidAny.error) {
@@ -111,7 +111,7 @@ export class BidFormPage implements OnInit {
           this.mode = 'error';
           this.loadError = this.mapError(err);
         }
-      } else if (bidAny?.status === 'success' && bidAny.data) {
+      } else if (bidAny?.status === true && bidAny.data) {
         this.existingBid = bidAny.data;
         this.bidId       = bidAny.data.id ?? null;
         this.bidAmount   = bidAny.data.bid_amount ?? null;
@@ -137,7 +137,7 @@ export class BidFormPage implements OnInit {
       this.tenderService.updateBid(this.tenderId, this.bidId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
-          if (res?.status === 'success') {
+          if (res?.status === true) {
             this.activityService.log('Memperbarui penawaran tender', 'hammer-outline');
             this.existingBid = res.data ?? null;
             this.bidId       = res.data?.id ?? this.bidId;
@@ -156,7 +156,7 @@ export class BidFormPage implements OnInit {
       this.tenderService.submitBid(this.tenderId, payload).subscribe({
         next: async (res) => {
           this.isSaving = false;
-          if (res?.status === 'success') {
+          if (res?.status === true) {
             this.activityService.log('Mengajukan penawaran tender', 'hammer-outline');
             this.existingBid = res.data ?? null;
             this.bidId       = res.data?.id ?? null;
@@ -173,6 +173,7 @@ export class BidFormPage implements OnInit {
       });
     }
   }
+
   private mapError(err: any): string {
     const status: number = err?.status || err?.error?.status || 0;
     const msg: string = (err?.error?.message || '').toLowerCase();

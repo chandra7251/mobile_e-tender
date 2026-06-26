@@ -1,4 +1,5 @@
 import type { CapacitorConfig } from '@capacitor/cli';
+import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
   appId: 'com.vandrafcy.zeta',
@@ -13,8 +14,8 @@ const config: CapacitorConfig = {
       showSpinner: false,
     },
     Keyboard: {
-      resize: 'none',
-      style: 'dark',
+      resize: KeyboardResize.None,
+      style: KeyboardStyle.Dark,
       resizeOnFullScreen: true,
     },
   },

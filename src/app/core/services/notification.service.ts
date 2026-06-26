@@ -22,7 +22,7 @@ export interface NotificationItem {
   isDeleting?: boolean;
 }
 export interface NotificationResponse {
-  status: string;
+  status: boolean;
   data: {
     current_page: number;
     data: NotificationItem[];
@@ -42,7 +42,7 @@ export class NotificationService {
   getNotifications(page: number = 1): Observable<NotificationResponse> {
     return this.http.get<NotificationResponse>(`${this.apiUrl}?page=${page}`).pipe(
       tap(res => {
-        if (res.status === 'success') {
+        if (res.status === true) {
           if (res.data.unread_count !== undefined) {
             this.unreadCountSubject.next(res.data.unread_count);
           } else if (page === 1) {
