@@ -42,6 +42,12 @@ export class AuthService {
       tap(async (res) => {
         if (res.status === true && res.data) {
           await this.storage.setToken(res.data.token);
+          if (res.data.user) {
+            await this.storage.setUser(res.data.user as any);
+          }
+          if (res.data.vendor) {
+            await this.storage.setVendor(res.data.vendor);
+          }
         }
       })
     );

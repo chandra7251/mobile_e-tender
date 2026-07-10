@@ -56,7 +56,7 @@
         <p *ngIf="item.price_estimate" style="font-size:11px;font-weight:700;color:#3553A8;margin:6px 0 0;">
           {{formatPrice(item.price_estimate)}}/{{item.unit}}
         </p>
-        <p *ngIf="item.category" style="font-size:10px;color:#28C5D4;margin:4px 0 0;">{{item.category?.name}}</p>
+        <p *ngIf="item.category" style="font-size:10px;color:#28C5D4;margin:4px 0 0;">{{item.category.name}}</p>
       </div>
     </div>
   </div>

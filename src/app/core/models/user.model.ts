@@ -24,14 +24,15 @@ export interface VendorProfile {
 }
 export interface AuthData {
   token: string;
-  token_type: string;   
-  expires_in: number;   
+  token_type: string;
+  expires_in: number;
   user: {
     id: number;
     name: string;
     email: string;
-    role: string;        
+    role: string;
   };
+  vendor?: VendorProfile; // tambahan dari update backend
 }
 export interface RefreshData {
   token: string;
