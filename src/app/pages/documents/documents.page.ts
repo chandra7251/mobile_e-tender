@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, ToastController, Platform } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VendorService } from '../../core/services/vendor.service';
@@ -12,7 +12,7 @@ type AllowedType = 'legalitas' | 'izin_usaha' | 'dokumen_pendukung';
   templateUrl: './documents.page.html',
   styleUrls: ['./documents.page.scss'],
 })
-export class DocumentsPage implements OnInit {
+export class DocumentsPage {
   documents: VendorDocument[] = [];
   isLoading = false;
   listError = '';
@@ -53,7 +53,6 @@ export class DocumentsPage implements OnInit {
       this.backButtonSub.unsubscribe();
     }
   }
-  ngOnInit(): void {}
   ionViewWillEnter(): void {
     this.loadProfileAndDocuments();
     const from = this.route.snapshot.queryParamMap.get('from');
@@ -148,7 +147,7 @@ export class DocumentsPage implements OnInit {
       },
       error: (err) => {
         this.isUploading = false;
-        const errors = err?.error?.data;
+        const errors = err?.error?.errors || err?.error?.data;
         if (errors) {
           const firstKey = Object.keys(errors)[0];
           this.uploadError = errors[firstKey]?.[0] || 'Upload gagal.';

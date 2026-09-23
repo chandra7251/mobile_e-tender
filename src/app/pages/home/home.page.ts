@@ -15,7 +15,7 @@ import { NotificationService } from '../../core/services/notification.service';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
   vendorProfile: VendorProfile | null = null;
   openTenders: Tender[] = [];
   isLoadingTenders = false;

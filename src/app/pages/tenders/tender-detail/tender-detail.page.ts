@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ToastController, Platform } from '@ionic/angular';
 import { TenderService } from '../../../core/services/tender.service';
@@ -12,7 +12,7 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './tender-detail.page.html',
   styleUrls: ['./tender-detail.page.scss'],
 })
-export class TenderDetailPage {
+export class TenderDetailPage implements OnInit {
   tender: Tender | null = null;
   announcements: Announcement[] = [];
   currentPhotoIndex: number = 0;
@@ -206,7 +206,7 @@ export class TenderDetailPage {
       error: (err) => {
         this.isJoining = false;
         const msg = err?.error?.message || '';
-        const verificationStatus = err?.error?.data?.verification_status;
+        const verificationStatus = err?.error?.data?.verification_status || err?.error?.verification_status;
         if (verificationStatus === 'pending') {
           this.joinError = 'Akun vendor Anda belum diverifikasi. Tunggu persetujuan admin.';
         } else if (verificationStatus === 'rejected') {

@@ -188,7 +188,7 @@ export class BidFormPage implements OnInit {
     if (msg.includes('not a participant')) return 'Anda belum terdaftar di tender ini.';
     if (msg.includes('closed') || msg.includes('ended')) return 'Fase bidding sudah ditutup.';
     if (msg.includes('not started')) return 'Fase bidding belum dimulai.';
-    const errors = err?.error?.data;
+    const errors = err?.error?.errors || err?.error?.data;
     if (errors && typeof errors === 'object') {
       const firstKey = Object.keys(errors)[0];
       if (Array.isArray(errors[firstKey])) return errors[firstKey][0];

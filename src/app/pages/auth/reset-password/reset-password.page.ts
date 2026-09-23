@@ -64,7 +64,7 @@ export class ResetPasswordPage {
       },
       error: (err) => {
         this.isLoading = false;
-        const backendErrors = err?.error?.data;
+        const backendErrors = err?.error?.errors || err?.error?.data;
         if (backendErrors && typeof backendErrors === 'object') {
           for (const key of Object.keys(backendErrors)) {
             this.validationErrors[key] = backendErrors[key][0];

@@ -184,7 +184,7 @@ export class ProfilePage {
       },
       error: (err) => {
         this.isSaving = false;
-        const errors = err?.error?.data;
+        const errors = err?.error?.errors || err?.error?.data;
         if (errors) {
           const firstKey = Object.keys(errors)[0];
           this.errorMessage = errors[firstKey]?.[0] || 'Gagal menyimpan.';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 @Component({
@@ -7,9 +7,9 @@ import { Preferences } from '@capacitor/preferences';
   styleUrls: ['./splash.page.scss'],
   standalone: false,
 })
-export class SplashPage implements OnInit {
+export class SplashPage {
   constructor(private router: Router) {}
-  ngOnInit() {}
+
   async ionViewDidEnter() {
     setTimeout(async () => {
       const hasSeenIntro = await Preferences.get({ key: 'hasSeenIntro' });
