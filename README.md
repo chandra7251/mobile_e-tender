@@ -40,15 +40,17 @@ Key vendor capabilities provided by the application include:
 
 ## Screenshots
 
-Interface previews from the live mobile client:
+Interface previews from the live Android/Ionic mobile client:
 
-| Mobile Dashboard | Mobile Bidding & Schedule |
+### Onboarding & Authentication
+| Onboarding & Consent | Login Screen |
 | --- | --- |
-| ![Mobile Dashboard](docs/screenshots/mobile-dashboard.png) | ![Mobile Bidding](docs/screenshots/mobile-bidding.png) |
+| ![Onboarding](docs/screenshots/mobile-onboarding.png) | ![Login](docs/screenshots/mobile-login.png) |
 
-| Tender Details | Web Admin Dashboard (Backend) |
-| --- | --- |
-| ![Tender Detail](docs/screenshots/tender-detail.png) | ![Admin Web Dashboard](docs/screenshots/admin-dashboard.png) |
+### Vendor Experience
+| Home Dashboard | Active Tenders & Schedule | Mobile Bidding Form |
+| --- | --- | --- |
+| ![Home Dashboard](docs/screenshots/mobile-dashboard.png) | ![Tenders Tab](docs/screenshots/mobile-tenders.png) | ![Mobile Bidding](docs/screenshots/mobile-bidding.png) |
 
 ---
 
@@ -56,25 +58,25 @@ Interface previews from the live mobile client:
 
 ```mermaid
 graph TD
-    subgraph Mobile Client [Ionic / Angular Client]
-        UI[Pages: Splash, Home, Tenders, Bidding, Contracts, Profile]
-        Services[Core Services: Auth, Tender, Payment, Contract, Storage]
-        Guards[AuthGuard, GuestGuard, VendorApprovedGuard]
-        Interceptors[AuthInterceptor: Bearer JWT + 401 Auto Refresh]
+    subgraph MobileClient ["Ionic / Angular Client"]
+        UI["Pages: Splash, Home, Tenders, Bidding, Contracts, Profile"]
+        Services["Core Services: Auth, Tender, Payment, Contract, Storage"]
+        Guards["Guards: AuthGuard, GuestGuard, VendorApprovedGuard"]
+        Interceptors["AuthInterceptor: Bearer JWT + 401 Auto Refresh"]
     end
 
-    subgraph Native Bridge [Capacitor Layer]
-        Camera[Camera / Photo Plugin]
-        Preferences[Preferences / Secure Token Storage]
-        FCMPlugin[Push Notifications Plugin]
-        Network[Network Status Plugin]
+    subgraph NativeBridge ["Capacitor Layer"]
+        Camera["Camera / Photo Plugin"]
+        Preferences["Preferences / Secure Token Storage"]
+        FCMPlugin["Push Notifications Plugin"]
+        Network["Network Status Plugin"]
     end
 
-    subgraph Backend [Laravel REST API]
-        Gateway[REST API: https://vandrafcy.my.id/api]
-        AuthAPI[POST /api/auth/login, refresh]
-        TenderAPI[GET /api/tenders, POST /api/tenders/{id}/penawaran]
-        ContractAPI[GET /api/vendor/contracts, PATCH deliveries]
+    subgraph BackendGateway ["Laravel REST API"]
+        Gateway["REST API: https://vandrafcy.my.id/api"]
+        AuthAPI["POST /api/auth/login, refresh"]
+        TenderAPI["GET /api/tenders, POST /api/tenders/:id/penawaran"]
+        ContractAPI["GET /api/vendor/contracts, PATCH deliveries"]
     end
 
     UI --> Guards
