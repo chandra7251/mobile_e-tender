@@ -52,7 +52,7 @@ export class PaymentService {
   }
 
   /** Open Midtrans Snap payment popup */
-  openSnapPayment(snapToken: string): void {
+  openSnapPayment(snapToken: string, fallbackUrl?: string): void {
     const w = window as any;
     if (w.snap) {
       w.snap.pay(snapToken, {

@@ -45,3 +45,25 @@ body.ion-keyboard-is-open {
     margin-bottom: -15px !important;
   }
 }
+
+:root {
+  --zeta-navy: #26366c;
+  --zeta-primary: #3f51b5;
+  --zeta-accent: #14b8a6;
+  --zeta-surface: #ffffff;
+  --zeta-background: #f4f6f9;
+  --zeta-text: #172033;
+  --zeta-muted: #667085;
+  --zeta-border: rgba(38, 54, 108, 0.12);
+  --zeta-shadow: 0 12px 28px rgba(38, 54, 108, 0.12);
+}
+
+ion-button { --border-radius: 14px; font-weight: 700; letter-spacing: 0; }
+
+button, a, ion-button, ion-tab-button, [routerLink] { -webkit-tap-highlight-color: transparent; }
+
+:focus-visible { outline: 3px solid rgba(20, 184, 166, 0.65); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
